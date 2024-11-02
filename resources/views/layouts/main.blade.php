@@ -11,6 +11,7 @@
 <body class="flex flex-col min-h-screen">
     @include('partials.header')
     <main class="flex-grow">
+        @include('partials.hero')
         @yield('content')
     </main>
     @include('partials.footer')

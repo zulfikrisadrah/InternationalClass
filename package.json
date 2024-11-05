@@ -17,6 +17,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "@fontsource/poppins": "^5.1.0"
+        "@fontsource/poppins": "^5.1.0",
+        "daisyui": "^4.12.14"
     }
 }

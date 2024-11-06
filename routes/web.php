@@ -15,6 +15,9 @@ Route::get('/news', function () {
 Route::get('/about', function () {
     return view('about');
 });
+Route::get('/IE', function () {
+    return view('InternationalExposure');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

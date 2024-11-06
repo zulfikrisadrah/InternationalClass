@@ -6,6 +6,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 });
+Route::get('/event', function () {
+    return view('event');
+});
+Route::get('/news', function () {
+    return view('news');
+});
+Route::get('/about', function () {
+    return view('about');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

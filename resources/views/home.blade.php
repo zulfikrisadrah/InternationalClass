@@ -265,7 +265,7 @@
 </section>
 
         <!-- Join Us Section -->
-<section class="py-16 text-white">
+{{-- <section class="py-16 text-white">
     <div class="container mx-[70px]">
                 <div class="flex gap-5 max-md:flex-col">
                     <div class="flex flex-col max-md:ml-0 max-md:w-full">
@@ -304,7 +304,7 @@
                     </div>
                 </div>
     </div>
-</section>
+</section> --}}
 </main>
 
 @endsection

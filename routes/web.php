@@ -18,6 +18,12 @@ Route::get('/about', function () {
 Route::get('/IE', function () {
     return view('InternationalExposure');
 });
+Route::get('/studyProgram', function () {
+    return view('studyProgram');
+});
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');

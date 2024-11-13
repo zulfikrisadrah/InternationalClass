@@ -26,8 +26,24 @@ Route::get('/studyProgram', function () {
 // });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard.admin.home');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard/class', function () {
+    return view('dashboard.admin.class');
+})->middleware(['auth', 'verified'])->name('class');
+
+Route::get('/dashboard/program', function () {
+    return view('dashboard.admin.program');
+})->middleware(['auth', 'verified'])->name('program');
+
+Route::get('/dashboard/information', function () {
+    return view('dashboard.admin.information');
+})->middleware(['auth', 'verified'])->name('information');
+
+Route::get('/dashboard/user', function () {
+    return view('dashboard.admin.user');
+})->middleware(['auth', 'verified'])->name('user');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

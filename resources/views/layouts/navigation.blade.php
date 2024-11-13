@@ -1,100 +1,52 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    </a>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
-            </div>
-
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+<nav x-data="{ open: false }" class="fixed inset-y-0 left-0 flex flex-col justify-between items-center bg-white  rounded-none max-w-[270px] h-screen w-3/4 sm:w-1/3 md:w-1/4 lg:w-[270px]" aria-label="Main Navigation">
+    <!-- Logo and Header -->
+    <div class="flex gap-1.5 max-w-full text-2xl font-bold text-blue-500 w-[183px] pt-12">
+        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/62ceb8205bf88c56d839d6567aba3f155933937062c2826e1d3e3f58ca0b8cfb?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7" class="object-contain shrink-0 aspect-[0.83] w-[29px]" alt="International Class Logo" />
+        <h1>International Class</h1>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+    <!-- Navigation Links -->
+    <ul class="flex flex-col justify-center items-start self-stretch pl-2.5 mt-16 w-full">
+        <li class="flex flex-col justify-center p-px w-full">
+            <a href="{{ route('dashboard') }}" class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50' : '' }}">
+                <div class="flex gap-1">
+                    <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/96e23ef634af7bf374ec57a83d5743f3a0a37c0f21e66c7d6e63d097676988d5?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7" class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]" alt="Home Icon" />
+                </div>
+                <span class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
+            </a>
+        </li>
+        <li class="mt-12 w-full">
+            <a href="{{ route('user') }}" class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('user') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/a762db1e3bcbb58cfd22caa167084d2ad439be98cb53c6642bf53c7631a23c81?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7" class="object-contain shrink-0 self-start aspect-square w-[25px]" alt="Users Icon" />
+                <span class="grow shrink w-[142px]">Users</span>
+            </a>
+        </li>
+        <li class="mt-12 w-full">
+            <a href="{{ route('class') }}" class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('class') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/f7c65653ae84ac3f19a73ff468be26cde7fef5c5f31c6fe9cf7ec77951f54fb0?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7" class="object-contain shrink-0 w-8 aspect-[1.07]" alt="Calendar Icon" />
+                <span class="grow shrink w-[198px]">Classes</span>
+            </a>
+        </li>
+        <li class="mt-12 w-full">
+            <a href="{{ route('program') }}" class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('program') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/a762db1e3bcbb58cfd22caa167084d2ad439be98cb53c6642bf53c7631a23c81?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7" class="object-contain shrink-0 self-start aspect-square w-[25px]" alt="Programs Icon" />
+                <span class="grow shrink w-[142px]">Programs</span>
+            </a>
+        </li>
+        <li class="mt-12 w-full">
+            <a href="{{ route('information') }}" class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('information') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/a762db1e3bcbb58cfd22caa167084d2ad439be98cb53c6642bf53c7631a23c81?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7" class="object-contain shrink-0 self-start aspect-square w-[25px]" alt="Informations Icon" />
+                <span class="grow shrink w-[142px]">Informations</span>
+            </a>
+        </li>
+    </ul>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- Sign Out Button -->
+    <form method="POST" action="{{ route('logout') }}" class="w-full mt-10 pb-12">
+        @csrf
+        <button class="px-9 text-xl font-bold text-rose-500 w-full" onclick="event.preventDefault(); this.closest('form').submit();">
+            Sign Out
+        </button>
+    </form>
 </nav>

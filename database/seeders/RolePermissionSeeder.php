@@ -24,6 +24,20 @@ class RolePermissionSeeder extends Seeder
             'password' => '123',
         ]);
 
+        $managerRole = User::create([
+            'name' => 'manager',
+            'email' => 'manager@gmail.com',
+            'password' => '123',
+        ]);
+
+        $studentRole = User::create([
+            'name' => 'student',
+            'email' => 'student@gmail.com',
+            'password' => '123',
+        ]);
+
         $adminRole->assignRole('admin');
+        $managerRole->assignRole('manager');
+        $studentRole->assignRole('student');
     }
 }

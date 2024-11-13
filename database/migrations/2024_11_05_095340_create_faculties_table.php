@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('kurikulum', function (Blueprint $table) {
-            $table->foreign(['ID_Prodi'], 'kurikulum_ibfk_1')->references(['ID_Prodi'])->on('prodi')->onUpdate('restrict')->onDelete('restrict');
+        Schema::create('faculties', function (Blueprint $table) {
+            $table->id('ID_Faculty');
+            $table->string('Faculty_Name');
+            $table->string('Faculty_Code', 50);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('kurikulum', function (Blueprint $table) {
-            $table->dropForeign('kurikulum_ibfk_1');
-        });
+        Schema::dropIfExists('faculties');
     }
 };

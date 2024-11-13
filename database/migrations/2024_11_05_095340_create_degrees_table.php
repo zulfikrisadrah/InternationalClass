@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('gelar', function (Blueprint $table) {
-            $table->foreign(['ID_Prodi'], 'gelar_ibfk_1')->references(['ID_Prodi'])->on('prodi')->onUpdate('restrict')->onDelete('restrict');
+        Schema::create('degrees', function (Blueprint $table) {
+            $table->id('ID_Degree');
+            $table->string('Degree', 50);
+            $table->string('Country_of_Execution');
+            $table->date('Execution_Date');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('gelar', function (Blueprint $table) {
-            $table->dropForeign('gelar_ibfk_1');
-        });
+        Schema::dropIfExists('degrees');
     }
 };

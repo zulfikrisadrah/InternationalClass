@@ -15,7 +15,7 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         $adminRole = Role::create(['name' => 'admin']);
-        $managerRole = Role::create(['name' => 'manager']);
+        $staffRole = Role::create(['name' => 'staff']);
         $studentRole = Role::create(['name' => 'student']);
 
         $adminRole = User::create([
@@ -24,9 +24,9 @@ class RolePermissionSeeder extends Seeder
             'password' => '123',
         ]);
 
-        $managerRole = User::create([
-            'name' => 'manager',
-            'email' => 'manager@gmail.com',
+        $staffRole = User::create([
+            'name' => 'staff',
+            'email' => 'staff@gmail.com',
             'password' => '123',
         ]);
 
@@ -37,7 +37,7 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         $adminRole->assignRole('admin');
-        $managerRole->assignRole('manager');
+        $staffRole->assignRole('staff');
         $studentRole->assignRole('student');
     }
 }

@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\StaffDashboardController;
+use App\Http\Controllers\StudentDashboardController;
 
 Route::get('/', function () {
     return view('home');
@@ -24,6 +27,21 @@ Route::get('/studyProgram', function () {
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // });
+
+// Admin Dashboard Resource
+// Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+//     Route::get('dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin.index');
+// });
+
+// Route::middleware(['auth', 'verified', 'role:staff'])->group(function () {
+//     Route::get('dashboard/staff', [StaffDashboardController::class, 'index'])->name('dashboard.staff.index');
+// });
+
+// Route::middleware(['auth', 'verified', 'role:student'])->group(function () {
+//     Route::get('dashboard/student', [StudentDashboardController::class, 'index'])->name('dashboard.student.index');
+// });
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard.admin.home');

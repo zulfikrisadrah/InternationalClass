@@ -13,18 +13,23 @@ class DashboardController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (Auth::user()->role == 'admin') {
+            $user = Auth::user();
+
+            if ($user->hasRole('admin')) {
                 return view('dashboard.admin.home');
             }
-            if (Auth::user()->role == 'staff') {
+
+            if ($user->hasRole('staff')) {
                 return view('dashboard.staff.home');
             }
-            if (Auth::user()->role == 'student') {
+
+            if ($user->hasRole('student')) {
                 return view('dashboard.student.home');
             } else {
                 return redirect()->route('login');
             }
         }
+
     }
 
     /**

@@ -27,6 +27,7 @@ Route::get('/IE', function () {
 Route::get('/studyProgram', function () {
     return view('studyProgram');
 });
+
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -63,8 +64,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('program', ProgramController::class);
         });
     });
-    Route::prefix('student')->name('student.')->group(function () {
-    });
+    // Route::prefix('student')->name('student.')->group(function () {
+    // });
 });
 
 require __DIR__ . '/auth.php';

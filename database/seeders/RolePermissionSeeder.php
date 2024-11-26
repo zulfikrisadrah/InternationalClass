@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -15,6 +14,7 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        // Mendefinisikan daftar permission
         $permissions = [
             'manage news',
             'manage event',
@@ -22,37 +22,42 @@ class RolePermissionSeeder extends Seeder
             'manage class',
         ];
 
+        // Membuat permission jika belum ada
         foreach ($permissions as $perm) {
             Permission::firstOrCreate(['name' => $perm]);
         }
 
+        // Membuat peran 'admin' dan menetapkan pengguna
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $user = User::create([
+        $adminUser = User::create([
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('123'),
         ]);
-        $user->assignRole('admin');
+        $adminUser->assignRole('admin');  // Menetapkan peran admin kepada pengguna admin
 
+        // Membuat peran 'staff' dan menetapkan izin untuk peran ini
         $staffRole = Role::firstOrCreate(['name' => 'staff']);
         $staffPermissions = [
             'manage news',
             'manage event',
             'manage program',
         ];
-        $staffRole = User::create([
+        $staffRole->syncPermissions($staffPermissions); // Menyinkronkan izin untuk peran staff
+        $staffUser = User::create([
             'name' => 'staff',
             'email' => 'staff@gmail.com',
             'password' => bcrypt('123'),
         ]);
-        $staffRole->syncPermissions($staffPermissions);
+        $staffUser->assignRole('staff'); // Menetapkan peran staff kepada pengguna staff
 
+        // Membuat peran 'student' dan menetapkan pengguna
         $studentRole = Role::firstOrCreate(['name' => 'student']);
-        $studentRole = User::create([
+        $studentUser = User::create([
             'name' => 'student',
             'email' => 'student@gmail.com',
             'password' => bcrypt('123'),
         ]);
-        $studentRole->assignRole('student');
+        $studentUser->assignRole('student'); // Menetapkan peran student kepada pengguna student
     }
 }

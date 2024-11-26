@@ -43,16 +43,16 @@
         @endrole
 
         @role('staff')
-            <li class="flex flex-col justify-center p-px w-full">
-                <a href="{{ route('dashboard') }}"
-                    class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50' : '' }}">
-                    <div class="flex gap-1">
-                        <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]"> <x-typ-home /> </i>
-                    </div>
-                    <span
-                        class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
-                </a>
-            </li>
+        <li class="flex flex-col justify-center p-px w-full">
+            <a href="{{ route('dashboard') }}"
+                class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                <div class="flex gap-1">
+                    <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]"> <x-typ-home /></i>
+                </div>
+                <span
+                    class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
+            </a>
+        </li>
             <li class="mt-12 w-full">
                 <a href="{{ route('staff.program.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.program.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
@@ -70,6 +70,16 @@
         @endrole
 
         @role('student')
+        <li class="flex flex-col justify-center p-px w-full">
+            <a href="{{ route('dashboard') }}"
+                class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                <div class="flex gap-1">
+                    <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]"> <x-typ-home /></i>
+                </div>
+                <span
+                    class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
+            </a>
+        </li>
             <li class="mt-12 w-full">
                 <a href="{{ route('student.studyPlan.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.studyPlan.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">

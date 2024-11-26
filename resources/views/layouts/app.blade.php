@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,9 +30,22 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                @if (auth()->user()->hasRole('admin'))
+                    <div class="admin-layout">
+                        {{ $slot }}
+                    </div>
+                @elseif(auth()->user()->hasRole('staff'))
+                    <div class="staff-layout">
+                        {{ $slot }}
+                    </div>
+                @elseif(auth()->user()->hasRole('student'))
+                    <div class="student-layout">
+                        {{ $slot }}
+                    </div>
+                @endif
             </main>
         </div>
     </div>
 </body>
+
 </html>

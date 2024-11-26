@@ -6,9 +6,8 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProgramController;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\StaffDashboardController;
-use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\DashboardController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -28,10 +27,7 @@ Route::get('/IE', function () {
 Route::get('/studyProgram', function () {
     return view('studyProgram');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard.admin.home');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -53,8 +49,21 @@ Route::middleware('auth')->group(function () {
             Route::resource('program', ProgramController::class);
         });
     });
+    Route::prefix('staff')->name('staff.')->group(function () {
+        Route::middleware('can:manage class')->group(function () {
+            Route::resource('class', ClassController::class);
+        });
+        Route::middleware('can:manage news')->group(function () {
+            Route::resource('news', NewsController::class);
+        });
+        Route::middleware('can:manage user')->group(function () {
+            Route::resource('user', UserController::class);
+        });
+        Route::middleware('can:manage program')->group(function () {
+            Route::resource('program', ProgramController::class);
+        });
+    });
     Route::prefix('student')->name('student.')->group(function () {
-
     });
 });
 

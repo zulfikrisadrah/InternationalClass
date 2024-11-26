@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ClassController extends Controller
+class CalenderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('dashboard.admin.class'); 
+        return view('dashboard.student.academicCalender');
     }
 
     /**

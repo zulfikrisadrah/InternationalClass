@@ -12,7 +12,7 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        //
+        return view('dashboard.admin.program');
     }
 
     /**

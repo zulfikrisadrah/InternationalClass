@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
@@ -14,30 +15,44 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole = Role::create(['name' => 'admin']);
-        $staffRole = Role::create(['name' => 'staff']);
-        $studentRole = Role::create(['name' => 'student']);
+        $permissions = [
+            'manage news',
+            'manage event',
+            'manage program',
+            'manage class',
+        ];
 
-        $adminRole = User::create([
+        foreach ($permissions as $perm) {
+            Permission::firstOrCreate(['name' => $perm]);
+        }
+
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $user = User::create([
             'name' => 'admin',
             'email' => 'admin@gmail.com',
-            'password' => '123',
+            'password' => bcrypt('123'),
         ]);
+        $user->assignRole('admin');
 
+        $staffRole = Role::firstOrCreate(['name' => 'staff']);
+        $staffPermissions = [
+            'manage news',
+            'manage event',
+            'manage program',
+        ];
         $staffRole = User::create([
             'name' => 'staff',
             'email' => 'staff@gmail.com',
-            'password' => '123',
+            'password' => bcrypt('123'),
         ]);
+        $staffRole->syncPermissions($staffPermissions);
 
+        $studentRole = Role::firstOrCreate(['name' => 'student']);
         $studentRole = User::create([
             'name' => 'student',
             'email' => 'student@gmail.com',
-            'password' => '123',
+            'password' => bcrypt('123'),
         ]);
-
-        $adminRole->assignRole('admin');
-        $staffRole->assignRole('staff');
         $studentRole->assignRole('student');
     }
 }

@@ -32,17 +32,6 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->intended(route('dashboard', absolute: false));
 
-        // if ($user->role('admin')) {
-        //     return redirect()->route('dashboard.admin.index');
-        // } elseif ($user->Role('staff')) {
-        //     return redirect()->route('dashboard.faculty.index');
-        // } elseif ($user->Role('student')) {
-        //     return redirect()->route('dashboard.student.index');
-        // }
-
-        // // Jika tidak memiliki role yang valid, logout pengguna
-        // Auth::logout();
-        // return redirect('/')->withErrors(['role' => 'Access denied. No valid role assigned.']);
     }
 
     /**

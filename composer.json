@@ -6,9 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "codeat3/blade-iconpark": "^1.6",
+        "codeat3/blade-phosphor-icons": "^2.2",
+        "codeat3/blade-typicons": "^1.6",
+        "davidhsianturi/blade-bootstrap-icons": "^1.5",
+        "faisal50x/blade-ionicons": "^1.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "spatie/laravel-permission": "^6.9"
+        "owenvoke/blade-fontawesome": "^2.7",
+        "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

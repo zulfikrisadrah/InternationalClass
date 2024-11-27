@@ -11,12 +11,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // $middleware->alias([
-        //     'admin' => \App\Http\Middleware\RoleMiddleware::class,
-        //     'staff' => \App\Http\Middleware\RoleMiddleware::class,
-        //     'student' => \App\Http\Middleware\RoleMiddleware::class,
-        //     'role' => \App\Http\Middleware\RoleMiddleware::class,
-        // ]);
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,

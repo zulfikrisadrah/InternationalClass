@@ -13,70 +13,70 @@ class CourseSeeder extends Seeder
     public function run(): void
     {
         $courses = [
-            // Manajemen
-            ['Course_Name' => 'Pengantar Manajemen', 'Credits' => 3, 'ID_Program' => 1],
-            ['Course_Name' => 'Manajemen Keuangan', 'Credits' => 3, 'ID_Program' => 1],
-            ['Course_Name' => 'Manajemen Sumber Daya Manusia', 'Credits' => 3, 'ID_Program' => 1],
+            // Management
+            ['Course_Name' => 'Introduction to Management', 'Credits' => 3, 'ID_Program' => 1],
+            ['Course_Name' => 'Financial Management', 'Credits' => 3, 'ID_Program' => 1],
+            ['Course_Name' => 'Human Resource Management', 'Credits' => 3, 'ID_Program' => 1],
 
-            // Akuntansi
-            ['Course_Name' => 'Pengantar Akuntansi', 'Credits' => 3, 'ID_Program' => 2],
-            ['Course_Name' => 'Akuntansi Biaya', 'Credits' => 3, 'ID_Program' => 2],
+            // Accounting
+            ['Course_Name' => 'Introduction to Accounting', 'Credits' => 3, 'ID_Program' => 2],
+            ['Course_Name' => 'Cost Accounting', 'Credits' => 3, 'ID_Program' => 2],
             ['Course_Name' => 'Auditing', 'Credits' => 3, 'ID_Program' => 2],
 
-            // Ilmu Hukum
-            ['Course_Name' => 'Hukum Pidana', 'Credits' => 3, 'ID_Program' => 3],
-            ['Course_Name' => 'Hukum Perdata', 'Credits' => 3, 'ID_Program' => 3],
-            ['Course_Name' => 'Hukum Internasional', 'Credits' => 3, 'ID_Program' => 3],
+            // Law
+            ['Course_Name' => 'Criminal Law', 'Credits' => 3, 'ID_Program' => 3],
+            ['Course_Name' => 'Civil Law', 'Credits' => 3, 'ID_Program' => 3],
+            ['Course_Name' => 'International Law', 'Credits' => 3, 'ID_Program' => 3],
 
-            // Pendidikan Dokter
-            ['Course_Name' => 'Anatomi Manusia', 'Credits' => 3, 'ID_Program' => 4],
-            ['Course_Name' => 'Fisiologi', 'Credits' => 3, 'ID_Program' => 4],
-            ['Course_Name' => 'Farmakologi', 'Credits' => 3, 'ID_Program' => 4],
+            // Medicine
+            ['Course_Name' => 'Human Anatomy', 'Credits' => 3, 'ID_Program' => 4],
+            ['Course_Name' => 'Physiology', 'Credits' => 3, 'ID_Program' => 4],
+            ['Course_Name' => 'Pharmacology', 'Credits' => 3, 'ID_Program' => 4],
 
-            // Teknik Sipil
-            ['Course_Name' => 'Mekanika Teknik', 'Credits' => 3, 'ID_Program' => 5],
-            ['Course_Name' => 'Struktur Beton', 'Credits' => 3, 'ID_Program' => 5],
-            ['Course_Name' => 'Hidrologi', 'Credits' => 3, 'ID_Program' => 5],
+            // Civil Engineering
+            ['Course_Name' => 'Engineering Mechanics', 'Credits' => 3, 'ID_Program' => 5],
+            ['Course_Name' => 'Concrete Structures', 'Credits' => 3, 'ID_Program' => 5],
+            ['Course_Name' => 'Hydrology', 'Credits' => 3, 'ID_Program' => 5],
 
-            // Teknik Informatika
-            ['Course_Name' => 'Pemrograman Dasar', 'Credits' => 3, 'ID_Program' => 6],
-            ['Course_Name' => 'Basis Data', 'Credits' => 3, 'ID_Program' => 6],
-            ['Course_Name' => 'Jaringan Komputer', 'Credits' => 3, 'ID_Program' => 6],
+            // Computer Science
+            ['Course_Name' => 'Introduction to Programming', 'Credits' => 3, 'ID_Program' => 6],
+            ['Course_Name' => 'Database Systems', 'Credits' => 3, 'ID_Program' => 6],
+            ['Course_Name' => 'Computer Networks', 'Credits' => 3, 'ID_Program' => 6],
 
-            // Teknik Arsitektur
-            ['Course_Name' => 'Desain Arsitektur', 'Credits' => 3, 'ID_Program' => 7],
-            ['Course_Name' => 'Bangunan Gedung', 'Credits' => 3, 'ID_Program' => 7],
-            ['Course_Name' => 'Teknologi Material', 'Credits' => 3, 'ID_Program' => 7],
+            // Architecture
+            ['Course_Name' => 'Architectural Design', 'Credits' => 3, 'ID_Program' => 7],
+            ['Course_Name' => 'Building Structures', 'Credits' => 3, 'ID_Program' => 7],
+            ['Course_Name' => 'Material Technology', 'Credits' => 3, 'ID_Program' => 7],
 
-            // Teknik Geologi
-            ['Course_Name' => 'Geologi Dasar', 'Credits' => 3, 'ID_Program' => 8],
-            ['Course_Name' => 'Geologi Struktur', 'Credits' => 3, 'ID_Program' => 8],
-            ['Course_Name' => 'Petrologi', 'Credits' => 3, 'ID_Program' => 8],
+            // Geology
+            ['Course_Name' => 'Basic Geology', 'Credits' => 3, 'ID_Program' => 8],
+            ['Course_Name' => 'Structural Geology', 'Credits' => 3, 'ID_Program' => 8],
+            ['Course_Name' => 'Petrology', 'Credits' => 3, 'ID_Program' => 8],
 
-            // Ilmu Hubungan Internasional
-            ['Course_Name' => 'Teori Hubungan Internasional', 'Credits' => 3, 'ID_Program' => 9],
-            ['Course_Name' => 'Diplomasi', 'Credits' => 3, 'ID_Program' => 9],
-            ['Course_Name' => 'Politik Global', 'Credits' => 3, 'ID_Program' => 9],
+            // International Relations
+            ['Course_Name' => 'International Relations Theory', 'Credits' => 3, 'ID_Program' => 9],
+            ['Course_Name' => 'Diplomacy', 'Credits' => 3, 'ID_Program' => 9],
+            ['Course_Name' => 'Global Politics', 'Credits' => 3, 'ID_Program' => 9],
 
-            // Ilmu Komunikasi
-            ['Course_Name' => 'Pengantar Ilmu Komunikasi', 'Credits' => 3, 'ID_Program' => 10],
-            ['Course_Name' => 'Komunikasi Antarbudaya', 'Credits' => 3, 'ID_Program' => 10],
-            ['Course_Name' => 'Jurnalistik', 'Credits' => 3, 'ID_Program' => 10],
+            // Communication Studies
+            ['Course_Name' => 'Introduction to Communication Studies', 'Credits' => 3, 'ID_Program' => 10],
+            ['Course_Name' => 'Intercultural Communication', 'Credits' => 3, 'ID_Program' => 10],
+            ['Course_Name' => 'Journalism', 'Credits' => 3, 'ID_Program' => 10],
 
-            // Pendidikan Dokter Gigi
-            ['Course_Name' => 'Anatomi Gigi', 'Credits' => 3, 'ID_Program' => 11],
-            ['Course_Name' => 'Konservasi Gigi', 'Credits' => 3, 'ID_Program' => 11],
-            ['Course_Name' => 'Ortodonti', 'Credits' => 3, 'ID_Program' => 11],
+            // Dentistry
+            ['Course_Name' => 'Dental Anatomy', 'Credits' => 3, 'ID_Program' => 11],
+            ['Course_Name' => 'Dental Conservation', 'Credits' => 3, 'ID_Program' => 11],
+            ['Course_Name' => 'Orthodontics', 'Credits' => 3, 'ID_Program' => 11],
 
-            // S1 Kesehatan Masyarakat
-            ['Course_Name' => 'Epidemiologi', 'Credits' => 3, 'ID_Program' => 12],
-            ['Course_Name' => 'Biostatistik', 'Credits' => 3, 'ID_Program' => 12],
-            ['Course_Name' => 'Manajemen Kesehatan', 'Credits' => 3, 'ID_Program' => 12],
+            // Public Health
+            ['Course_Name' => 'Epidemiology', 'Credits' => 3, 'ID_Program' => 12],
+            ['Course_Name' => 'Biostatistics', 'Credits' => 3, 'ID_Program' => 12],
+            ['Course_Name' => 'Health Management', 'Credits' => 3, 'ID_Program' => 12],
 
-            // Ilmu Keperawatan
-            ['Course_Name' => 'Dasar Keperawatan', 'Credits' => 3, 'ID_Program' => 13],
-            ['Course_Name' => 'Keperawatan Anak', 'Credits' => 3, 'ID_Program' => 13],
-            ['Course_Name' => 'Keperawatan Komunitas', 'Credits' => 3, 'ID_Program' => 13],
+            // Nursing
+            ['Course_Name' => 'Nursing Fundamentals', 'Credits' => 3, 'ID_Program' => 13],
+            ['Course_Name' => 'Pediatric Nursing', 'Credits' => 3, 'ID_Program' => 13],
+            ['Course_Name' => 'Community Nursing', 'Credits' => 3, 'ID_Program' => 13],
         ];
 
         foreach ($courses as $course) {

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IeActivity;
 use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProgramController extends Controller
 {
@@ -12,7 +14,8 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        return view('dashboard.admin.programs.index');
+        $programs = IeActivity::all();
+        return view('dashboard.admin.programs.index', compact('programs'));
     }
 
     /**
@@ -20,7 +23,7 @@ class ProgramController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.admin.programs.create');
     }
 
     /**
@@ -28,7 +31,23 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'Activity_Name' => 'required|string|max:255',
+            'Country_of_Execution' => 'required|string|max:255',
+            'Execution_Date' => 'required|date',
+            'Participants_Count' => 'required|integer|min:1',
+            'IeActivity_Image' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $validated;
+
+        if ($request->hasFile('IeActivity_Image')) {
+            $data['IeActivity_Image'] = $request->file('IeActivity_Image')->store('images/ie_activities', 'public');
+        }
+
+        IeActivity::create($data);
+
+        return redirect()->route('admin.program.index')->with('success', 'Activity added successfully.');
     }
 
     /**
@@ -42,24 +61,57 @@ class ProgramController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Program $program)
+    public function edit(IeActivity $program)
     {
-        //
+        return view('dashboard.admin.programs.edit', compact('program'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Program $program)
+    public function update(Request $request, IeActivity $program)
     {
-        //
+        // Validasi data dari request
+        $validated = $request->validate([
+            'Activity_Name' => 'required|string|max:255',
+            'Country_of_Execution' => 'required|string|max:255',
+            'Execution_Date' => 'required|date',
+            'Participants_Count' => 'required|integer|min:1',
+            'IeActivity_Image' => 'nullable|image|max:2048',
+        ]);
+
+        // Update data
+        $data = $validated;
+
+        if ($request->hasFile('IeActivity_Image')) {
+            // Hapus gambar lama jika ada
+            if ($program->IeActivity_Image) {
+                Storage::disk('public')->delete($program->IeActivity_Image);
+            }
+
+            $data['IeActivity_Image'] = $request->file('IeActivity_Image')->store('images/ie_activities', 'public');
+        }
+
+        $program->update($data);
+
+        return redirect()->route('admin.program.index')->with('success', 'Activity updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Program $program)
+    public function destroy(IeActivity $program)
     {
-        //
+        // Hapus gambar jika ada
+        if ($program->IeActivity_Image && Storage::exists('public/' . $program->IeActivity_Image)) {
+            Storage::delete('public/' . $program->IeActivity_Image);
+        }
+
+        // Hapus program dari database
+        $program->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('admin.program.index')->with('success', 'Program deleted successfully.');
     }
+
 }

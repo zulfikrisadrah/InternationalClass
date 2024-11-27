@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -12,7 +14,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        return view('dashboard.admin.event.index');
+        $events = Event::all();
+        return view('dashboard.admin.event.index', compact('events'));
     }
 
     /**
@@ -20,7 +23,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.admin.event.create');
     }
 
     /**
@@ -28,8 +31,29 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request
+        $validated = $request->validate([
+            'Event_Title' => 'required|string|max:255',
+            'Event_Content' => 'required|string',
+            'Publication_Date' => 'required|date',
+            'Event_Image' => 'nullable|image|max:2048',
+        ]);
+
+        // Prepare data for storage
+        $data = $validated;
+
+        // Handle file upload if an image is provided
+        if ($request->hasFile('Event_Image')) {
+            $data['Event_Image'] = $request->file('Event_Image')->store('images/events', 'public');
+        }
+
+        // Create the event
+        Event::create($data);
+
+        // Redirect to the event index page with a success message
+        return redirect()->route('admin.event.index')->with('success', 'Event added successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -44,7 +68,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        return view('dashboard.admin.event.edit', compact('event'));
     }
 
     /**
@@ -52,7 +76,28 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+        $validated = $request->validate([
+            'Event_Title' => 'required|string|max:255',
+            'Event_Content' => 'required|string',
+            'Publication_Date' => 'required|date',
+            'Event_Image' => 'nullable|image|max:2048',
+        ]);
+
+        // Prepare data for storage
+        $data = $validated;
+
+        if ($request->hasFile('Event_Image')) {
+            // Hapus gambar lama jika ada
+            if ($event->Event_Image) {
+                Storage::disk('public')->delete($event->Event_Image);
+            }
+
+            $data['Event_Image'] = $request->file('Event_Image')->store('images/events', 'public');
+        }
+
+        $event->update($data);
+
+        return redirect()->route('admin.event.index')->with('success', 'Event updated successfully.');
     }
 
     /**
@@ -60,6 +105,14 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        if ($event->Event_Image && Storage::exists('public/' . $event->Event_Image)) {
+            Storage::delete('public/' . $event->Event_Image);
+        }
+
+        // Hapus program dari database
+        $event->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('admin.event.index')->with('success', 'Event deleted successfully.');
     }
 }

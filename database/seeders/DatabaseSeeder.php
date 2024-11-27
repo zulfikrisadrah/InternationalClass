@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             CollaborationSeeder::class,
             LecturerOutboundSeeder::class,
-            CurriculaSeeder::class
+            CurriculaSeeder::class,
+            EventSeeder::class
         ]);
     }
 }

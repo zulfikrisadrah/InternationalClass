@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('Country_of_Execution', 50);
             $table->date('Execution_Date');
             $table->integer('Participants_Count');
+            $table->string('IeActivity_Image')->nullable();
             $table->unsignedBigInteger('ID_Program');
 
             $table->foreign('ID_Program')->references('ID_Program')->on('programs')->onDelete('cascade');

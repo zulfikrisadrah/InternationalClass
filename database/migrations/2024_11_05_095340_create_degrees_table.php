@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('degrees', function (Blueprint $table) {
             $table->id('ID_Degree');
             $table->string('Degree', 50);
-            $table->string('Country_of_Execution');
-            $table->date('Execution_Date');
             $table->timestamps();
         });
     }

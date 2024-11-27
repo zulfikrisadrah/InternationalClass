@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('Student_ID_Number', 20)->unique('NIM');
             $table->string('Student_Email', 100)->nullable();
             $table->string('Country_of_Origin', 50)->nullable();
+            $table->string('Profile_Photo')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('ID_Program')->nullable();
+            $table->unsignedBigInteger('ID_Program');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('ID_Program')->references('ID_Program')->on('programs')->onDelete('cascade');

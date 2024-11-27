@@ -19,6 +19,7 @@ class StudentSeeder extends Seeder
             'Student_Email' => 'zufasa@unhas.ac.id',
             'Country_of_Origin' => 'Indonesia',
             'user_id' => 3,
+            'ID_Program' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

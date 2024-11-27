@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('Student_UKT_Fee', 10, 2)->nullable();
             $table->decimal('Student_DP_IPI_Fee', 10, 2)->nullable();
             $table->string('Activity_Photo_Link')->nullable();
+            $table->string('Programs_Image')->nullable();
             $table->boolean('International_Accreditation')->default(false);
             $table->unsignedBigInteger('ID_Faculty');
             $table->unsignedBigInteger('ID_Degree');

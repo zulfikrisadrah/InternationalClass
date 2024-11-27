@@ -10,5 +10,6 @@ class News extends Model
         'News_Title',
         'News_Content',
         'Publication_Date',
+        'News_Image'
     ];
 }

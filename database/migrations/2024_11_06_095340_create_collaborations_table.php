@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('collaborations', function (Blueprint $table) {
             $table->id('ID_Collaboration')->primary();
-            $table->string('MoU_MoA_IA_Number', 50)->nullable();
-            $table->string('Collaboration_Title', 100)->nullable();
-            $table->date('Validity_Period')->nullable();
+            $table->string('MoU_MoA_IA_Number', 50);
+            $table->string('Collaboration_Title', 100);
+            $table->date('Validity_Period');
             $table->unsignedBigInteger('ID_Program');
 
             $table->foreign('ID_Program')->references('ID_Program')->on('programs')->onDelete('cascade');

@@ -22,5 +22,6 @@ class Program extends Model
         'Student_DP_IPI_Fee',
         'Activity_Photo_Link',
         'International_Accreditation',
+        'Programs_Image'
     ];
 }

@@ -11,5 +11,6 @@ class Student extends Model
         'Student_ID_Number',
         'Student_Email',
         'Country_of_Origin',
+        'Profile_Photo'
     ];
 }

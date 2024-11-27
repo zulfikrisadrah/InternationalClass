@@ -12,5 +12,6 @@ class Event extends Model
         'Event_Title',
         'Event_Content',
         'Publication_Date',
-        'Event_Image'
+        'Event_Image',
+        'user_id'
     ];}

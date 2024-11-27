@@ -40,6 +40,7 @@ class ProgramController extends Controller
         ]);
 
         $data = $validated;
+        $data['ID_Program'] = 1;
 
         if ($request->hasFile('IeActivity_Image')) {
             $data['IeActivity_Image'] = $request->file('IeActivity_Image')->store('images/ie_activities', 'public');
@@ -82,6 +83,7 @@ class ProgramController extends Controller
 
         // Update data
         $data = $validated;
+        $data['ID_Program'] = 1;
 
         if ($request->hasFile('IeActivity_Image')) {
             // Hapus gambar lama jika ada

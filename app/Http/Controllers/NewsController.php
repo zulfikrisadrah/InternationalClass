@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
@@ -12,7 +13,8 @@ class NewsController extends Controller
      */
     public function index()
     {
-        return view('dashboard.admin.news.index');
+        $news = News::all();
+        return view('dashboard.admin.news.index', compact('news'));
     }
 
     /**
@@ -20,7 +22,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.admin.news.create');
     }
 
     /**
@@ -28,7 +30,23 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'News_Title' => 'required|string|max:255',
+            'News_Content' => 'required|string',
+            'Publication_Date' => today(),
+            'News_Image' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $validated;
+        $data['user_id'] = 1;
+
+        if ($request->hasFile('News_Image')) {
+            $data['News_Image'] = $request->file('News_Image')->store('images/news', 'public');
+        }
+
+        News::create($data);
+
+        return redirect()->route('admin.news.index')->with('success', 'News added successfully.');
     }
 
     /**
@@ -44,7 +62,7 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        //
+        return view('dashboard.admin.news.edit', compact('news'));
     }
 
     /**
@@ -52,7 +70,28 @@ class NewsController extends Controller
      */
     public function update(Request $request, News $news)
     {
-        //
+        $validated = $request->validate([
+            'News_Title' => 'required|string|max:255',
+            'News_Content' => 'required|string',
+            'Publication_Date' => today(),
+            'News_Image' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $validated;
+        $data['user_id'] = 1;
+
+        if ($request->hasFile('News_Image')) {
+            // Hapus gambar lama jika ada
+            if ($news->News_Image) {
+                Storage::disk('public')->delete($news->News_Image);
+            }
+
+            $data['News_Image'] = $request->file('News_Image')->store('images/news', 'public');
+        }
+
+        $news->update($data);
+
+        return redirect()->route('admin.news.index')->with('success', 'News updated successfully.');
     }
 
     /**
@@ -60,6 +99,14 @@ class NewsController extends Controller
      */
     public function destroy(News $news)
     {
-        //
+        if ($news->News_Image && Storage::exists('public/' . $news->News_Image)) {
+            Storage::delete('public/' . $news->News_Image);
+        }
+
+        // Hapus program dari database
+        $news->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('admin.news.index')->with('success', 'News deleted successfully.');
     }
 }

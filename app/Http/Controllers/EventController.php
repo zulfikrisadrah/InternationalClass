@@ -41,6 +41,7 @@ class EventController extends Controller
 
         // Prepare data for storage
         $data = $validated;
+        $data['user_id'] = 1;
 
         // Handle file upload if an image is provided
         if ($request->hasFile('Event_Image')) {
@@ -85,6 +86,7 @@ class EventController extends Controller
 
         // Prepare data for storage
         $data = $validated;
+        $data['user_id'] = 1;
 
         if ($request->hasFile('Event_Image')) {
             // Hapus gambar lama jika ada

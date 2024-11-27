@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalenderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ClassController;
@@ -7,7 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\StudyPlanController;
 
 Route::get('/', function () {
     return view('home');
@@ -64,8 +65,10 @@ Route::middleware('auth')->group(function () {
             Route::resource('program', ProgramController::class);
         });
     });
-    // Route::prefix('student')->name('student.')->group(function () {
-    // });
+    Route::prefix('student')->name('student.')->group(function () {
+        Route::resource('studyPlan', StudyPlanController::class);
+        Route::resource('calender', CalenderController::class);
+    });
 });
 
 require __DIR__ . '/auth.php';

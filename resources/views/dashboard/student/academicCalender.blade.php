@@ -32,7 +32,7 @@
                             <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/62x62" alt="Event Image">
                             <div>
                                 <div class="font-bold text-sm">Weekend Festival</div>
-                                <div class="text-gray-500 text-xs">16 October 2019 at 5:00 PM</div>
+                                <div class="text-gray-500 text-xs">16 October 2024 at 5:00 PM</div>
                                 <div class="text-gray-500 text-xs">853 Moore Flats Suite 158, Sweden</div>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                 <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 border border-gray-300 w-full lg:w-2/3">
                     <!-- Calendar Header -->
                     <div class="flex justify-between items-center border-b pb-2 mb-4">
-                        <div class="text-xl font-bold text-[#202224]">October 2019</div>
+                        <div class="text-xl font-bold text-[#202224]">October 2024</div>
                         <div class="flex items-center space-x-4">
                             <button class="text-xs font-semibold">Day</button>
                             <button class="text-xs font-semibold">Week</button>

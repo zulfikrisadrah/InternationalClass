@@ -35,7 +35,7 @@
             </li>
             <li class="mt-12 w-full">
                 <a href="{{ route('admin.news.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('news') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('admin.news.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]"> <x-ionicon-newspaper /> </i>
                     <span class="grow shrink w-[142px]">Informations</span>
                 </a>

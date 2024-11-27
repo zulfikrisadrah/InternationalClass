@@ -8,7 +8,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\StudyPlanController;
+use App\Models\Event;
 
 Route::get('/', function () {
     return view('home');
@@ -44,6 +46,9 @@ Route::middleware('auth')->group(function () {
         Route::middleware('can:manage news')->group(function () {
             Route::resource('news', NewsController::class);
         });
+        Route::middleware('can:manage news')->group(function () {
+            Route::resource('event', EventController::class);
+        });
         Route::middleware('can:manage user')->group(function () {
             Route::resource('user', UserController::class);
         });
@@ -57,6 +62,9 @@ Route::middleware('auth')->group(function () {
         });
         Route::middleware('can:manage news')->group(function () {
             Route::resource('news', NewsController::class);
+        });
+        Route::middleware('can:manage news')->group(function () {
+            Route::resource('event', EventController::class);
         });
         Route::middleware('can:manage user')->group(function () {
             Route::resource('user', UserController::class);

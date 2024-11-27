@@ -12,7 +12,7 @@ class NewsController extends Controller
      */
     public function index()
     {
-        return view('dashboard.admin.information');
+        return view('dashboard.admin.news.index');
     }
 
     /**

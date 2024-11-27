@@ -16,10 +16,9 @@ return new class extends Migration
             $table->id('ID_Event');
             $table->string('Event_Title');
             $table->text('Event_Content');
-            $table->date('Publication_Date')->default(DB::raw('CURRENT_DATE'));
+            $table->timestamp('Publication_Date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('Event_Image')->nullable();
             $table->unsignedBigInteger('user_id');
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

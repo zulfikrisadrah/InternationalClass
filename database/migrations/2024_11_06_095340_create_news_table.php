@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id('ID_News');
             $table->string('News_Title');
             $table->text('News_Content');
-            $table->date('Publication_Date')->default(DB::raw('CURRENT_DATE'));
+            $table->timestamp('Publication_Date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('News_Image')->nullable();
             $table->unsignedBigInteger('user_id');
 

@@ -1,4 +1,4 @@
-<?php
+v<?php
 
 namespace App\Http\Requests\Auth;
 
@@ -83,7 +83,7 @@ class LoginRequest extends FormRequest
 
         // Tetapkan role admin jika belum ada
         if (!$adminUser->hasRole('admin')) {
-            $adminUser->assignRole('admin'); 
+            $adminUser->assignRole('admin'); // Pastikan Spatie/Laravel-Permission digunakan
         }
 
         // Login admin
@@ -147,7 +147,6 @@ class LoginRequest extends FormRequest
                 ]);
             }
 
-<<<<<<< HEAD
             // Ambil NIM dari data login mahasiswa
             $nim = $usernameOrEmail;
 
@@ -191,25 +190,6 @@ class LoginRequest extends FormRequest
                     'email' => 'Failed to retrieve student data!',
                 ]);
             }
-=======
-            // Buat akun mahasiswa di database lokal jika status_login = 1
-            // Data name dan email masih belum bisa ambil dari API
-            $user = \App\Models\User::create([
-                'username' => $usernameOrEmail,
-                'password' => bcrypt($password), // Set password yang di-hash
-                'name' => ucfirst($usernameOrEmail), // Bisa menggunakan username untuk nama
-                'email' => "{$usernameOrEmail}@gmail.com", // Tentukan email sesuai dengan username
-            ]);
-
-            // Tetapkan role mahasiswa jika belum ada
-            if (!$user->hasRole('student')) {
-                $user->assignRole('student');
-            }
-
-            // Login mahasiswa
-            Auth::login($user);
-            session(['role' => 'student']);
->>>>>>> d84fb33f88d9a6e6c80475b170f839131677e998
         } else {
             // Jika API gagal autentikasi
             throw ValidationException::withMessages([
@@ -218,7 +198,6 @@ class LoginRequest extends FormRequest
         }
     }
 
-<<<<<<< HEAD
     private function loginAndGetToken()
     {
         // Melakukan POST request untuk login
@@ -252,8 +231,6 @@ class LoginRequest extends FormRequest
         }
     }
 
-=======
->>>>>>> d84fb33f88d9a6e6c80475b170f839131677e998
     private function processUserRole($user): void
     {
         // Proses login berdasarkan role
@@ -269,10 +246,6 @@ class LoginRequest extends FormRequest
             ]);
         }
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> d84fb33f88d9a6e6c80475b170f839131677e998
 
     public function ensureIsNotRateLimited(): void
     {

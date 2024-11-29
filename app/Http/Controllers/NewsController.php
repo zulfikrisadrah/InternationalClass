@@ -13,7 +13,14 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::all();
+        $user = auth()->user();
+
+        if ($user->hasRole('staff')) {
+            $news = News::where('user_id', $user->id)->get();
+        } else {
+            $news = News::all();
+        }
+
         return view('dashboard.admin.news.index', compact('news'));
     }
 
@@ -38,7 +45,7 @@ class NewsController extends Controller
         ]);
 
         $data = $validated;
-        $data['user_id'] = 1;
+        $data['user_id'] = auth()->id();
 
         if ($request->hasFile('News_Image')) {
             $data['News_Image'] = $request->file('News_Image')->store('images/news', 'public');
@@ -78,7 +85,6 @@ class NewsController extends Controller
         ]);
 
         $data = $validated;
-        $data['user_id'] = 1;
 
         if ($request->hasFile('News_Image')) {
             // Hapus gambar lama jika ada

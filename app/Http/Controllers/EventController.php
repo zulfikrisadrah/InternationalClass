@@ -14,7 +14,14 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::all();
+        $user = auth()->user();
+
+        if ($user->hasRole('staff')) {
+            $events = Event::where('user_id', $user->id)->get();
+        } else {
+            $events = Event::all();
+        }
+
         return view('dashboard.admin.event.index', compact('events'));
     }
 
@@ -35,13 +42,13 @@ class EventController extends Controller
         $validated = $request->validate([
             'Event_Title' => 'required|string|max:255',
             'Event_Content' => 'required|string',
-            'Publication_Date' => 'required|date',
+            'Publication_Date' => today(),
             'Event_Image' => 'nullable|image|max:2048',
         ]);
 
         // Prepare data for storage
         $data = $validated;
-        $data['user_id'] = 1;
+        $data['user_id'] = auth()->id();
 
         // Handle file upload if an image is provided
         if ($request->hasFile('Event_Image')) {
@@ -80,13 +87,12 @@ class EventController extends Controller
         $validated = $request->validate([
             'Event_Title' => 'required|string|max:255',
             'Event_Content' => 'required|string',
-            'Publication_Date' => 'required|date',
+            'Publication_Date' => today(),
             'Event_Image' => 'nullable|image|max:2048',
         ]);
 
         // Prepare data for storage
         $data = $validated;
-        $data['user_id'] = 1;
 
         if ($request->hasFile('Event_Image')) {
             // Hapus gambar lama jika ada

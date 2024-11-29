@@ -4,94 +4,97 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         if (Auth::check()) {
             $user = Auth::user();
 
+            // Cek apakah user memiliki peran admin
             if ($user->hasRole('admin')) {
                 return view('dashboard.admin.home');
             }
 
+            // Cek apakah user memiliki peran staff
             if ($user->hasRole('staff')) {
                 return view('dashboard.staff.home');
             }
 
+            // Cek apakah user memiliki peran student
             if ($user->hasRole('student')) {
-                return view('dashboard.student.home');
-            } else {
-                return redirect()->route('login');
+                // Login dan dapatkan access_token menggunakan akun admin
+                $tokenData = $this->loginAndGetToken();
+
+                // Jika login berhasil dan mendapatkan access_token
+                if ($tokenData['status'] == 200) {
+                    $accessToken = $tokenData['access_token'];
+
+                    // Panggil API untuk mendapatkan data transkrip mahasiswa (indeks_prestasi_kumulatif)
+                    $response = Http::withOptions(['verify' => false])
+                        ->withHeaders([
+                            'Authorization' => 'Bearer ' . $accessToken
+                        ])
+                        ->withBody(json_encode([
+                            'nim' => $user->username
+                        ]), 'application/json')
+                        ->get('https://sipakamase.unhas.ac.id:8107/get_transkrip_mahasiswa');
+
+                    // Cek apakah API berhasil
+                    if ($response->successful()) {
+                        $data = $response->json();
+                        $indeksPrestasiKumulatif = $data['current_indeks_prestasi']['indeks_prestasi_kumulatif'] ?? 'N/A';
+
+                        // Pass data ke view
+                        return view('dashboard.student.home', compact('indeksPrestasiKumulatif'));
+                    } else {
+                        // Jika API gagal
+                        return view('dashboard.student.home')->with('error', 'Failed to retrieve data.');
+                    }
+                } else {
+                    // Jika login gagal atau token tidak ditemukan
+                    return view('dashboard.student.home')->with('error', 'Login failed: ' . $tokenData['message']);
+                }
             }
         }
 
+        // Jika tidak ada role yang valid
+        return redirect()->route('login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Fungsi untuk login dan mendapatkan access token
+    private function loginAndGetToken()
     {
-        //
-    }
+        // Melakukan POST request untuk login
+        $loginResponse = Http::withOptions(['verify' => false])
+            ->post('https://sipakamase.unhas.ac.id:8107/login', [
+                'username' => 'admin', // Gantilah dengan username yang benar
+                'password' => 'UnhasTamalanreaMakassar', // Gantilah dengan password yang benar
+            ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Jika login berhasil, ambil token
+        if ($loginResponse->successful()) {
+            $loginData = $loginResponse->json();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        // Pemetaan ID ke view
-        $views = [
-            'class' => 'dashboard.admin.class',
-            'program' => 'dashboard.admin.program',
-            'information' => 'dashboard.admin.information',
-            'user' => 'dashboard.admin.user',
-        ];
-
-        // Validasi ID dan render view yang sesuai
-        if (array_key_exists($id, $views)) {
-            return view($views[$id]);
+            if (isset($loginData['access_token'])) {
+                return [
+                    'status' => $loginResponse->status(),  // Status HTTP (200 jika berhasil)
+                    'access_token' => $loginData['access_token'],
+                    'message' => 'Login berhasil',
+                ];
+            } else {
+                return [
+                    'status' => $loginResponse->status(),
+                    'message' => 'Access token tidak ditemukan.',
+                ];
+            }
+        } else {
+            return [
+                'status' => $loginResponse->status(),
+                'message' => 'Login gagal. Status: ' . $loginResponse->status(),
+            ];
         }
-
-        // Jika ID tidak valid
-        abort(404, 'Page not found.');
-    }
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

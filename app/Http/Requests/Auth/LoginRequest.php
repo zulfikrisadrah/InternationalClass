@@ -112,54 +112,125 @@ class LoginRequest extends FormRequest
             $this->authenticateStudentViaAPI($usernameOrEmail, $password);
         }
     }
-    
+
     private function authenticateStudentViaAPI(string $usernameOrEmail, string $password): void
     {
+        // Ambil token akses dengan memanggil loginAndGetToken
+        $tokenResponse = $this->loginAndGetToken();
+
+        // Cek apakah token berhasil didapat
+        if ($tokenResponse['status'] != 200) {
+            throw ValidationException::withMessages([
+                'email' => 'Login failed: ' . $tokenResponse['message'],
+            ]);
+        }
+
+        $accessToken = $tokenResponse['access_token'];
+
         // Panggil API login_mahasiswa untuk autentikasi mahasiswa
         $response = Http::withOptions(['verify' => false])->post('https://sipakamase.unhas.ac.id:8107/login_mahasiswa', [
             'username' => $usernameOrEmail,
             'password' => $password,
         ]);
-    
+
         // Cek apakah respon API berhasil
         if ($response->successful()) {
             $studentData = $response->json();
-    
+
             // Periksa status_login dari respon API
             $statusLogin = $studentData['status_login'] ?? null;
-    
+
             if ($statusLogin != 1) {
                 // Jika status_login tidak valid, lempar exception
                 throw ValidationException::withMessages([
                     'email' => 'Invalid Student Username or Password!',
                 ]);
             }
-    
-            // Buat akun mahasiswa di database lokal jika status_login = 1
-            // Data name dan email masih belum bisa ambil dari API
-            $user = \App\Models\User::create([
-                'username' => $usernameOrEmail,
-                'password' => bcrypt($password), // Set password yang di-hash
-                'name' => ucfirst($usernameOrEmail), // Bisa menggunakan username untuk nama
-                'email' => "{$usernameOrEmail}@gmail.com", // Tentukan email sesuai dengan username
-            ]);
-    
-            // Tetapkan role mahasiswa jika belum ada
-            if (!$user->hasRole('student')) {
-                $user->assignRole('student');
+
+            // Ambil NIM dari data login mahasiswa
+            $nim = $usernameOrEmail;
+
+            // Panggil API untuk mendapatkan data mahasiswa berdasarkan NIM dengan menggunakan access token
+            $mahasiswaResponse = Http::withOptions(['verify' => false])
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken
+            ])
+            ->withBody(json_encode([
+                'nim' => 'H071221082',
+            ]), 'application/json')
+            ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+
+            // Cek apakah respon API untuk data mahasiswa berhasil
+            if ($mahasiswaResponse->successful()) {
+                $mahasiswaData = $mahasiswaResponse->json();
+
+                // Ambil nama_mahasiswa dan email dari data mahasiswa
+                $namaMahasiswa = $mahasiswaData['mahasiswas'][0]['nama_mahasiswa'] ?? 'No Name';
+                $emailMahasiswa = $mahasiswaData['mahasiswas'][0]['email'] ?? "{$usernameOrEmail}@unhas.ac.id";
+
+                // Buat akun mahasiswa di database lokal jika status_login = 1
+                $user = \App\Models\User::create([
+                    'username' => $usernameOrEmail,
+                    'password' => bcrypt($password), // Set password yang di-hash
+                    'name' => ucfirst($namaMahasiswa), // Gunakan nama mahasiswa
+                    'email' => $emailMahasiswa, // Gunakan email yang didapat dari API
+                ]);
+
+                // Tetapkan role mahasiswa jika belum ada
+                if (!$user->hasRole('student')) {
+                    $user->assignRole('student');
+                }
+
+                // Login mahasiswa
+                Auth::login($user);
+                session(['role' => 'student']);
+            } else {
+                // Jika API gagal atau data tidak valid
+                throw ValidationException::withMessages([
+                    'email' => 'Failed to retrieve student data!',
+                ]);
             }
-    
-            // Login mahasiswa
-            Auth::login($user);
-            session(['role' => 'student']);
         } else {
-            // Jika API gagal atau data tidak valid
+            // Jika API gagal autentikasi
             throw ValidationException::withMessages([
                 'email' => 'Invalid Student Username or Password!',
             ]);
         }
     }
-    
+
+    private function loginAndGetToken()
+    {
+        // Melakukan POST request untuk login
+        $loginResponse = Http::withOptions(['verify' => false])
+            ->post('https://sipakamase.unhas.ac.id:8107/login', [
+                'username' => 'admin', // Gantilah dengan username yang benar
+                'password' => 'UnhasTamalanreaMakassar', // Gantilah dengan password yang benar
+            ]);
+
+        // Jika login berhasil, ambil token
+        if ($loginResponse->successful()) {
+            $loginData = $loginResponse->json();
+
+            if (isset($loginData['access_token'])) {
+                return [
+                    'status' => $loginResponse->status(),  // Status HTTP (200 jika berhasil)
+                    'access_token' => $loginData['access_token'],
+                    'message' => 'Login berhasil',
+                ];
+            } else {
+                return [
+                    'status' => $loginResponse->status(),
+                    'message' => 'Access token tidak ditemukan.',
+                ];
+            }
+        } else {
+            return [
+                'status' => $loginResponse->status(),
+                'message' => 'Login gagal. Status: ' . $loginResponse->status(),
+            ];
+        }
+    }
+
     private function processUserRole($user): void
     {
         // Proses login berdasarkan role
@@ -175,7 +246,6 @@ class LoginRequest extends FormRequest
             ]);
         }
     }
-    
 
     public function ensureIsNotRateLimited(): void
     {
@@ -197,6 +267,6 @@ class LoginRequest extends FormRequest
 
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email'))) . '|' . $this->ip();
     }
 }

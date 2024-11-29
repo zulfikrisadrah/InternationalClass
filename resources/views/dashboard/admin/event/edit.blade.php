@@ -36,13 +36,6 @@
                         <x-input-error :messages="$errors->get('Event_Content')" class="mt-2" />
                     </div>
 
-                    <!-- Publication Date -->
-                    <div class="mt-4">
-                        <x-input-label for="Publication_Date" :value="__('Publication Date')" />
-                        <x-text-input id="Publication_Date" class="block mt-1 w-full" type="date" name="Publication_Date" :value="old('Publication_Date', $event->Publication_Date)" required autocomplete="Publication_Date" />
-                        <x-input-error :messages="$errors->get('Publication_Date')" class="mt-2" />
-                    </div>
-
                     <!-- Event Image -->
                     <div class="mt-4">
                         <x-input-label for="Event_Image" :value="__('Event Image')" />

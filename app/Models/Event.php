@@ -14,4 +14,15 @@ class Event extends Model
         'Publication_Date',
         'Event_Image',
         'user_id'
-    ];}
+    ];
+
+    protected $casts = [
+        'Publication_Date' => 'datetime',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+

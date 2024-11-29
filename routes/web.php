@@ -1,19 +1,20 @@
 <?php
 
-use App\Http\Controllers\CalenderController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
-use App\Http\Controllers\ClassController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProgramController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClassController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CalenderController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudyPlanController;
+use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\ProgramController;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [LandingPageController::class, 'index'])->name('landing.page');
+
 Route::get('/event', function () {
     return view('event');
 });
@@ -69,7 +70,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('user', UserController::class);
         });
         Route::middleware('can:manage program')->group(function () {
-            Route::resource('program', ProgramController::class);
+            Route::resource('Program', ProgramController::class);
         });
     });
     Route::prefix('student')->name('student.')->group(function () {

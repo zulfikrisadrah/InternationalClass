@@ -20,4 +20,9 @@ class News extends Model
         'Publication_Date' => 'datetime',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

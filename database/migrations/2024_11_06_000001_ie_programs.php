@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('degrees', function (Blueprint $table) {
-            $table->id('ID_Degree');
-            $table->string('Degree', 50);
+        Schema::create('ie_programs', function (Blueprint $table) {
+            $table->id('ID_ie_program');
+            $table->string('ie_program_name', 50);
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('degrees');
+        Schema::dropIfExists('courses');
     }
 };

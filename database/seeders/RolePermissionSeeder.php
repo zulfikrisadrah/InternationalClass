@@ -29,13 +29,7 @@ class RolePermissionSeeder extends Seeder
 
         // Membuat peran 'admin' dan menetapkan pengguna
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $adminUser = User::create([
-            'name' => 'admin',
-            'email' => 'admin1@gmail.com',
-            'password' => bcrypt('123'),
-            'username' => "admin1"
-        ]);
-        $adminUser->assignRole('admin');  // Menetapkan peran admin kepada pengguna admin
+        $adminRole->syncPermissions(Permission::all());
 
         // Membuat peran 'staff' dan menetapkan izin untuk peran ini
         $staffRole = Role::firstOrCreate(['name' => 'staff']);
@@ -52,15 +46,5 @@ class RolePermissionSeeder extends Seeder
             'username' => "staff"
         ]);
         $staffUser->assignRole('staff'); // Menetapkan peran staff kepada pengguna staff
-
-        // Membuat peran 'student' dan menetapkan pengguna
-        $studentRole = Role::firstOrCreate(['name' => 'student']);
-        $studentUser = User::create([
-            'name' => 'student',
-            'email' => 'student@gmail.com',
-            'password' => bcrypt('123'),
-            'username' => "student"
-        ]);
-        $studentUser->assignRole('student'); // Menetapkan peran student kepada pengguna student
     }
 }

@@ -75,82 +75,22 @@
 
         <section class="mx-[70px] my-12" data-aos="fade-up">
             <!-- Study Program Section -->
-            <h2 class="text-bluePrimary text-3xl font-bold mt-12" data-aos="fade-right" data-aos-duration="1200">Study
-                Program</h2>
+            <h2 class="text-bluePrimary text-3xl font-bold mt-12" data-aos="fade-right" data-aos-duration="1200">
+                Study Program
+            </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
                 <!-- Program Cards -->
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="200">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
+                @foreach ($programs as $index => $program)
+                    <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="{{ 200 * ($index + 1) }}">
+                        <figure>
+                            <img src="{{ $program['study_programs_Image'] }}" alt="{{ $program['study_program_Name'] }}" class="w-full rounded-t-lg">
+                        </figure>
+                        <div class="card-body p-4">
+                            <h3 class="mt-2 text-lg font-semibold">{{ $program['study_program_Name'] }}</h3>
+                            <p class="text-sm">{{ $program->faculty->Faculty_Name }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="400">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
-                    </div>
-                </div>
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="600">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
-                    </div>
-                </div>
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="800">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
-                    </div>
-                </div>
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="1000">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
-                    </div>
-                </div>
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="1200">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
-                    </div>
-                </div>
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="1400">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
-                    </div>
-                </div>
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left" data-aos-delay="1600">
-                    <figure>
-                        <img src="images/fkg.jpg" alt="S1 Pendidikan Dokter" class="w-full rounded-t-lg">
-                    </figure>
-                    <div class="card-body p-4">
-                        <h3 class="mt-2 text-lg font-semibold">S1 Pendidikan Dokter</h3>
-                        <p class="text-sm">Fakultas Kedokteran</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </section>
 

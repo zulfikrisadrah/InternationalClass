@@ -13,10 +13,17 @@ class ProgramController extends Controller
      */
     public function index()
     {
-        $programs = Program::all();
-        return view('dashboard.admin.programs.index', compact('programs'));
-    }
 
+        $user = auth()->user();
+        $programs = Program::all();
+        if ($user->hasRole('admin') || $user->hasRole('staff')) {
+
+
+            return view('dashboard.admin.programs.index', compact('programs'));
+        } else {
+            return view('dashboard.student.programs.index', compact('programs'));
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -114,5 +121,4 @@ class ProgramController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->route('admin.program.index')->with('success', 'Program deleted successfully.');
     }
-
 }

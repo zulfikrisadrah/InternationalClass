@@ -70,12 +70,13 @@ Route::middleware('auth')->group(function () {
             Route::resource('user', UserController::class);
         });
         Route::middleware('can:manage program')->group(function () {
-            Route::resource('Program', ProgramController::class);
+            Route::resource('program', ProgramController::class);
         });
     });
     Route::prefix('student')->name('student.')->group(function () {
         Route::resource('studyPlan', StudyPlanController::class);
         Route::resource('calender', CalenderController::class);
+        Route::get('program', [ProgramController::class, 'index'])->name('program.index');
     });
 });
 

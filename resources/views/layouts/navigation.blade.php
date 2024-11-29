@@ -139,14 +139,27 @@
                     class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
                     <div class="flex gap-1">
                         <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
-                            <<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path
                                     d="M17 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9V3H15V1H17V3ZM4 9V19H20V9H4ZM6 13H11V17H6V13Z">
-                                </path></svg>
+                                </path>
+                            </svg>
                         </i>
                     </div>
                     <span
                         class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
+                </a>
+            </li>
+            <li class="mt-12 w-full">
+                <a href="{{ route('student.program.index') }}"
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.program.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                            <path
+                                d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z" />
+                        </svg>
+                    </i>
+                    <span class="grow shrink w-[142px]">Programs</span>
                 </a>
             </li>
             <li class="mt-12 w-full">

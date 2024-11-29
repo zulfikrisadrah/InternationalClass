@@ -156,7 +156,7 @@ class LoginRequest extends FormRequest
                     'Authorization' => 'Bearer ' . $accessToken
                 ])
                 ->withBody(json_encode([
-                    'nim' => 'H071221082',
+                    'nim' => $nim,
                 ]), 'application/json')
                 ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
 

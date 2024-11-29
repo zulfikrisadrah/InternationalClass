@@ -121,10 +121,21 @@ class LoginRequest extends FormRequest
             'password' => $password,
         ]);
     
+        // Cek apakah respon API berhasil
         if ($response->successful()) {
             $studentData = $response->json();
     
-            // Buat akun mahasiswa di database lokal jika data valid dari API
+            // Periksa status_login dari respon API
+            $statusLogin = $studentData['status_login'] ?? null;
+    
+            if ($statusLogin != 1) {
+                // Jika status_login tidak valid, lempar exception
+                throw ValidationException::withMessages([
+                    'email' => 'Invalid Student Username or Password!',
+                ]);
+            }
+    
+            // Buat akun mahasiswa di database lokal jika status_login = 1
             // Data name dan email masih belum bisa ambil dari API
             $user = \App\Models\User::create([
                 'username' => $usernameOrEmail,

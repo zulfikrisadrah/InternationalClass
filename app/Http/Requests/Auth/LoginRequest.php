@@ -1,4 +1,4 @@
-v<?php
+<?php
 
 namespace App\Http\Requests\Auth;
 
@@ -152,13 +152,13 @@ class LoginRequest extends FormRequest
 
             // Panggil API untuk mendapatkan data mahasiswa berdasarkan NIM dengan menggunakan access token
             $mahasiswaResponse = Http::withOptions(['verify' => false])
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken
-            ])
-            ->withBody(json_encode([
-                'nim' => 'H071221082',
-            ]), 'application/json')
-            ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $accessToken
+                ])
+                ->withBody(json_encode([
+                    'nim' => 'H071221082',
+                ]), 'application/json')
+                ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
 
             // Cek apakah respon API untuk data mahasiswa berhasil
             if ($mahasiswaResponse->successful()) {

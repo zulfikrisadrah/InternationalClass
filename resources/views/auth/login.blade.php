@@ -17,12 +17,12 @@
                 <!-- Email Address -->
                 <div class="mb-4">
                     <label for="email" class="block self-start mb-1 text-sm font-medium text-stone-900">
-                        Email
+                        Username
                     </label>
-                    <input type="email" id="email" name="email" placeholder="Username or Email" :value="old('email')" class="w-full px-9 py-2.5 text-sm font-light bg-stone-400 bg-opacity-10 rounded-[100px] text-zinc-500 max-md:px-5 max-md:max-w-full" required autofocus autocomplete="username" />
+                    <input type="text" id="email" name="email" placeholder="Username" :value="old('email')" required autofocus autocomplete="username" class="w-full px-9 py-2.5 text-sm font-light bg-stone-400 bg-opacity-10 rounded-[100px] text-zinc-500 max-md:px-5 max-md:max-w-full" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
-
+                
                 <!-- Password -->
                 <div class="mb-4">
                     <label for="password" class="block self-start mb-1 text-sm font-medium text-stone-900">

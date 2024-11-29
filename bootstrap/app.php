@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use Barryvdh\Debugbar\Middleware\Debugbar;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -15,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            Debugbar::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

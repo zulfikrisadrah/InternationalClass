@@ -10,7 +10,6 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\StudyPlanController;
-use App\Models\Event;
 
 Route::get('/', function () {
     return view('home');

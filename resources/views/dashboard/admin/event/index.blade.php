@@ -3,7 +3,7 @@
         @include('dashboard.partials.header')
     </x-slot>
 
-    <div class="flex flex-row justify-between items-center">
+    <div class="flex flex-row justify-between items-center py-12">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Manage Events') }}
         </h2>

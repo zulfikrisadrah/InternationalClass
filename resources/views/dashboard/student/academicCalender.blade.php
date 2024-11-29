@@ -53,9 +53,9 @@
 
                 <!-- Right Section for Calendar -->
                 <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 border border-gray-300 w-full lg:w-2/3">
-                    <!-- Calendar Header -->
+                    -- Calendar Header -->
                     <div class="flex justify-between items-center border-b pb-2 mb-4">
-                        <div class="text-xl font-bold text-[#202224]">October 2024</div>
+                        <div class="text-xl font-bold text-[#202224]">October </div>
                         <div class="flex items-center space-x-4">
                             <button class="text-xs font-semibold">Day</button>
                             <button class="text-xs font-semibold">Week</button>

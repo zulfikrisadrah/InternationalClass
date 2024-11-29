@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ie_activities', function (Blueprint $table) {
-            $table->id('ID_Activity');
-            $table->string('Activity_Name');
+        Schema::create('programs', function (Blueprint $table) {
+            $table->id('ID_program');
+            $table->string('program_Name');
             $table->string('Country_of_Execution', 50);
             $table->date('Execution_Date');
             $table->integer('Participants_Count');
-            $table->string('IeActivity_Image')->nullable();
-            $table->unsignedBigInteger('ID_Program');
+            $table->string('program_Image')->nullable();
+            $table->unsignedBigInteger('ID_Ie_program');
 
-            $table->foreign('ID_Program')->references('ID_Program')->on('programs')->onDelete('cascade');
+            $table->foreign('ID_Ie_program')->references('ID_Ie_program')->on('ie_programs')->onDelete('cascade');
             $table->timestamps();
         });
     }

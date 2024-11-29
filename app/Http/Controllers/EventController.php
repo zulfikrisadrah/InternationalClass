@@ -14,7 +14,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth()->user();
 
         if ($user->hasRole('staff')) {
             $events = Event::where('user_id', $user->id)->get();

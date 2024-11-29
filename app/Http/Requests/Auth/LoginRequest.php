@@ -51,26 +51,26 @@ class LoginRequest extends FormRequest
             'username' => $username,
             'password' => $password,
         ]);
-    
+
         if (!$response->successful()) {
             throw ValidationException::withMessages([
                 'email' => 'Invalid Admin Username or Password!',
             ]);
         }
-    
+
         $accessToken = $response->json('access_token');
         if (!$accessToken) {
             throw ValidationException::withMessages([
                 'email' => 'Failed to retrieve access token!',
             ]);
         }
-    
+
         // Simpan token API di sesi
         Session::put('access_token', $accessToken);
-    
+
         // Generate email sesuai dengan username
         $email = "{$username}@gmail.com";
-    
+
         // Cek apakah user admin sudah ada atau buat jika belum
         $adminUser = \App\Models\User::firstOrCreate(
             ['username' => "admin"],
@@ -80,15 +80,15 @@ class LoginRequest extends FormRequest
                 'password' => bcrypt($password), // Password di-hash
             ]
         );
-    
+
         // Tetapkan role admin jika belum ada
         if (!$adminUser->hasRole('admin')) {
-            $adminUser->assignRole('admin'); // Pastikan Spatie/Laravel-Permission digunakan
+            $adminUser->assignRole('admin'); 
         }
-    
+
         // Login admin
         Auth::login($adminUser);
-    
+
         // Tetapkan role untuk sesi
         session(['role' => 'admin']);
     }
@@ -97,7 +97,7 @@ class LoginRequest extends FormRequest
     {
         // Cek user di database lokal
         $user = \App\Models\User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
-    
+
         if ($user) {
             // Jika user ditemukan, verifikasi password dan role
             if (\Hash::check($password, $user->password)) {
@@ -112,7 +112,7 @@ class LoginRequest extends FormRequest
             $this->authenticateStudentViaAPI($usernameOrEmail, $password);
         }
     }
-    
+
     private function authenticateStudentViaAPI(string $usernameOrEmail, string $password): void
     {
         // Panggil API login_mahasiswa untuk autentikasi mahasiswa
@@ -120,21 +120,21 @@ class LoginRequest extends FormRequest
             'username' => $usernameOrEmail,
             'password' => $password,
         ]);
-    
+
         // Cek apakah respon API berhasil
         if ($response->successful()) {
             $studentData = $response->json();
-    
+
             // Periksa status_login dari respon API
             $statusLogin = $studentData['status_login'] ?? null;
-    
+
             if ($statusLogin != 1) {
                 // Jika status_login tidak valid, lempar exception
                 throw ValidationException::withMessages([
                     'email' => 'Invalid Student Username or Password!',
                 ]);
             }
-    
+
             // Buat akun mahasiswa di database lokal jika status_login = 1
             // Data name dan email masih belum bisa ambil dari API
             $user = \App\Models\User::create([
@@ -143,12 +143,12 @@ class LoginRequest extends FormRequest
                 'name' => ucfirst($usernameOrEmail), // Bisa menggunakan username untuk nama
                 'email' => "{$usernameOrEmail}@gmail.com", // Tentukan email sesuai dengan username
             ]);
-    
+
             // Tetapkan role mahasiswa jika belum ada
             if (!$user->hasRole('student')) {
                 $user->assignRole('student');
             }
-    
+
             // Login mahasiswa
             Auth::login($user);
             session(['role' => 'student']);
@@ -159,7 +159,7 @@ class LoginRequest extends FormRequest
             ]);
         }
     }
-    
+
     private function processUserRole($user): void
     {
         // Proses login berdasarkan role
@@ -175,7 +175,7 @@ class LoginRequest extends FormRequest
             ]);
         }
     }
-    
+
 
     public function ensureIsNotRateLimited(): void
     {

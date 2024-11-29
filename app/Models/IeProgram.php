@@ -12,6 +12,6 @@ class IeProgram extends Model
 
     public function programs()
     {
-        return $this->hasMany(StudyProgram::class, 'ID_Ie_program', 'ID_Ie_program');
+        return $this->hasMany(StudyProgram::class, 'ID_Ie_program');
     }
 }

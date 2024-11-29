@@ -22,9 +22,9 @@
 
                     <!-- Activity Name -->
                     <div>
-                        <x-input-label for="Activity_Name" :value="__('Activity Name')" />
-                        <x-text-input id="Activity_Name" class="block mt-1 w-full" type="text" name="Activity_Name" :value="old('Activity_Name')" required autofocus autocomplete="Activity_Name" />
-                        <x-input-error :messages="$errors->get('Activity_Name')" class="mt-2" />
+                        <x-input-label for="program_Name" :value="__('program Name')" />
+                        <x-text-input id="program_Name" class="block mt-1 w-full" type="text" name="program_Name" :value="old('program_Name')" required autofocus autocomplete="program_Name" />
+                        <x-input-error :messages="$errors->get('program_Name')" class="mt-2" />
                     </div>
 
                     <!-- Country of Execution -->
@@ -48,11 +48,11 @@
                         <x-input-error :messages="$errors->get('Participants_Count')" class="mt-2" />
                     </div>
 
-                    <!-- IeActivity Image -->
+                    <!-- program Image -->
                     <div class="mt-4">
-                        <x-input-label for="IeActivity_Image" :value="__('IE Activity Image')" />
-                        <x-text-input id="IeActivity_Image" class="block mt-1 w-full" type="file" name="IeActivity_Image" accept="image/*" autocomplete="IeActivity_Image" />
-                        <x-input-error :messages="$errors->get('IeActivity_Image')" class="mt-2" />
+                        <x-input-label for="program_Image" :value="__(' program Image')" />
+                        <x-text-input id="program_Image" class="block mt-1 w-full" type="file" name="program_Image" accept="image/*" autocomplete="program_Image" />
+                        <x-input-error :messages="$errors->get('program_Image')" class="mt-2" />
                     </div>
 
                     <!-- Submit Button -->

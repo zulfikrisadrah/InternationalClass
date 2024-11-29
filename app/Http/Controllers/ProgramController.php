@@ -31,7 +31,7 @@ class ProgramController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Activity_Name' => 'required|string|max:255',
+            'program_Name' => 'required|string|max:255',
             'Country_of_Execution' => 'required|string|max:255',
             'Execution_Date' => 'required|date',
             'Participants_Count' => 'required|integer|min:1',
@@ -42,12 +42,12 @@ class ProgramController extends Controller
         $data['ID_Program'] = 1;
 
         if ($request->hasFile('Program_Image')) {
-            $data['Program_Image'] = $request->file('Program_Image')->store('images/ie_activities', 'public');
+            $data['Program_Image'] = $request->file('Program_Image')->store('images/program', 'public');
         }
 
         Program::create($data);
 
-        return redirect()->route('admin.program.index')->with('success', 'Activity added successfully.');
+        return redirect()->route('admin.program.index')->with('success', 'program added successfully.');
     }
 
     /**
@@ -73,7 +73,7 @@ class ProgramController extends Controller
     {
         // Validasi data dari request
         $validated = $request->validate([
-            'Activity_Name' => 'required|string|max:255',
+            'program_Name' => 'required|string|max:255',
             'Country_of_Execution' => 'required|string|max:255',
             'Execution_Date' => 'required|date',
             'Participants_Count' => 'required|integer|min:1',
@@ -90,12 +90,12 @@ class ProgramController extends Controller
                 Storage::disk('public')->delete($program->Program_Image);
             }
 
-            $data['Program_Image'] = $request->file('Program_Image')->store('images/ie_activities', 'public');
+            $data['Program_Image'] = $request->file('Program_Image')->store('images/program', 'public');
         }
 
         $program->update($data);
 
-        return redirect()->route('admin.program.index')->with('success', 'Activity updated successfully.');
+        return redirect()->route('admin.program.index')->with('success', 'program updated successfully.');
     }
 
     /**

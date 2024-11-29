@@ -46,5 +46,7 @@ class RolePermissionSeeder extends Seeder
             'username' => "staff"
         ]);
         $staffUser->assignRole('staff'); // Menetapkan peran staff kepada pengguna staff
+        Role::firstOrCreate(['name' => 'student']);
+
     }
 }

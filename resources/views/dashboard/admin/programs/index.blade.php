@@ -19,9 +19,9 @@
                     <div class="item-card flex flex-row justify-between items-center">
                         <div class="flex flex-row items-center gap-x-3">
                             <!-- Display program image -->
-                            <img src="{{ asset('storage/' . $program->IeActivity_Image) }}" alt="image" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                            <img src="{{ asset('storage/' . $program->program_Image) }}" alt="image" class="rounded-2xl object-cover w-[120px] h-[90px]">
                             <div class="flex flex-col">
-                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $program->Activity_Name }}</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $program->program_Name }}</h3>
                             </div>
                         </div>
 
@@ -31,11 +31,11 @@
                         </div>
 
                         <div class="hidden md:flex flex-row items-center gap-x-3">
-                            <a href="{{ route('admin.program.edit', $program->ID_Activity) }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                            <a href="{{ route('admin.program.edit', $program->ID_program) }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
                                 Edit
                             </a>
 
-                            <form action="{{ route('admin.program.destroy', $program->ID_Activity) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this program?');">
+                            <form action="{{ route('admin.program.destroy', $program->ID_program) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this program?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="font-bold py-4 px-6 bg-red-700 text-white rounded-full">

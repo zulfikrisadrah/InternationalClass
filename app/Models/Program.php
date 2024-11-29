@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Program extends Model
 {
-    protected $primaryKey = 'ID_Ie';
+    protected $primaryKey = 'ID_program';
+
 
     protected $fillable = [
         'program_Name',
@@ -14,11 +15,11 @@ class Program extends Model
         'Execution_Date',
         'Participants_Count',
         'Program_Image',
-        'ID_Program'
+        'ID_Ie_program'
     ];
 
     public function ieProgram()
     {
-        return $this->belongsTo(IeProgram::class, 'ID_Ie_program', 'ID_Ie_program');
+        return $this->belongsTo(IeProgram::class, 'ID_Ie_program');
     }
 }

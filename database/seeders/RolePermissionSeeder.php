@@ -1,13 +1,14 @@
-<?php 
+<?php
 
 namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Spatie\Permission\Models\Permission;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -22,6 +23,8 @@ class RolePermissionSeeder extends Seeder
             'manage event',
             'manage program',
             'manage class',
+            'choose program',
+            'manage user',
         ];
 
         // Membuat permission jika belum ada
@@ -40,6 +43,8 @@ class RolePermissionSeeder extends Seeder
             'manage news',
             'manage event',
             'manage program',
+            'manage class',
+            'manage user',
         ];
         $staffRole->syncPermissions($staffPermissions); // Menyinkronkan izin untuk peran staff
         $staffUser = User::create([
@@ -58,7 +63,7 @@ class RolePermissionSeeder extends Seeder
         $loginResponse = Http::withOptions(['verify' => false])
             ->post('https://sipakamase.unhas.ac.id:8107/login', [
                 'username' => 'admin',
-                'password' => 'UnhasTamalanreaMakassar', 
+                'password' => 'UnhasTamalanreaMakassar',
             ]);
 
         if ($loginResponse->successful()) {
@@ -66,14 +71,14 @@ class RolePermissionSeeder extends Seeder
             $accessToken = $loginData['access_token'] ?? null;
 
             if ($accessToken) {
-                $email = 'admin@gmail.com'; 
+                $email = 'admin@gmail.com';
 
                 $adminUser = User::firstOrCreate(
                     ['username' => 'admin'],
                     [
-                        'name' => 'Admin', 
-                        'email' => $email, 
-                        'password' => Hash::make('adminPassword'), 
+                        'name' => 'Admin',
+                        'email' => $email,
+                        'password' => Hash::make('adminPassword'),
                     ]
                 );
 
@@ -81,10 +86,10 @@ class RolePermissionSeeder extends Seeder
                     $adminUser->assignRole('admin');
                 }
             } else {
-                \Log::error('Failed to retrieve access token for admin creation');
+                Log::error('Failed to retrieve access token for admin creation');
             }
         } else {
-            \Log::error('Login failed for admin creation API');
+            Log::error('Login failed for admin creation API');
         }
     }
 }

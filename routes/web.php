@@ -76,7 +76,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('student')->name('student.')->group(function () {
         Route::resource('studyPlan', StudyPlanController::class);
         Route::resource('calender', CalenderController::class);
+        Route::middleware('can:choose program')->group(function () {
         Route::get('program', [ProgramController::class, 'index'])->name('program.index');
+        });
     });
 });
 

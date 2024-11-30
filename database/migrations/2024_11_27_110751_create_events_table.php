@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('Publication_Date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('Event_Image')->nullable();
             $table->unsignedBigInteger('user_id');
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

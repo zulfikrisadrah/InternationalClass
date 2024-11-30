@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('Country_of_Origin', 50)->nullable();
             $table->string('Profile_Photo')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('ID_Program');
+            $table->unsignedBigInteger('ID_study_program');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('ID_Program')->references('ID_Program')->on('programs')->onDelete('cascade');
+            $table->foreign('ID_study_program')->references('ID_study_program')->on('study_programs')->onDelete('cascade');
             $table->timestamps();
         });
     }

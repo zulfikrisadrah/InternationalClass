@@ -17,9 +17,13 @@ return new class extends Migration
             $table->string('Country_of_Execution', 50);
             $table->date('Execution_Date');
             $table->integer('Participants_Count');
-            $table->string('program_Image')->nullable();
+            $table->string('program_Image');
             $table->unsignedBigInteger('ID_Ie_program');
+            $table->unsignedBigInteger('ID_study_program');
+            $table->unsignedBigInteger('ID_Staff');
 
+            $table->foreign('ID_Staff')->references('ID_Staff')->on('staff')->onDelete('cascade');
+            $table->foreign('ID_study_program')->references('ID_study_program')->on('study_programs')->onDelete('cascade');
             $table->foreign('ID_Ie_program')->references('ID_Ie_program')->on('ie_programs')->onDelete('cascade');
             $table->timestamps();
         });

@@ -18,4 +18,12 @@ class StudyProgram extends Model
     {
         return $this->belongsTo(Faculty::class, 'ID_Faculty');
     }
+    public function programs()
+    {
+        return $this->hasMany(Program::class, 'ID_study_program');
+    }
+    public function staff()
+    {
+        return $this->hasMany(Staff::class, 'ID_study_program'); 
+    }
 }

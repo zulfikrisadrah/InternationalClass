@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             FacultySeeder::class,
             StudyProgramSeeder::class,
             IeProgramSeeder::class,
-            ProgramSeeder::class,
             NewsSeeder::class,
             EventSeeder::class,
         ]);

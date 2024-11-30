@@ -40,6 +40,19 @@
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
 
+                    <div class="mb-4">
+                        <x-input-label for="study_program_id" :value="__('Program Studi')" />
+                        <select name="study_program_id" id="study_program_id" class="block mt-1 w-full" required>
+                            <option value="" disabled selected>-- Pilih Program Studi --</option>
+                            @foreach ($studyPrograms as $program)
+                                <option value="{{ $program->ID_study_program }}" {{ old('study_program_id') == $program->ID_study_program ? 'selected' : '' }}>
+                                    {{ $program->study_program_Name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('study_program_id')" class="mt-2" />
+                    </div>
+
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">
                         <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">

@@ -22,4 +22,12 @@ class Program extends Model
     {
         return $this->belongsTo(IeProgram::class, 'ID_Ie_program');
     }
+    public function studyProgram()
+    {
+        return $this->belongsTo(StudyProgram::class, 'ID_study_program');
+    }
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, 'ID_Staff');
+    }
 }

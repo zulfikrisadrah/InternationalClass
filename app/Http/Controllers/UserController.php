@@ -8,7 +8,6 @@ use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -118,13 +117,11 @@ class UserController extends Controller
         $action = $request->input('action');
         
         if (in_array($action, ['accept', 'reject'])) {
-            $tokenData = $this->loginAndGetToken(); 
-    
-            if (!isset($tokenData['status']) || $tokenData['status'] != 200) {
-                abort(500, 'Failed to retrieve access token.');
+            $accessToken = session('access_token');
+            
+            if (!$accessToken) {
+                abort(500, 'Access token tidak ditemukan dalam session.');
             }
-    
-            $accessToken = $tokenData['access_token'];
     
             $response = Http::withOptions(['verify' => false])
                 ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
@@ -153,7 +150,7 @@ class UserController extends Controller
     
             $studyProgramId = $studyProgram->ID_study_program;
     
-            $student = Student::create([
+            Student::create([
                 'Student_Name' => $user->name,
                 'Student_ID_Number' => $user->username,
                 'Student_Email' => $user->email,
@@ -200,7 +197,7 @@ class UserController extends Controller
         }
     
         return redirect()->route('admin.user.index')->with('success', 'User updated successfully.');
-    }    
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -213,36 +210,5 @@ class UserController extends Controller
 
         $user->delete(); 
         return redirect()->route('admin.user.index')->with('success', 'User deleted successfully.');
-    }
-
-    private function loginAndGetToken()
-    {
-        $loginResponse = Http::withOptions(['verify' => false])
-            ->post('https://sipakamase.unhas.ac.id:8107/login', [
-                'username' => 'admin',
-                'password' => 'UnhasTamalanreaMakassar',
-            ]);
-
-        if ($loginResponse->successful()) {
-            $loginData = $loginResponse->json();
-
-            if (isset($loginData['access_token'])) {
-                return [
-                    'status' => $loginResponse->status(),
-                    'access_token' => $loginData['access_token'],
-                    'message' => 'Login berhasil',
-                ];
-            } else {
-                return [
-                    'status' => $loginResponse->status(),
-                    'message' => 'Access token tidak ditemukan.',
-                ];
-            }
-        } else {
-            return [
-                'status' => $loginResponse->status(),
-                'message' => 'Login gagal. Status: ' . $loginResponse->status(),
-            ];
-        }
     }
 }

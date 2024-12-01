@@ -14,84 +14,76 @@ class StudyProgramSeeder extends Seeder
     {
         $programs = [
             [
-                'study_program_Name' => 'Management',
-                'degree' => 'Undergraduate',
-                'ID_Faculty' => 1,
-            ],
-            [
-                'study_program_Name' => 'Accounting',
-                'degree' => 'Undergraduate',
-                'ID_Faculty' => 1,
-            ],
-            [
-                'study_program_Name' => 'Law',
-                'degree' => 'Undergraduate',
-                'ID_Faculty' => 2,
-
-            ],
-            [
-                'study_program_Name' => 'Medical Education',
-                'degree' => 'Undergraduate',
+                'study_program_Name' => 'PENDIDIKAN DOKTER',
                 'ID_Faculty' => 3,
             ],
             [
-                'study_program_Name' => 'Civil Engineering',
-                'degree' => 'Undergraduate',
+                'study_program_Name' => 'PENDIDIKAN DOKTER GIGI - S1',
+                'ID_Faculty' => 10,
+            ],
+            [
+                'study_program_Name' => 'ILMU KEPERAWATAN - S1',
+                'ID_Faculty' => 15,
+            ],
+            [
+                'study_program_Name' => 'KESEHATAN MASYARAKAT - S1',
+                'ID_Faculty' => 11,
+            ],
+            [
+                'study_program_Name' => 'TEKNIK SIPIL - S1',
                 'ID_Faculty' => 4,
             ],
             [
-                'study_program_Name' => 'Informatics Engineering',
-                'degree' => 'Undergraduate',
+                'study_program_Name' => 'TEKNIK INFORMATIKA - S1',
                 'ID_Faculty' => 4,
             ],
             [
-                'study_program_Name' => 'Architecture Engineering',
-                'degree' => 'Undergraduate',
+                'study_program_Name' => 'TEKNIK ARSITEKTUR - S1',
                 'ID_Faculty' => 4,
             ],
             [
-                'study_program_Name' => 'Geological Engineering',
-                'degree' => 'Undergraduate',
+                'study_program_Name' => 'TEKNIK GEOLOGI - S1',
                 'ID_Faculty' => 4,
             ],
             [
-                'study_program_Name' => 'International Relations',
-                'degree' => 'Undergraduate',
+                'study_program_Name' => 'ILMU HUKUM - S1',
+                'ID_Faculty' => 2,
+            ],
+            [
+                'study_program_Name' => 'ILMU HUBUNGAN INTERNASIONAL - S1',
                 'ID_Faculty' => 5,
             ],
             [
-                'study_program_Name' => 'Communication Science',
-                'degree' => 'Undergraduate',
+                'study_program_Name' => 'ILMU KOMUNIKASI - S1',
                 'ID_Faculty' => 5,
             ],
             [
-                'study_program_Name' => 'Dental Education',
-                'degree' => 'Undergraduate',
-                'ID_Faculty' => 6,
+                'study_program_Name' => 'MANAJEMEN - S1',
+                'ID_Faculty' => 1,
             ],
             [
-                'study_program_Name' => 'Public Health',
-                'degree' => 'Undergraduate',
-                'ID_Faculty' => 7,
-            ],
-            [
-                'study_program_Name' => 'Nursing Science',
-                'degree' => 'Undergraduate',
-                'ID_Faculty' => 8,
+                'study_program_Name' => 'AKUTANSI - S1',
+                'ID_Faculty' => 1,
             ],
         ];
 
 
         foreach ($programs as $program) {
-            DB::table('study_programs')->insert([
-                'study_program_Name' => $program['study_program_Name'],
-                'degree' => $program['degree'],
-                'study_program_Description' => null,
-                'International_Accreditation' => null,
-                'ID_Faculty' => $program['ID_Faculty'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            $faculty = DB::table('faculties')->where('ID_Faculty', $program['ID_Faculty'])->first();
+
+            if ($faculty) {
+                DB::table('study_programs')->insert([
+                    'study_program_Name' => $program['study_program_Name'],
+                    'degree' => 'Undergraduate',
+                    'study_program_Description' => null,
+                    'International_Accreditation' => null,
+                    'ID_Faculty' => $faculty->ID_Faculty,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                echo "Fakultas '{$program['faculty_name']}' tidak ditemukan.\n";
+            }
         }
     }
 }

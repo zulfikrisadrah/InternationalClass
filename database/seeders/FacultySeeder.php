@@ -5,23 +5,28 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class FacultySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $faculties = [
-            ['Faculty_Name' => 'Faculty of Economics and Business', 'Faculty_Code' => 'FEB'],
-            ['Faculty_Name' => 'Faculty of Law', 'Faculty_Code' => 'FH'],
-            ['Faculty_Name' => 'Faculty of Medicine', 'Faculty_Code' => 'FK'],
-            ['Faculty_Name' => 'Faculty of Engineering', 'Faculty_Code' => 'FT'],
-            ['Faculty_Name' => 'Faculty of Social and Political Sciences', 'Faculty_Code' => 'FISIP'],
-            ['Faculty_Name' => 'Faculty of Dentistry', 'Faculty_Code' => 'FKG'],
-            ['Faculty_Name' => 'Faculty of Public Health', 'Faculty_Code' => 'FKM'],
-            ['Faculty_Name' => 'Faculty of Nursing', 'Faculty_Code' => 'FKEP']
+            ['Faculty_Name' => 'EKONOMI', 'Faculty_Code' => 'A'],
+            ['Faculty_Name' => 'HUKUM', 'Faculty_Code' => 'B'],
+            ['Faculty_Name' => 'KEDOKTERAN', 'Faculty_Code' => 'C'],
+            ['Faculty_Name' => 'TEKNIK', 'Faculty_Code' => 'D'],
+            ['Faculty_Name' => 'ILMU SOSIAL DAN ILMU POLITIK', 'Faculty_Code' => 'E'],
+            ['Faculty_Name' => 'ILMU BUDAYA', 'Faculty_Code' => 'F'],
+            ['Faculty_Name' => 'PERTANIAN', 'Faculty_Code' => 'G'],
+            ['Faculty_Name' => 'MATEMATIKA DAN ILMU PENG. ALAM', 'Faculty_Code' => 'H'],
+            ['Faculty_Name' => 'PETERNAKAN', 'Faculty_Code' => 'I'],
+            ['Faculty_Name' => 'PENDIDIKAN DOKTER GIGI', 'Faculty_Code' => 'J'],
+            ['Faculty_Name' => 'KESEHATAN MASYARAKAT', 'Faculty_Code' => 'K'],
+            ['Faculty_Name' => 'ILMU KELAUTAN DAN PERIKANAN', 'Faculty_Code' => 'L'],
+            ['Faculty_Name' => 'KEHUTANAN', 'Faculty_Code' => 'M'],
+            ['Faculty_Name' => 'FARMASI', 'Faculty_Code' => 'N'],
+            ['Faculty_Name' => 'KEPERAWATAN', 'Faculty_Code' => 'R'],
         ];
 
         foreach ($faculties as $faculty) {

@@ -36,12 +36,18 @@
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
-                    <!-- Password Input (Optional for Edit) -->
-                    <!-- <div class="mb-4">
-                        <x-input-label for="password" :value="__('Password')" />
-                        <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" autocomplete="new-password" />
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div> -->
+                    <!-- Status Active Input (Checkbox) -->
+                    <div class="mb-4">
+                        <x-input-label for="isActive" :value="__('Active Status')" />
+                        
+                        <!-- Using HTML checkbox -->
+                        <input type="checkbox" id="isActive" name="isActive" 
+                            value="1" 
+                            {{ old('isActive', $user->student->isActive ?? 0) == 1 ? 'checked' : '' }} 
+                            class="form-checkbox" />
+                        
+                        <x-input-error :messages="$errors->get('isActive')" class="mt-2" />
+                    </div>
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">

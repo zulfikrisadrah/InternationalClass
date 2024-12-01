@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Models\Faculty;
+use App\Models\StudyProgram;
 
 class LoginRequest extends FormRequest
 {
@@ -100,7 +103,7 @@ class LoginRequest extends FormRequest
 
         if ($user) {
             // Jika user ditemukan, verifikasi password dan role
-            if (\Hash::check($password, $user->password)) {
+            if (Hash::check($password, $user->password)) {
                 $this->processUserRole($user); // Proses autentikasi berdasarkan role
             } else {
                 throw ValidationException::withMessages([
@@ -167,6 +170,29 @@ class LoginRequest extends FormRequest
                 // Ambil nama_mahasiswa dan email dari data mahasiswa
                 $namaMahasiswa = $mahasiswaData['mahasiswas'][0]['nama_mahasiswa'] ?? 'No Name';
                 $emailMahasiswa = $mahasiswaData['mahasiswas'][0]['email'] ?? "{$usernameOrEmail}@unhas.ac.id";
+
+                $facultyCode = substr($nim, 0, 1); 
+                $faculty = Faculty::where('Faculty_Code', $facultyCode)->first();
+
+                if (!$faculty) {
+                    throw ValidationException::withMessages([
+                        'email' => 'Faculty not found for the given code.',
+                    ]);
+                }
+
+                $programName = $mahasiswaData['mahasiswas'][0]['prodi']['nama_resmi'];
+
+                StudyProgram::firstOrCreate(
+                    ['study_program_Name' => $programName],
+                    [
+                        'degree' => 'Undergraduate', 
+                        'study_program_Description' => null,
+                        'International_Accreditation' => null,
+                        'ID_Faculty' => $faculty->ID_Faculty,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
 
                 // Buat akun mahasiswa di database lokal jika status_login = 1
                 $user = \App\Models\User::create([

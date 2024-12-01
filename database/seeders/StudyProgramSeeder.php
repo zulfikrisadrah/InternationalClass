@@ -15,55 +15,42 @@ class StudyProgramSeeder extends Seeder
         $programs = [
             [
                 'study_program_Name' => 'PENDIDIKAN DOKTER - S1',
-                'faculty_name' => 'KEDOKTERAN',
             ],
             [
                 'study_program_Name' => 'PENDIDIKAN DOKTER GIGI - S1',
-                'faculty_name' => 'PENDIDIKAN DOKTER GIGI',
             ],
             [
                 'study_program_Name' => 'ILMU KEPERAWATAN - S1',
-                'faculty_name' => 'KEPERAWATAN',
             ],
             [
                 'study_program_Name' => 'KESEHATAN MASYARAKAT - S1',
-                'faculty_name' => 'KESEHATAN MASYARAKAT',
             ],
             [
                 'study_program_Name' => 'TEKNIK SIPIL - S1',
-                'faculty_name' => 'TEKNIK',
             ],
             [
                 'study_program_Name' => 'TEKNIK INFORMATIKA - S1',
-                'faculty_name' => 'TEKNIK',
             ],
             [
                 'study_program_Name' => 'TEKNIK ARSITEKTUR - S1',
-                'faculty_name' => 'TEKNIK',
             ],
             [
                 'study_program_Name' => 'TEKNIK GEOLOGI - S1',
-                'faculty_name' => 'TEKNIK',
             ],
             [
                 'study_program_Name' => 'ILMU HUKUM - S1',
-                'faculty_name' => 'HUKUM',
             ],
             [
                 'study_program_Name' => 'ILMU HUBUNGAN INTERNASIONAL - S1',
-                'faculty_name' => 'ILMU SOSIAL DAN ILMU POLITIK',
             ],
             [
                 'study_program_Name' => 'ILMU KOMUNIKASI - S1',
-                'faculty_name' => 'ILMU SOSIAL DAN ILMU POLITIK',
             ],
             [
                 'study_program_Name' => 'MANAJEMEN - S1',
-                'faculty_name' => 'EKONOMI',
             ],
             [
                 'study_program_Name' => 'AKUTANSI - S1',
-                'faculty_name' => 'EKONOMI',
             ],
         ];
 

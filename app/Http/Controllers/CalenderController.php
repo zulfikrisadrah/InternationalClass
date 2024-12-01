@@ -2,63 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agenda;
 use Illuminate\Http\Request;
 
 class CalenderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan halaman kalender
     public function index()
     {
         return view('dashboard.student.academicCalender');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Mengambil semua agenda untuk ditampilkan di kalender
+    public function getEvents()
     {
-        //
+        // Ambil semua agenda dari database
+        $events = Agenda::all();
+
+        // Format data agenda untuk FullCalendar
+        $events = $events->map(function($event) {
+            return [
+                'title' => $event->title,
+                'start' => $event->start->toIso8601String(),  // Pastikan format ISO 8601 untuk FullCalendar
+                'end' => $event->end->toIso8601String(),
+                'description' => $event->description,
+                'location' => $event->location,
+            ];
+        });
+
+        return response()->json($events);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menyimpan agenda baru
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'start' => 'required|date',
+            'end' => 'required|date|after_or_equal:start',
+            'description' => 'nullable|string',
+            'location' => 'nullable|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        // Simpan agenda ke database
+        $agenda = Agenda::create([
+            'title' => $request->title,
+            'start' => $request->start,
+            'end' => $request->end,
+            'description' => $request->description,
+            'location' => $request->location,
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json($agenda, 201);
     }
 }
+

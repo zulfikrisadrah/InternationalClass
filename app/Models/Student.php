@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $primaryKey = 'ID_Student';
+    protected $primaryKey = 'ID_Student'; 
 
     protected $fillable = [
         'Student_Name',
@@ -23,7 +23,14 @@ class Student extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
+    public function studyProgram()
+    {
+        return $this->belongsTo(StudyProgram::class, 'ID_study_program', 'ID_study_program');
+    }
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, 'ID_Staff', 'ID_Staff');
+    }
     public function programs()
     {
         return $this->belongsToMany(Program::class, 'program_enrollment', 'ID_Student', 'ID_program')

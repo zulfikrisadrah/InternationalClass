@@ -14,7 +14,7 @@ class StudyProgramSeeder extends Seeder
     {
         $programs = [
             [
-                'study_program_Name' => 'PENDIDIKAN DOKTER',
+                'study_program_Name' => 'PENDIDIKAN DOKTER - S1',
                 'ID_Faculty' => 3,
             ],
             [

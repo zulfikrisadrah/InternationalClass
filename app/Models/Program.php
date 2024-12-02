@@ -14,13 +14,15 @@ class Program extends Model
         'Country_of_Execution',
         'Execution_Date',
         'Participants_Count',
-        'Program_Image',
-        'ID_Ie_program'
+        'program_Image',
+        'ID_Ie_program',
+        'ID_study_program',
+        'ID_Staff'
     ];
 
     public function ieProgram()
     {
-        return $this->belongsTo(IeProgram::class, 'ID_Ie_program');
+        return $this->belongsTo(IeProgram::class, 'ID_Ie_program', 'ID_Ie_program');
     }
     public function studyProgram()
     {
@@ -29,5 +31,11 @@ class Program extends Model
     public function staff()
     {
         return $this->belongsTo(Staff::class, 'ID_Staff');
+    }
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'program_enrollment', 'ID_program', 'ID_Student')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 }

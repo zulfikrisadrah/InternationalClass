@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $primaryKey = 'ID_Student'; 
+    protected $primaryKey = 'ID_Student';
 
     protected $fillable = [
         'Student_Name',
@@ -22,5 +22,12 @@ class Student extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function programs()
+    {
+        return $this->belongsToMany(Program::class, 'program_enrollment', 'ID_Student', 'ID_program')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 }

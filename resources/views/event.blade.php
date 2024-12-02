@@ -7,7 +7,7 @@
     <div class="w-full max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col">
             <div class="flex flex-col items-center w-full max-w-[700px] mx-auto px-4">
-                @foreach ($events as $event)
+                @foreach ($events_page as $event)
                     <div
                         class="w-full max-w-[650px] mb-8 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
                         @if($event->Event_Image)
@@ -42,8 +42,8 @@
                 <div class="mt-4 flex justify-center space-x-3 items-center">
                     <nav class="self-center text-5xl font-semibold text-black max-md:mt-10"
                         aria-label="Event navigation">
-                        @if ($events->currentPage() > 1)
-                            <a href="{{ $events->previousPageUrl() }}"
+                        @if ($events_page->currentPage() > 1)
+                            <a href="{{ $events_page->previousPageUrl() }}"
                                 class="focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 &lt;
                             </a>
@@ -52,8 +52,8 @@
                                 &lt;
                             </span>
                         @endif
-                        @if ($events->hasMorePages())
-                            <a href="{{ $events->nextPageUrl() }}"
+                        @if ($events_page->hasMorePages())
+                            <a href="{{ $events_page->nextPageUrl() }}"
                                 class="focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 &gt;
                             </a>
@@ -66,36 +66,36 @@
                 </div>
 
                 <div class="mt-4 flex justify-center space-x-3 items-center">
-                    @if ($events->currentPage() > 3)
-                        <a href="{{ $events->url(1) }}" class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white 
+                    @if ($events_page->currentPage() > 3)
+                        <a href="{{ $events_page->url(1) }}" class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white 
                                         text-black hover:text-white hover:bg-indigo-400">1</a>
                     @endif
 
-                    @if ($events->currentPage() > 4)
+                    @if ($events_page->currentPage() > 4)
                         <span class="text-gray-500">...</span>
                     @endif
 
                     @php
-                        $start = max(1, $events->currentPage() - 2);
-                        $end = min($events->lastPage(), $events->currentPage() + 2);
+                        $start = max(1, $events_page->currentPage() - 2);
+                        $end = min($events_page->lastPage(), $events_page->currentPage() + 2);
                     @endphp
 
                     @for ($i = $start; $i <= $end; $i++)
-                        <a href="{{ $events->url($i) }}"
+                        <a href="{{ $events_page->url($i) }}"
                             class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 
-                                        {{ $events->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
+                                        {{ $events_page->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
                             {{ $i }}
                         </a>
                     @endfor
 
-                    @if ($events->currentPage() < $events->lastPage() - 2)
+                    @if ($events_page->currentPage() < $events_page->lastPage() - 2)
                         <span class="text-gray-500">...</span>
                     @endif
 
-                    @if ($events->currentPage() < $events->lastPage() && $events->lastPage() - $events->currentPage() > 2)
-                        <a href="{{ $events->url($events->lastPage()) }}" class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 
+                    @if ($events_page->currentPage() < $events_page->lastPage() && $events_page->lastPage() - $events_page->currentPage() > 2)
+                        <a href="{{ $events_page->url($events_page->lastPage()) }}" class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 
                                         bg-white text-black hover:text-white hover:bg-indigo-400 ">
-                            {{ $events->lastPage() }}
+                            {{ $events_page->lastPage() }}
                         </a>
                     @endif
                 </div>
@@ -106,7 +106,7 @@
                     Big Event
                 </h2>
                 <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
-                    @foreach ($big_events as $big_event)
+                    @foreach ($big_events_page as $big_event)
                         <div
                             class="w-full max-w-[650px] mb-8 bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_20px_rgba(0,0,0,0.25)] border-gray-200">
                             <div class="p-6">
@@ -139,7 +139,7 @@
                     Upcoming Event
                 </h2>
                 <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
-                    @foreach ($upcoming_events as $upcoming_event)
+                    @foreach ($upcoming_events_page as $upcoming_event)
                         <div class="w-full max-w-[650px] mb-8 bg-white rounded-3xl border-indigo-900 border-t-[6px] 
                             shadow-[0px_2px_20px_rgba(0,0,0,0.25)] border-gray-200">
                             <div class="p-6">

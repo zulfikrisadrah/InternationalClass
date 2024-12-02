@@ -22,10 +22,6 @@ class NewsController extends Controller
                 $news = News::latest()->paginate(10);
             }
             return view('dashboard.admin.news.index', compact('news'));//untuk return ke dashboard admin
-        } else {
-            $news = News::latest()->paginate(4);//tampil per page 4 
-            $popular_news = News::latest()->take(4)->get();//ambil 4 berita terbaru(latest)
-            return view('news', compact('news', 'popular_news'));//untuk return ke halaman utama news
         }
     }
 

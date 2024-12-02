@@ -8,7 +8,7 @@
         <div class="flex gap-5 max-md:flex-col">
             <!-- Main News -->
             <article class="flex flex-col w-[55%] max-md:ml-0 max-md:w-full">
-                @foreach($news as $newsItem)
+                @foreach($news_page as $newsItem)
                     <div
                         class="flex flex-col grow items-start mt-5 text-xl text-black max-md:mt-10 max-md:max-w-full mb-10">
                         @if($newsItem->News_Image)
@@ -33,9 +33,9 @@
                 <!--Pagination-->
                 <div class="mt-4 flex justify-center space-x-3 items-center">
                     <nav class="self-center text-5xl font-semibold text-black max-md:mt-10"
-                        aria-label="Event navigation">
-                        @if ($news->currentPage() > 1)
-                            <a href="{{ $news->previousPageUrl() }}"
+                        aria-label="News navigation">
+                        @if ($news_page->currentPage() > 1)
+                            <a href="{{ $news_page->previousPageUrl() }}"
                                 class="focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 &lt;
                             </a>
@@ -45,8 +45,8 @@
                             </span>
                         @endif
 
-                        @if ($news->hasMorePages())
-                            <a href="{{ $news->nextPageUrl() }}"
+                        @if ($news_page->hasMorePages())
+                            <a href="{{ $news_page->nextPageUrl() }}"
                                 class="focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 &gt;
                             </a>
@@ -60,35 +60,35 @@
 
                 <div class="mt-4 flex justify-center space-x-3 items-center">
                     <!-- Pagination Links -->
-                    @if ($news->currentPage() > 3)
-                        <a href="{{ $news->url(1) }}"
+                    @if ($news_page->currentPage() > 3)
+                        <a href="{{ $news_page->url(1) }}"
                             class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400">1</a>
                     @endif
 
-                    @if ($news->currentPage() > 4)
+                    @if ($news_page->currentPage() > 4)
                         <span class="text-gray-500">...</span>
                     @endif
 
                     @php
-                        $start = max(1, $news->currentPage() - 2);
-                        $end = min($news->lastPage(), $news->currentPage() + 2);
+                        $start = max(1, $news_page->currentPage() - 2);
+                        $end = min($news_page->lastPage(), $news_page->currentPage() + 2);
                     @endphp
 
                     @for ($i = $start; $i <= $end; $i++)
-                        <a href="{{ $news->url($i) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 {{ $news->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
+                        <a href="{{ $news_page->url($i) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 {{ $news_page->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
                             {{ $i }}
                         </a>
                     @endfor
 
-                    @if ($news->currentPage() < $news->lastPage() - 2)
+                    @if ($news_page->currentPage() < $news_page->lastPage() - 2)
                         <span class="text-gray-500">...</span>
                     @endif
 
-                    @if ($news->currentPage() < $news->lastPage() && $news->lastPage() - $news->currentPage() > 2)
-                        <a href="{{ $news->url($news->lastPage()) }}"
+                    @if ($news_page->currentPage() < $news_page->lastPage() && $news_page->lastPage() - $news_page->currentPage() > 2)
+                        <a href="{{ $news_page->url($news_page->lastPage()) }}"
                             class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400 ">
-                            {{ $news->lastPage() }}
+                            {{ $news_page->lastPage() }}
                         </a>
                     @endif
                 </div>
@@ -102,7 +102,7 @@
                         Popular News
                     </h3>
                     <div class="flex flex-col gap-5 mt-3 w-full max-md:mt-10 max-md:mr-1.5 max-md:max-w-full">
-                        @foreach ($popular_news as $popular)
+                        @foreach ($popular_news_page as $popular)
                             <div class="flex flex-col p-5 bg-zinc-300 rounded-lg shadow-md">
                                 <div class="flex items-start gap-5">
                                     @if($popular->News_Image)

@@ -3,6 +3,7 @@
         @include('dashboard.partials.header')
     </x-slot>
 
+    @role('admin')
     <div class="flex flex-row justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Manage Users') }}
@@ -11,6 +12,7 @@
             Add Staff
         </a>
     </div>
+    @endrole
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -22,15 +24,7 @@
                        class="font-bold py-2 px-6 
                               {{ !request()->has('role') && !request()->has('status') ? 'bg-blue-500 text-white' : 'bg-white text-gray-700' }} 
                        rounded-full">
-                        All
-                    </a>
-            
-                    <!-- Staff Users Button -->
-                    <a href="{{ route('admin.user.index', ['role' => 'staff']) }}" 
-                       class="font-bold py-2 px-6 
-                              {{ request()->get('role') == 'staff' && !request()->has('status') ? 'bg-blue-500 text-white' : 'bg-white text-gray-700' }} 
-                       rounded-full">
-                        Staff
+                        All Student
                     </a>
             
                     <!-- Student Users Button -->
@@ -38,8 +32,16 @@
                         class="font-bold py-2 px-6 
                                {{ request()->get('role') == 'student' && !request()->has('status') ? 'bg-blue-500 text-white' : 'bg-white text-gray-700' }} 
                         rounded-full">
-                         Student
-                     </a>                     
+                        Active Student                  
+                    </a>   
+                    @role('admin')
+                    <a href="{{ route('admin.user.index', ['role' => 'staff']) }}" 
+                       class="font-bold py-2 px-6 
+                              {{ request()->get('role') == 'staff' && !request()->has('status') ? 'bg-blue-500 text-white' : 'bg-white text-gray-700' }} 
+                       rounded-full">
+                        Staff
+                    </a>
+                    @endrole                  
                 </div>
             
                 <!-- Waiting List Button -->
@@ -67,12 +69,27 @@
                                     No Avatar
                                 </div>
                             @endif
+
+                            <!-- User Info -->
                             <div class="flex flex-col">
-                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $user->name }}</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[500px]">{{ $user->name }}</h3>
                                 <p class="text-slate-500 text-sm">{{ $user->email }}</p>
+                            
+                                @if (($user->hasRole('student') && $user->student && $user->student->studyProgram) || ($user->hasRole('staff') && $user->staff && $user->staff->studyProgram))
+                                    <p class="text-slate-1000 text-sm font-bold" style="padding-top: 10px">
+                                        {{ $user->hasRole('student') ? $user->student->studyProgram->study_program_Name : $user->staff->studyProgram->study_program_Name }}
+                                    </p>
+                                @elseif(isset($programNames[$user->id])) 
+                                    <p class="text-slate-1000 text-sm font-bold" style="padding-top: 10px">
+                                        {{ $programNames[$user->id] }} 
+                                    </p>
+                                @else
+                                    <p class="text-slate-500 text-sm font-bold" style="padding-top: 10px">Undefined</p>
+                                @endif
                             </div>
                         </div>
 
+                        <!-- Action Buttons -->
                         <div class="hidden md:flex flex-row items-center gap-x-3">
                             @if (request()->get('status') == 'waiting')
                                 <!-- Accept Button -->
@@ -94,10 +111,27 @@
                                         Reject
                                     </button>
                                 </form>
+                            @elseif(request()->get('role') == 'staff')
+                                <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="font-bold py-4 px-6 bg-red-700 text-white rounded-full">
+                                        Delete
+                                    </button>
+                                </form>
                             @else
-                                <a href="{{ route('admin.user.edit', $user->id) }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
-                                    Edit
-                                </a>
+                            <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                
+                                <button type="submit" 
+                                        class="status-button {{ $user->student->isActive ? 'active' : 'inactive' }}" 
+                                        name="isActive" 
+                                        value="{{ $user->student->isActive ? 0 : 1 }}">
+                                    {{ $user->student->isActive ? 'Aktif' : 'Tidak Aktif' }}
+                                </button>
+                            </form>
+                            
                                 <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                     @csrf
                                     @method('DELETE')
@@ -106,10 +140,40 @@
                                     </button>
                                 </form>
                             @endif
-                        </div>                  
+                        </div>
+                        
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
 </x-app-layout>
+
+<style>
+    .status-button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .status-button.active {
+        background-color: #4CAF50; 
+    }
+
+    .status-button.inactive {
+        background-color: #F44336; 
+    }
+
+    .status-button:focus {
+        outline: none;
+        transform: scale(1.05);
+    }
+
+    .status-button:hover {
+        transform: scale(1.05);/
+    }
+</style>

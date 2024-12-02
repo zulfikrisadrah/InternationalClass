@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Staff;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
@@ -47,14 +48,7 @@ class RolePermissionSeeder extends Seeder
             'manage user',
         ];
         $staffRole->syncPermissions($staffPermissions); // Menyinkronkan izin untuk peran staff
-        $staffUser = User::create([
-            'name' => 'staff',
-            'email' => 'staff@gmail.com',
-            'password' => bcrypt('123'),
-            'username' => "staff"
-        ]);
-        $staffUser->assignRole('staff'); // Menetapkan peran staff kepada pengguna staff
-
+        
         Role::firstOrCreate(['name' => 'student']);
     }
 

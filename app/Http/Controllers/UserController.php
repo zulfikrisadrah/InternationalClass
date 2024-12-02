@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Staff;
 use App\Models\Student;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -16,53 +18,183 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
         $role = $request->input('role');
         $status = $request->input('status');
         
-        // Menghitung jumlah user yang berada di waiting list
-        $waitingCount = User::role('student')
-                            ->whereDoesntHave('student')  
-                            ->whereNotIn('username', Student::pluck('Student_ID_Number'))  
-                            ->count();
-        
-        if ($role == 'student') {
-            $users = User::role('student')
-                         ->whereHas('student', function ($query) {
-                             // Pastikan status isActive ada di tabel student
-                             $query->where('isActive', 1);
-                         })
-                         ->get();
-    
-            foreach ($users as $user) {
-                $student = $user->student;  
-    
-                if ($student && $student->isActive == 1 && !$user->hasPermissionTo('choose program')) {
-                    $user->givePermissionTo('choose program');
-                }
+        if (Auth::user()->hasRole('admin')) {
+            $waitingCount = User::role('student')
+            ->whereDoesntHave('student')  
+            ->whereNotIn('username', Student::pluck('Student_ID_Number'))  
+            ->count();
+        }  
+        elseif (Auth::user()->hasRole('staff')) {
+            $adminCount = $waitingCount = User::role('student')
+            ->whereDoesntHave('student')  
+            ->whereNotIn('username', Student::pluck('Student_ID_Number'))  
+            ->count();
+
+            if ($adminCount>0){
+                
             }
-        } elseif ($status == 'waiting') {
+            $adminStudyProgram = Auth::user()->staff->studyProgram->study_program_Name; 
             $users = User::role('student')
                          ->whereDoesntHave('student') 
                          ->whereNotIn('username', Student::pluck('Student_ID_Number')) 
                          ->get();
+        
+            $waitingCount = 0;
+        
+            foreach ($users as $user) {
+                $tokenData = $this->loginAndGetToken(); 
+                if ($tokenData['status'] == 200) {
+                    $accessToken = $tokenData['access_token'];
+        
+                    $response = Http::withOptions(['verify' => false])
+                                    ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
+                                    ->withBody(json_encode(['nim' => $user->username]), 'application/json')
+                                    ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+        
+                    if ($response->successful()) {
+                        $data = $response->json();
+                        if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
+                            $studentStudyProgram = $data['mahasiswas'][0]['prodi']['nama_resmi'];
+        
+                            if ($studentStudyProgram === $adminStudyProgram) {
+                                $waitingCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        $users = collect(); 
+        $programNames = [];  
+
+        if ($role == 'student') {
+            if (Auth::user()->hasRole('admin')) {
+                $users = User::role('student')
+                             ->whereHas('student', function ($query) {
+                                 $query->where('isActive', 1);
+                             })->get();
+            } else if (Auth::user()->hasRole('staff')) {
+                $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+                
+                $users = User::role('student')
+                             ->whereHas('student', function ($query) use ($staffStudyProgram) {
+                                 $query->where('isActive', 1)
+                                       ->where('ID_study_program', $staffStudyProgram);
+                             })->get();
+            }
+        } elseif ($role == 'staff'){
+            $users = User::role('staff')->get();
+        } elseif ($status == 'waiting') {
+            if (Auth::user()->hasRole('staff')) {
+                $staffStudyProgram = auth()->user()->staff->studyProgram->study_program_Name;
+    
+                $users = User::role('student')
+                             ->whereDoesntHave('student')
+                             ->whereNotIn('username', Student::pluck('Student_ID_Number'))
+                             ->get();
+    
+                $validUsers = [];
+                foreach ($users as $user) {
+                    $tokenData = $this->loginAndGetToken(); 
+                    if ($tokenData['status'] == 200) {
+                        $accessToken = $tokenData['access_token'];
+    
+                        $response = Http::withOptions(['verify' => false])
+                                        ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
+                                        ->withBody(json_encode(['nim' => $user->username]), 'application/json')
+                                        ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+    
+                        if ($response->successful()) {
+                            $data = $response->json();
+                            if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
+                                $studentStudyProgram = $data['mahasiswas'][0]['prodi']['nama_resmi'];
+                                $programNames[$user->id] = $data['mahasiswas'][0]['prodi']['nama_resmi'];
+    
+                                if ($studentStudyProgram == $staffStudyProgram) {
+                                    $validUsers[] = $user;  
+                                }
+                            }
+                        }
+                    }
+                }
+                $users = collect($validUsers);
+            } else {
+                if (Auth::user()->hasRole('admin')) {
+                    $users = User::role('student')
+                                 ->whereDoesntHave('student') 
+                                 ->whereNotIn('username', Student::pluck('Student_ID_Number'))
+                                 ->get();
+                }
+                else if (Auth::user()->hasRole('staff')) {
+                    $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+                    
+                    $users = User::role('student')
+                                 ->whereDoesntHave('student')  
+                                 ->whereNotIn('username', Student::pluck('Student_ID_Number')) 
+                                 ->whereHas('student', function ($query) use ($staffStudyProgram) {
+                                     $query->where('ID_study_program', $staffStudyProgram);  
+                                 })
+                                 ->get();
+                }
+            
+                foreach ($users as $user) {
+                    $tokenData = $this->loginAndGetToken(); 
+                    if ($tokenData['status'] == 200) {
+                        $accessToken = $tokenData['access_token'];
+            
+                        $response = Http::withOptions(['verify' => false])
+                                        ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
+                                        ->withBody(json_encode(['nim' => $user->username]), 'application/json')
+                                        ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+                        
+                        if ($response->successful()) {
+                            $data = $response->json();
+                            if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
+                                $programNames[$user->id] = $data['mahasiswas'][0]['prodi']['nama_resmi'];
+                            }
+                        }
+                    }
+                }
+            }
         } else {
-            $users = User::when($role, function ($query, $role) {
-                            return $query->role($role);
-                        })
-                        ->where('username', '!=', 'admin') 
-                        ->get();
+            if (Auth::user()->hasRole('admin')) {
+                $users = User::when($role, function ($query, $role) {
+                    return $query->role($role);
+                })
+                ->where('username', '!=', 'admin') 
+                ->where(function ($query) {
+                    $query->whereHas('student');
+                })
+                ->get();
+            } else {
+                $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+                
+                $users = User::role('student')
+                             ->whereHas('student', function ($query) use ($staffStudyProgram) {
+                                 $query->whereIn('isActive', [1, 0])
+                                       ->where('ID_study_program', $staffStudyProgram);
+                             })
+                             ->get();
+            }
         }
     
-        return view('dashboard.admin.users.index', compact('users', 'waitingCount'));
-    }
+        return view('dashboard.admin.users.index', compact('users', 'waitingCount', 'programNames'));
+    }    
     
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('dashboard.admin.users.create'); // Tampilkan form create user
+        $studyPrograms = StudyProgram::all();  
+        return view('dashboard.admin.users.create', compact('studyPrograms'));  
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -74,7 +206,8 @@ class UserController extends Controller
             'username' => 'required|string|unique:users,username|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
-            'name' => 'required|string|max:255', // Tambahkan validasi untuk name
+            'name' => 'required|string|max:255', 
+            'ID_Study_Program' => 'nullable|integer',
         ]);
     
         // Cek apakah email sudah ada di database
@@ -96,6 +229,12 @@ class UserController extends Controller
     
         // Menetapkan role 'staff' pada user yang baru dibuat
         $user->assignRole('staff');
+        
+        Staff::create([
+            'Staff_Name' => $validated['name'],
+            'user_id' => $user->id, 
+            'ID_Study_Program' => $validated['ID_Study_Program'], 
+        ]);
     
         // Redirect dengan pesan sukses
         return redirect()->route('admin.user.index')->with('success', 'User created successfully.');
@@ -114,22 +253,26 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        if ($user->student && isset($user->student->isActive)) {
+            $isActive = $request->input('isActive') ? 1 : 0;
+    
+            $user->student->isActive = $isActive;
+            $user->student->save();
+        }
+
         $action = $request->input('action');
-        
+    
         if (in_array($action, ['accept', 'reject'])) {
-            $accessToken = session('access_token');
-            
-            if (!$accessToken) {
-                abort(500, 'Access token tidak ditemukan dalam session.');
-            }
-    
-            $response = Http::withOptions(['verify' => false])
+            $tokenData = $this->loginAndGetToken();
+
+            if ($tokenData['status'] == 200) {
+                $accessToken = $tokenData['access_token'];
+
+                $response = Http::withOptions(['verify' => false])
                 ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
-                ->withBody(json_encode([
-                    'nim' => $user->username
-                ]), 'application/json')
+                ->withBody(json_encode(['nim' => $user->username]), 'application/json')
                 ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-    
+            } 
             if (!$response->successful()) {
                 abort(500, 'Failed to fetch program data from API.');
             }
@@ -141,8 +284,7 @@ class UserController extends Controller
     
             $programName = $data['mahasiswas'][0]['prodi']['nama_resmi'];
     
-            $studyProgram = StudyProgram::where('study_program_Name', $programName)
-                ->first(); 
+            $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
     
             if (!$studyProgram) {
                 return response()->json(['error' => 'Program studi not found.'], 404);
@@ -150,20 +292,32 @@ class UserController extends Controller
     
             $studyProgramId = $studyProgram->ID_study_program;
     
-            Student::create([
-                'Student_Name' => $user->name,
-                'Student_ID_Number' => $user->username,
-                'Student_Email' => $user->email,
-                'isActive' => $action === 'accept' ? 1 : 0,
-                'user_id' => $user->id,
-                'ID_study_program' => $studyProgramId,
-            ]);
+            if (Auth::user()->hasRole('staff')) {
+                $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+    
+                if ($staffStudyProgram != $studyProgramId) {
+                    return redirect()->route('admin.user.index')->with('error', 'Anda tidak memiliki akses untuk mahasiswa di program studi ini.');
+                }
+            }
+    
+            Student::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'Student_Name' => $user->name,
+                    'Student_ID_Number' => $user->username,
+                    'Student_Email' => $user->email,
+                    'isActive' => $action === 'accept' ? 1 : 0,
+                    'ID_study_program' => $studyProgramId,
+                ]
+            );
     
             if ($action === 'accept') {
                 $user->givePermissionTo('choose program');
             } else {
                 $user->revokePermissionTo('choose program');
             }
+    
+            return redirect()->route('admin.user.index')->with('success', 'Action performed successfully.');
         }
     
         $validated = $request->validate([
@@ -197,7 +351,7 @@ class UserController extends Controller
         }
     
         return redirect()->route('admin.user.index')->with('success', 'User updated successfully.');
-    }
+    }    
 
     /**
      * Remove the specified resource from storage.
@@ -210,5 +364,43 @@ class UserController extends Controller
 
         $user->delete(); 
         return redirect()->route('admin.user.index')->with('success', 'User deleted successfully.');
+    }
+
+    private function loginAndGetToken()
+    {
+        try {
+            $loginResponse = Http::withOptions(['verify' => false])
+                ->post('https://sipakamase.unhas.ac.id:8107/login', [
+                    'username' => 'admin', 
+                    'password' => 'UnhasTamalanreaMakassar',
+                ]);
+
+            if ($loginResponse->successful()) {
+                $loginData = $loginResponse->json();
+
+                if (isset($loginData['access_token'])) {
+                    return [
+                        'status' => $loginResponse->status(),  
+                        'access_token' => $loginData['access_token'],
+                        'message' => 'Login berhasil',
+                    ];
+                } else {
+                    return [
+                        'status' => $loginResponse->status(),
+                        'message' => 'Access token tidak ditemukan dalam respons API.',
+                    ];
+                }
+            } else {
+                return [
+                    'status' => $loginResponse->status(),
+                    'message' => 'Login gagal. Status: ' . $loginResponse->status() . ' - ' . $loginResponse->body(),
+                ];
+            }
+        } catch (\Exception $e) {
+            return [
+                'status' => 500,
+                'message' => 'Terjadi kesalahan saat menghubungi API: ' . $e->getMessage(),
+            ];
+        }
     }
 }

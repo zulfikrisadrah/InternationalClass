@@ -3,4 +3,96 @@
         @include('dashboard.partials.header')
     </x-slot>
 
+    <!-- Display alert if there is a status message -->
+    @if (session('success'))
+        <div class="alert alert-success bg-green-200 text-green-800 p-4 rounded-lg mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-error bg-red-200 text-red-800 p-4 rounded-lg mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <!-- Dropdown untuk memilih jenis IE -->
+    <div class="py-4">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <form method="GET" action="{{ route('student.program.index') }}">
+                <select name="ie_program_id" class="p-2 pr-8 rounded-md border border-gray-300">
+                    <option value="">All</option>
+                    @foreach ($iePrograms as $ie)
+                        <option value="{{ $ie->ID_Ie_program }}" {{ request('ie_program_id') == $ie->ID_Ie_program ? 'selected' : '' }}>
+                            {{ $ie->ie_program_name }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="ml-2 p-2 bg-indigo-700 text-white rounded-md">Filter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Program List -->
+    <div class="py-1">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
+
+                @foreach ($programs as $program)
+                    <div class="item-card flex flex-row items-center justify-between gap-x-3">
+                        <!-- Program Image and Name -->
+                        <div class="flex flex-row items-center gap-x-3 flex-grow">
+                            @if ($program->program_Image)
+                                <img src="{{ asset('storage/' . $program->program_Image) }}" alt="Program Image" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                            @else
+                                <div class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center text-gray-500">
+                                    No Image
+                                </div>
+                            @endif
+                            <div class="flex flex-col">
+                                <h3 class="text-indigo-950 text-xl font-bold truncate">{{ $program->program_Name }}</h3>
+                                <p class="text-slate-500">{{ $program->Country_of_Execution }} - {{ $program->ieProgram->ie_program_name ?? 'No IE Program Assigned' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Execution Date -->
+                        <div class="flex flex-col items-center text-center w-[300px]">
+                            <p class="text-slate-500 font-semibold">Execution Date</p>
+                            <p class="text-indigo-900 font-bold">
+                                {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }}
+                            </p>
+                        </div>
+
+                        <!-- Participants Count and Limit -->
+                        <div class="flex flex-col items-center text-center w-[300px]"> <!-- Set fixed width -->
+                            @php
+                                // Hitung jumlah student yang sudah disetujui (approved)
+                                $approvedCount = $program->students()->wherePivot('status', 'approved')->count();
+                                $participantLimit = $program->Participants_Count;
+                            @endphp
+
+                            <p class="text-slate-500 font-semibold">Participants</p>
+                            <p class="text-indigo-900 font-bold">
+                                @if ($approvedCount >= $participantLimit)
+                                    <span class="text-red-600">Full</span> <!-- Red color for "Full" -->
+                                @else
+                                    {{ $approvedCount }} / {{ $participantLimit }}
+                                @endif
+                            </p>
+                        </div>
+
+                        <!-- Enroll Button -->
+                        <div class="flex items-end">
+                            <form action="{{ route('student.program.enroll', $program->ID_program) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full">
+                                    Enroll
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 </x-app-layout>

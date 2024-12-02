@@ -48,6 +48,20 @@
                         <x-input-error :messages="$errors->get('Participants_Count')" class="mt-2" />
                     </div>
 
+                    <!-- IE Program Dropdown -->
+                    <div class="mt-4">
+                        <x-input-label for="ID_Ie_program" :value="__('IE Program')" />
+                        <select id="ID_Ie_program" class="block mt-1 w-full" name="ID_Ie_program" required>
+                            <option value="">Select IE Program</option>
+                            @foreach($iePrograms as $ie)
+                                <option value="{{ $ie->ID_Ie_program }}" {{ old('ID_Ie_program') == $ie->ID_Ie_program ? 'selected' : '' }}>
+                                    {{ $ie->ie_program_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('ID_Ie_program')" class="mt-2" />
+                    </div>
+
                     <!-- program Image -->
                     <div class="mt-4">
                         <x-input-label for="program_Image" :value="__(' program Image')" />

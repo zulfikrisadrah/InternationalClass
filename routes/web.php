@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
         Route::middleware('can:manage program')->group(function () {
             Route::resource('program', ProgramController::class);
         });
+        Route::post('program/{programId}/enrollments/{studentId}/update-status', [ProgramController::class, 'updateStatus'])
+        ->name('program.updateStatus');
     });
     Route::prefix('staff')->name('staff.')->group(function () {
         Route::middleware('can:manage class')->group(function () {
@@ -79,6 +81,7 @@ Route::middleware('auth')->group(function () {
         Route::middleware('can:choose program')->group(function () {
         Route::get('program', [ProgramController::class, 'index'])->name('program.index');
         });
+        Route::post('student/program/{programId}/enroll', [ProgramController::class, 'enroll'])->name('program.enroll');
     });
 });
 

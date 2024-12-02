@@ -3,262 +3,171 @@
 @section('title', 'Hasanuddin University - Event')
 
 @section('content')
-    <section class="flex flex-col mx-[70px] my-[70px]">
-        <div class="w-full max-md:max-w-full">
-            <div class="flex gap-5 max-md:flex-col">
-                <div class="flex flex-col w-[41%] max-md:ml-0 max-md:w-full">
-                    <div class="flex flex-col grow text-sm text-black max-md:mt-10 max-md:max-w-full">
-                        <article
-                            class="flex flex-col items-start px-7 py-28 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:px-5 max-md:py-24 max-md:mr-2.5 max-md:max-w-full">
-                            <h2 class="font-semibold text-center">Event Title</h2>
-                            <p class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-1.5 mt-36 mb-0 text-xs text-stone-900 max-md:mt-10 max-md:mb-2.5">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/ebc82c86872a1b27b649703e3ee4def5e810663957a8e8dc33cc8c5b0f702195?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 w-5 aspect-[0.87]" />
-                                <time datetime="2024-05-11" class="self-start mt-2.5">11 May, 2024</time>
+<section class="flex flex-col mx-[70px] my-[70px]">
+    <div class="w-full max-md:max-w-full">
+        <div class="flex gap-5 max-md:flex-col">
+            <div class="flex flex-col items-center w-full max-w-[700px] mx-auto px-4">
+                @foreach ($events as $event)
+                    <div
+                        class="w-full max-w-[650px] mb-8 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                        @if($event->Event_Image)
+                            <div class="relative w-full bg-white rounded-1xl border-indigo-900 border-t-[8px] shadow-[0px_2px_20px_rgba(0,0,0,0.25)]">
+                                <img src="{{ asset('storage/' . $event->Event_Image) }}"
+                                    alt="Featured Image for {{ $event->Event_Title }}"
+                                    class="w-full h-auto object-cover aspect-video">
                             </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start px-7 py-28 mt-9 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:px-5 max-md:py-24 max-md:mr-1.5 max-md:max-w-full">
-                            <h2 class="font-semibold text-center">Event Title</h2>
-                            <p class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
+                        @endif
+                        <div class="p-6">
+                            <h2 class="text-lg md:text-xl font-semibold text-black mb-3 ">
+                                {{ Str::limit($event->Event_Title, 150) }}
+                            </h2>
+                            <p class="text-gray-700 text-sm md:text-base leading-relaxed line-clamp-3">
+                                {{ Str::limit(html_entity_decode(strip_tags($event->Event_Content)), 150, '...') }}
                             </p>
-                            <div class="flex gap-1.5 mt-36 mb-0 text-xs text-stone-900 max-md:mt-10 max-md:mb-2.5">
+                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900 items-center">
                                 <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/ebc82c86872a1b27b649703e3ee4def5e810663957a8e8dc33cc8c5b0f702195?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 w-5 aspect-[0.87]" />
-                                <time datetime="2024-05-11" class="self-start mt-2.5">11 May, 2024</time>
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
+                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
+                                <time datetime="{{ $event->event_date }}" class="text-xs text-gray-500">
+                                    {{ \Carbon\Carbon::parse($event->event_date)->format('d M, Y') }}
+                                </time>
+                                <a href="{{ route('event.index', $event->id) }}"
+                                    class="ml-auto text-sm text-indigo-600 font-medium hover:underline">
+                                    Read More →
+                                </a>
                             </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start px-7 py-28 mt-9 ml-3 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:px-5 max-md:py-24 max-md:max-w-full">
-                            <h2 class="font-semibold text-center">Event Title</h2>
-                            <p class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-1.5 mt-36 mb-0 text-xs text-stone-900 max-md:mt-10 max-md:mb-2.5">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/ebc82c86872a1b27b649703e3ee4def5e810663957a8e8dc33cc8c5b0f702195?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 w-5 aspect-[0.87]" />
-                                <time datetime="2024-05-11" class="self-start mt-2.5">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start px-7 py-28 mt-8 ml-3 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:px-5 max-md:py-24 max-md:max-w-full">
-                            <h2 class="font-semibold text-center">Event Title</h2>
-                            <p class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-1.5 mt-36 mb-0 text-xs text-stone-900 max-md:mt-10 max-md:mb-2.5">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/ebc82c86872a1b27b649703e3ee4def5e810663957a8e8dc33cc8c5b0f702195?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 w-5 aspect-[0.87]" />
-                                <time datetime="2024-05-11" class="self-start mt-2.5">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start px-7 py-28 mt-9 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:px-5 max-md:py-24 max-md:mr-1.5 max-md:max-w-full">
-                            <h2 class="font-semibold text-center">Event Title</h2>
-                            <p class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-1.5 mt-36 mb-0 text-xs text-stone-900 max-md:mt-10 max-md:mb-2.5">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/ebc82c86872a1b27b649703e3ee4def5e810663957a8e8dc33cc8c5b0f702195?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 w-5 aspect-[0.87]" />
-                                <time datetime="2024-05-11" class="self-start mt-2.5">11 May, 2024</time>
-                            </div>
-                        </article>
+                        </div>
                     </div>
+                @endforeach
+                <div class="mt-4 flex justify-center space-x-3 items-center">
+                    <nav class="self-center text-5xl font-semibold text-black max-md:mt-10"
+                        aria-label="Event navigation">
+                        @if ($events->currentPage() > 1)
+                            <a href="{{ $events->previousPageUrl() }}"
+                                class="focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                &lt;
+                            </a>
+                        @else
+                            <span class="text-gray-400 cursor-not-allowed">
+                                &lt;
+                            </span>
+                        @endif
+                        @if ($events->hasMorePages())
+                            <a href="{{ $events->nextPageUrl() }}"
+                                class="focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                &gt;
+                            </a>
+                        @else
+                            <span class="text-gray-400 cursor-not-allowed">
+                                &gt;
+                            </span>
+                        @endif
+                    </nav>
                 </div>
-                <div class="flex flex-col ml-5 w-[59%] max-md:ml-0 max-md:w-full">
-                    <div class="flex flex-col text-sm text-black max-md:mt-10 max-md:max-w-full">
-                        <h2
-                            class="px-16 py-3 text-xl font-semibold text-white bg-indigo-950 max-md:px-5 max-md:mr-2.5 max-md:max-w-full">
-                            Big Event
-                        </h2>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-10 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:mr-2.5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
+
+                <div class="mt-4 flex justify-center space-x-3 items-center">
+                    @if ($events->currentPage() > 3)
+                        <a href="{{ $events->url(1) }}" class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white 
+                                        text-black hover:text-white hover:bg-indigo-400">1</a>
+                    @endif
+
+                    @if ($events->currentPage() > 4)
+                        <span class="text-gray-500">...</span>
+                    @endif
+
+                    @php
+                        $start = max(1, $events->currentPage() - 2);
+                        $end = min($events->lastPage(), $events->currentPage() + 2);
+                    @endphp
+
+                    @for ($i = $start; $i <= $end; $i++)
+                        <a href="{{ $events->url($i) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 
+                                        {{ $events->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
+                            {{ $i }}
+                        </a>
+                    @endfor
+
+                    @if ($events->currentPage() < $events->lastPage() - 2)
+                        <span class="text-gray-500">...</span>
+                    @endif
+
+                    @if ($events->currentPage() < $events->lastPage() && $events->lastPage() - $events->currentPage() > 2)
+                        <a href="{{ $events->url($events->lastPage()) }}" class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 
+                                        bg-white text-black hover:text-white hover:bg-indigo-400 ">
+                            {{ $events->lastPage() }}
+                        </a>
+                    @endif
+                </div>
+            </div>
+            <div class="flex flex-col w-[59%] max-md:ml-0 max-md:w-full">
+                <h2 class="px-6 py-2 mb-5 text-lg font-semibold text-white bg-indigo-950 rounded-md 
+                    text-center w-full max-w-[650px] mx-auto">
+                    Big Event
+                </h2>
+                <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
+                    @foreach ($big_events as $big_event)
+                        <div
+                            class="w-full max-w-[650px] mb-8 bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_20px_rgba(0,0,0,0.25)] border-gray-200">
+                            <div class="p-6">
+                                <h2 class="text-lg md:text-xl font-semibold text-black mb-3 ">
+                                {{ Str::limit($big_event->Event_Title, 150) }}
+                                </h2>
+                                <p class="text-gray-700 text-sm md:text-base leading-relaxed line-clamp-3">
+                                    {{ Str::limit(html_entity_decode(strip_tags($big_event->Event_Content)), 150, '...') }}
+                                </p>
+                                <div class="flex gap-3.5 mt-4 text-xs text-stone-900 items-center">
+                                    <img loading="lazy"
+                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
+                                        alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
+                                    <time datetime="{{ $big_event->Event_date }}" class="text-xs text-gray-500">
+                                        {{ \Carbon\Carbon::parse($big_event->Event_date)->format('d M, Y') }}
+                                    </time>
+                                </div>
                             </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:mr-2.5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
+                        </div>
+                    @endforeach
+                    <button
+                        class="self-center px-6 py-3 mt-1 mb-10 w-[200px] text-xs text-center whitespace-nowrap border 
+                        border-black border-solid hover:bg-indigo-950 hover:text-white rounded-md max-md:px-5 max-md:mt-10">
+                        See More
+                    </button>
+
+                </div>
+                <h2 class="px-6 py-2 mt-5 mb-5 text-lg font-semibold text-white bg-indigo-950 
+                    rounded-md text-center w-full max-w-[650px] mx-auto">
+                    Upcoming Event
+                </h2>
+                <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
+                    @foreach ($upcoming_events as $upcoming_event)
+                        <div class="w-full max-w-[650px] mb-8 bg-white rounded-3xl border-indigo-900 border-t-[6px] 
+                            shadow-[0px_2px_20px_rgba(0,0,0,0.25)] border-gray-200">
+                            <div class="p-6">
+                                <h2 class="text-lg md:text-xl font-semibold text-black mb-3 ">
+                                {{ Str::limit($upcoming_event->Event_Title, 150) }}
+                                </h2>
+                                <p class="text-gray-700 text-sm md:text-base leading-relaxed line-clamp-3">
+                                    {{ Str::limit(html_entity_decode(strip_tags($upcoming_event->Event_Content)), 150, '...') }}
+                                </p>
+                                <div class="flex gap-3.5 mt-4 text-xs text-stone-900 items-center">
+                                    <img loading="lazy"
+                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
+                                        alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
+                                    <time datetime="{{ $upcoming_event->event_date }}" class="text-xs text-gray-500">
+                                        {{ \Carbon\Carbon::parse($upcoming_event->event_date)->format('d M, Y') }}
+                                    </time>
+                                </div>
                             </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:mr-2.5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:mr-2.5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-8 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:mr-2.5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <button
-                            class="self-center px-16 py-2.5 mt-20 max-w-full text-xs text-center whitespace-nowrap border border-black border-solid text-stone-900 w-[149px] max-md:px-5 max-md:mt-10">
-                            More
-                        </button>
-                        <h2
-                            class="py-3 pr-16 pl-20 mt-40 ml-3 text-xl font-semibold text-white bg-indigo-950 max-md:px-5 max-md:mt-10 max-md:max-w-full">
-                            Upcoming Event
-                        </h2>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-10 ml-3 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-7 ml-3 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-7 ml-3 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-7 ml-3 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <article
-                            class="flex flex-col items-start py-8 pr-5 pl-11 mt-8 ml-3 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full">
-                            <h3 class="font-semibold text-center">Event Title</h3>
-                            <p class="self-stretch max-md:max-w-full">
-                                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is
-                                starting from 13 May 2024
-                            </p>
-                            <div class="flex gap-3.5 mt-4 text-xs text-stone-900">
-                                <img loading="lazy"
-                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                    alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                <time datetime="2024-05-11">11 May, 2024</time>
-                            </div>
-                        </article>
-                        <button
-                            class="self-center px-16 py-2.5 mt-20 ml-5 max-w-full text-xs text-center whitespace-nowrap border border-black border-solid text-stone-900 w-[149px] max-md:px-5 max-md:mt-10">
-                            More
-                        </button>
-                    </div>
+                        </div>
+                    @endforeach
+                    <button
+                        class="self-center px-6 py-3 mt-1 mb-10 w-[200px] text-xs text-center whitespace-nowrap 
+                        border border-black border-solid hover:bg-indigo-950 hover:text-white rounded-md max-md:px-5 max-md:mt-10">
+                        See More
+                    </button>
                 </div>
             </div>
         </div>
-        <article
-            class="flex flex-col items-start px-7 py-28 mt-9 ml-3 max-w-full text-sm text-black bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] w-[515px] max-md:px-5 max-md:py-24">
-            <h2 class="font-semibold text-center">Event Title</h2>
-            <p class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
-                The second phase of the training workshop for teachers organized by Seerat Chair, IUB is starting from 13
-                May 2024
-            </p>
-            <div class="flex gap-1.5 mt-36 mb-0 text-xs text-stone-900 max-md:mt-10 max-md:mb-2.5">
-                <img loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/ebc82c86872a1b27b649703e3ee4def5e810663957a8e8dc33cc8c5b0f702195?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                    alt="" class="object-contain shrink-0 w-5 aspect-[0.87]" />
-                <time datetime="2024-05-11" class="self-start mt-2.5">11 May, 2024</time>
-            </div>
-        </article>
-        <nav class="self-center mt-44 text-5xl font-semibold text-black max-md:mt-10" aria-label="Event navigation">
-            <button class="focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Previous event">&lt;</button>
-            <button class="focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Next event">&gt;</button>
-        </nav>
-    </section>
+    </div>
+</section>
 @endsection

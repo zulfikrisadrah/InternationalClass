@@ -20,28 +20,36 @@
                         <div class="flex flex-row items-center gap-x-3">
                             <!-- Display event image if available -->
                             @if ($event->Event_Image)
-                                <img src="{{ asset('storage/' . $event->Event_Image) }}" alt="Event Image" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                                <img src="{{ asset('storage/' . $event->Event_Image) }}" alt="Event Image"
+                                    class="rounded-2xl object-cover w-[120px] h-[90px]">
                             @else
-                                <div class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center text-gray-500">
+                                <div
+                                    class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center text-gray-500">
                                     No Image
                                 </div>
                             @endif
                             <div class="flex flex-col">
-                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $event->Event_Title }}</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">
+                                    {{ $event->Event_Title }}
+                                </h3>
                             </div>
                         </div>
 
                         <div class="hidden md:flex flex-col">
                             <p class="text-slate-500 text-sm">Publication Date</p>
-                            <h3 class="text-indigo-950 text-xl font-bold">{{ \Carbon\Carbon::parse($event->Publication_Date)->format('d M Y') }}</h3>
+                            <h3 class="text-indigo-950 text-xl font-bold">
+                                {{ \Carbon\Carbon::parse($event->Publication_Date)->format('d M Y') }}
+                            </h3>
                         </div>
 
                         <div class="hidden md:flex flex-row items-center gap-x-3">
-                            <a href="{{ route('admin.event.edit', $event->ID_Event) }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                            <a href="{{ route('admin.event.edit', $event->ID_Event) }}"
+                                class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
                                 Edit
                             </a>
 
-                            <form action="{{ route('admin.event.destroy', $event->ID_Event) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                            <form action="{{ route('admin.event.destroy', $event->ID_Event) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this event?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="font-bold py-4 px-6 bg-red-700 text-white rounded-full">
@@ -51,6 +59,38 @@
                         </div>
                     </div>
                 @endforeach
+                <!--Pagination-->
+                <div class="mt-4 flex justify-center space-x-3">
+                    @if ($events->currentPage() > 3)
+                        <a href="{{ $events->url(1) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400">1</a>
+                    @endif
+
+                    @if ($events->currentPage() > 4)
+                        <span class="text-gray-500">...</span>
+                    @endif
+
+                    @php
+                        $start = max(1, $events->currentPage() - 2);
+                        $end = min($events->lastPage(), $events->currentPage() + 2);
+                    @endphp
+
+                    @for ($i = $start; $i <= $end; $i++)
+                        <a href="{{ $events->url($i) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 {{ $events->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
+                            {{ $i }}
+                        </a>
+                    @endfor
+
+                    @if ($events->currentPage() < $events->lastPage() - 2)
+                        <span class="text-gray-500">...</span>
+                    @endif
+
+                    @if ($events->currentPage() < $events->lastPage() && $events->lastPage() - $events->currentPage() > 2)
+                        <a href="{{ $events->url($events->lastPage()) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400 ">{{ $events->lastPage() }}</a>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

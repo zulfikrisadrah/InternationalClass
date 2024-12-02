@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8"> <!-- Memperlebar container -->
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
 
                 @if($errors->any())
@@ -20,25 +20,35 @@
                 <form method="POST" action="{{ route('admin.news.store') }}" enctype="multipart/form-data">
                     @csrf
 
-                    <!-- Event Title -->
+                    <!-- News Title -->
                     <div>
                         <x-input-label for="News_Title" :value="__('News Title')" />
-                        <x-text-input id="News_Title" class="block mt-1 w-full" type="text" name="News_Title" :value="old('News_Title')" required autofocus autocomplete="News_Title" />
+                        <x-text-input id="News_Title" class="block mt-1 w-full" type="text" name="News_Title"
+                            :value="old('News_Title')" required minlength="16" autofocus autocomplete="News_Title" />
                         <x-input-error :messages="$errors->get('News_Title')" class="mt-2" />
                     </div>
 
-                    <!-- Event Content -->
+                    <!-- News Content -->
                     <div class="mt-4">
+                        <x-tinymce-config />
                         <x-input-label for="News_Content" :value="__('News Content')" />
-                        <textarea id="News_Content" name="News_Content" class="block mt-1 w-full" rows="4" required>{{ old('News_Content') }}</textarea>
+                        <textarea id="News_Content" name="News_Content" class="block mt-1 w-full"
+                            rows="6">{{ old('News_Content') }}</textarea> <!-- Memperlebar textarea -->
                         <x-input-error :messages="$errors->get('News_Content')" class="mt-2" />
                     </div>
 
-                    <!-- Event Image -->
-                    <div class="mt-4">
+                    <!-- News Image -->
+                    <div x-data="{ preview: null }" class="mt-4">
                         <x-input-label for="News_Image" :value="__('News Image')" />
-                        <x-text-input id="News_Image" class="block mt-1 w-full" type="file" name="News_Image" accept="image/*" autocomplete="News_Image" />
-                        <x-input-error :messages="$errors->get('News_Image')" class="mt-2" />
+                        <input type="file" id="News_Image" name="News_Image" class="block mt-1 w-full" accept="image/*"
+                            @change="preview = URL.createObjectURL($event.target.files[0])">
+
+                        <!-- Image Preview -->
+                        <div x-show="preview" class="mt-4">
+                            <p class="text-gray-600">Preview Image:</p>
+                            <img :src="preview" alt="Image Preview" class="object-contain rounded-lg border"
+                                style="max-width: 100%; height: auto; max-height: 200px;">
+                        </div>
                     </div>
 
                     <!-- Submit Button -->
@@ -48,7 +58,6 @@
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>

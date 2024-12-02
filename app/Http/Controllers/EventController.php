@@ -14,15 +14,15 @@ class EventController extends Controller
      */
     public function index()
     {
-        $user = Auth()->user();
-
-        if ($user->hasRole('staff')) {
-            $events = Event::where('user_id', $user->id)->get();
-        } else {
-            $events = Event::all();
+        $user = Auth::user();
+        if ($user) {
+            if ($user->hasRole('staff')) {
+                $events = Event::where('user_id', $user->id)->get();
+            } else {
+                $events = Event::latest()->paginate(10);
+            }
+            return view('dashboard.admin.event.index', compact('events'));//untuk return ke dashboard admin
         }
-
-        return view('dashboard.admin.event.index', compact('events'));
     }
 
     /**

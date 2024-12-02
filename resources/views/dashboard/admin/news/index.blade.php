@@ -20,28 +20,35 @@
                         <div class="flex flex-row items-center gap-x-3">
                             <!-- Display event image if available -->
                             @if ($new->News_Image)
-                                <img src="{{ asset('storage/' . $new->News_Image) }}" alt="News Image" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                                <img src="{{ asset('storage/' . $new->News_Image) }}" alt="News Image"
+                                    class="rounded-2xl object-cover w-[120px] h-[90px]">
                             @else
-                                <div class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center text-gray-500">
+                                <div
+                                    class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center 
+                                    text-gray-500">
                                     No Image
                                 </div>
                             @endif
                             <div class="flex flex-col">
-                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $new->News_Title }}</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $new->News_Title }}
+                                </h3>
                             </div>
                         </div>
 
                         <div class="hidden md:flex flex-col">
                             <p class="text-slate-500 text-sm">Publication Date</p>
-                            <h3 class="text-indigo-950 text-xl font-bold">{{ \Carbon\Carbon::parse($new->Publication_Date)->format('d M Y') }}</h3>
+                            <h3 class="text-indigo-950 text-xl font-bold">
+                                {{ \Carbon\Carbon::parse($new->Publication_Date)->format('d M Y') }}</h3>
                         </div>
 
                         <div class="hidden md:flex flex-row items-center gap-x-3">
-                            <a href="{{ route('admin.news.edit', $new->ID_News) }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                            <a href="{{ route('admin.news.edit', $new->ID_News) }}"
+                                class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
                                 Edit
                             </a>
 
-                            <form action="{{ route('admin.news.destroy', $new->ID_News) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this news?');">
+                            <form action="{{ route('admin.news.destroy', $new->ID_News) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this news?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="font-bold py-4 px-6 bg-red-700 text-white rounded-full">
@@ -51,6 +58,42 @@
                         </div>
                     </div>
                 @endforeach
+                <!--Pagination-->
+                <div class="mt-4 flex justify-center space-x-3">
+                    @if ($news->currentPage() > 3)
+                        <a href="{{ $news->url(1) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all 
+                            duration-300 bg-white text-black hover:text-white hover:bg-indigo-400">1</a>
+                    @endif
+
+                    @if ($news->currentPage() > 4)
+                        <span class="text-gray-500">...</span>
+                    @endif
+
+                    @php
+                        $start = max(1, $news->currentPage() - 2);
+                        $end = min($news->lastPage(), $news->currentPage() + 2);
+                    @endphp
+
+                    @for ($i = $start; $i <= $end; $i++)
+                        <a href="{{ $news->url($i) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all 
+                            duration-300 {{ $news->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white 
+                            hover:bg-indigo-400 ' }}">
+                            {{ $i }}
+                        </a>
+                    @endfor
+
+                    @if ($news->currentPage() < $news->lastPage() - 2)
+                        <span class="text-gray-500">...</span>
+                    @endif
+
+                    @if ($news->currentPage() < $news->lastPage() && $news->lastPage() - $news->currentPage() > 2)
+                        <a href="{{ $news->url($news->lastPage()) }}"
+                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all 
+                            duration-300 bg-white text-black hover:text-white hover:bg-indigo-400 ">{{ $news->lastPage() }}</a>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

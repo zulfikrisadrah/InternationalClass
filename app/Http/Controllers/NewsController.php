@@ -14,16 +14,17 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $user = Auth()->user();
-
-        if ($user->hasRole('staff')) {
-            $news = News::where('user_id', $user->id)->get();
-        } else {
-            $news = News::all();
+        $user = Auth::user();
+        if ($user) {
+            if ($user->hasRole('staff')) {
+                $news = News::where('user_id', $user->id)->get();
+            } else {
+                $news = News::latest()->paginate(10);
+            }
+            return view('dashboard.admin.news.index', compact('news'));//untuk return ke dashboard admin
         }
-
-        return view('dashboard.admin.news.index', compact('news'));
     }
+
 
     /**
      * Show the form for creating a new resource.

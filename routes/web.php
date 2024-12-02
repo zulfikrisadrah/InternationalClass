@@ -15,12 +15,10 @@ use App\Http\Controllers\ProgramController;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing.page');
 
-Route::get('/event', function () {
-    return view('event');
-});
-Route::get('/news', function () {
-    return view('news');
-});
+Route::get('/event', [LandingPageController::class, 'event'])->name('event.index');
+
+Route::get('/news', [LandingPageController::class, 'news'])->name('news.index');
+
 Route::get('/about', function () {
     return view('about');
 });

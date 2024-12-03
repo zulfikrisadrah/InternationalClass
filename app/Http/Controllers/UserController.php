@@ -79,7 +79,7 @@ class UserController extends Controller
                                  $query->where('isActive', 1);
                              })->get();
             } else if (Auth::user()->hasRole('staff')) {
-                $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+                $staffStudyProgram = auth()->user()->staff->ID_study_program;
                 
                 $users = User::role('student')
                              ->whereHas('student', function ($query) use ($staffStudyProgram) {
@@ -131,7 +131,7 @@ class UserController extends Controller
                                  ->get();
                 }
                 else if (Auth::user()->hasRole('staff')) {
-                    $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+                    $staffStudyProgram = auth()->user()->staff->ID_study_program;
                     
                     $users = User::role('student')
                                  ->whereDoesntHave('student')  
@@ -172,7 +172,7 @@ class UserController extends Controller
                 })
                 ->get();
             } else {
-                $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+                $staffStudyProgram = auth()->user()->staff->ID_study_program;
                 
                 $users = User::role('student')
                              ->whereHas('student', function ($query) use ($staffStudyProgram) {
@@ -293,7 +293,7 @@ class UserController extends Controller
             $studyProgramId = $studyProgram->ID_study_program;
     
             if (Auth::user()->hasRole('staff')) {
-                $staffStudyProgram = auth()->user()->staff->ID_Study_Program;
+                $staffStudyProgram = auth()->user()->staff->ID_study_program;
     
                 if ($staffStudyProgram != $studyProgramId) {
                     return redirect()->route('admin.user.index')->with('error', 'Anda tidak memiliki akses untuk mahasiswa di program studi ini.');

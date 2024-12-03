@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudyPlanController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\TranscriptController;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing.page');
 
@@ -77,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('student')->name('student.')->group(function () {
         Route::resource('studyPlan', StudyPlanController::class);
         Route::resource('calender', CalenderController::class);
+        Route::resource('transcript', TranscriptController::class);
         Route::get('/calendar/events', [CalenderController::class, 'getEvents'])->name('calendar.events');
         Route::post('/calendar/events', [CalenderController::class, 'store'])->name('calendar.store');
         Route::middleware('can:choose program')->group(function () {

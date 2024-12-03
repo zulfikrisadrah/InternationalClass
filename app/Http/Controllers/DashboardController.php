@@ -58,14 +58,27 @@ class DashboardController extends Controller
 
                         $transkrip_terakhir = array_slice($data['transkrips'], -1); 
                         $last_year_ajaran = isset($transkrip_terakhir[0]['semester']['tahun']) ? $transkrip_terakhir[0]['semester']['tahun'] + 1 : null;
+                        $last_semester_ajaran = isset($transkrip_terakhir[0]['semester']['jenis']) ? $transkrip_terakhir[0]['semester']['jenis'] : null;
 
-                        if ($last_year_ajaran !== null) {
-                            if ($angkatan <= 2022) {
-                                $masa_studi_maksimal = 14;
-                                $sisa_masa_studi = $masa_studi_maksimal - ((($last_year_ajaran - $angkatan) * 2) + 1);
-                            } else {
-                                $masa_studi_maksimal = 10;
-                                $sisa_masa_studi = $masa_studi_maksimal - ((($last_year_ajaran - $angkatan) * 2) + 1);
+                        if($last_semester_ajaran == "genap") {
+                            if ($last_year_ajaran !== null) {
+                                if ($angkatan <= 2022) {
+                                    $masa_studi_maksimal = 14;
+                                    $sisa_masa_studi = $masa_studi_maksimal - ((($last_year_ajaran - $angkatan) * 2) + 1);
+                                } else {
+                                    $masa_studi_maksimal = 10;
+                                    $sisa_masa_studi = $masa_studi_maksimal - ((($last_year_ajaran - $angkatan) * 2) + 1);
+                                }
+                            }
+                        } else {
+                            if ($last_year_ajaran !== null) {
+                                if ($angkatan <= 2022) {
+                                    $masa_studi_maksimal = 14;
+                                    $sisa_masa_studi = $masa_studi_maksimal - ((($last_year_ajaran - $angkatan) * 2 + 2));
+                                } else {
+                                    $masa_studi_maksimal = 10;
+                                    $sisa_masa_studi = $masa_studi_maksimal - ((($last_year_ajaran - $angkatan) * 2 + 2));
+                                }
                             }
                         }
 

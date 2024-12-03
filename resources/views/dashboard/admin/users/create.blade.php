@@ -41,16 +41,16 @@
                     </div>
 
                     <div class="mb-4">
-                        <x-input-label for="ID_Study_Program" :value="__('Program Studi')" />
-                        <select name="ID_Study_Program" id="ID_Study_Program" class="block mt-1 w-full" required>
+                        <x-input-label for="ID_study_program" :value="__('Program Studi')" />
+                        <select name="ID_study_program" id="ID_Study_Program" class="block mt-1 w-full" required>
                             <option value="" disabled selected>-- Pilih Program Studi --</option>
                             @foreach ($studyPrograms as $program)
-                                <option value="{{ $program->ID_study_program }}" {{ old('ID_Study_Program') == $program->ID_study_program ? 'selected' : '' }}>
+                                <option value="{{ $program->ID_study_program }}" {{ old('ID_study_program') == $program->ID_study_program ? 'selected' : '' }}>
                                     {{ $program->study_program_Name }}
                                 </option>
                             @endforeach
                         </select>
-                        <x-input-error :messages="$errors->get('ID_Study_Program')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('ID_study_program')" class="mt-2" />
                     </div>                                    
 
                     <!-- Submit Button -->

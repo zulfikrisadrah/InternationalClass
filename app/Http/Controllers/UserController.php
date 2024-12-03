@@ -207,7 +207,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'name' => 'required|string|max:255', 
-            'ID_Study_Program' => 'nullable|integer',
+            'ID_study_program' => 'nullable|integer',
         ]);
     
         // Cek apakah email sudah ada di database
@@ -233,7 +233,7 @@ class UserController extends Controller
         Staff::create([
             'Staff_Name' => $validated['name'],
             'user_id' => $user->id, 
-            'ID_Study_Program' => $validated['ID_Study_Program'], 
+            'ID_study_program' => $validated['ID_study_program'], 
         ]);
     
         // Redirect dengan pesan sukses

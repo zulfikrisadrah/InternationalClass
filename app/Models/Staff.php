@@ -8,13 +8,13 @@ class Staff extends Model
 {
     protected $fillable = [
         'Staff_Name',
-        'ID_Study_Program',
+        'ID_study_program',
         'user_id',
     ];
 
     public function studyProgram()
     {
-        return $this->belongsTo(StudyProgram::class, 'ID_Study_Program', 'ID_study_program');
+        return $this->belongsTo(StudyProgram::class, 'ID_study_program', 'ID_study_program');
     }    
 
     public function programs()

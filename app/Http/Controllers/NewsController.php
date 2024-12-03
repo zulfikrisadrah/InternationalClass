@@ -17,7 +17,7 @@ class NewsController extends Controller
         $user = Auth::user();
         if ($user) {
             if ($user->hasRole('staff')) {
-                $news = News::where('user_id', $user->id)->get();
+                $news = News::where('user_id', $user->id)->paginate(10);
             } else {
                 $news = News::latest()->paginate(10);
             }

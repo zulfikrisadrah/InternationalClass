@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::post('program/{programId}/enrollments/{studentId}/update-status', [ProgramController::class, 'updateStatus'])
         ->name('program.updateStatus');
+        Route::resource('calender', CalenderController::class);
     });
     Route::prefix('staff')->name('staff.')->group(function () {
         Route::middleware('can:manage class')->group(function () {

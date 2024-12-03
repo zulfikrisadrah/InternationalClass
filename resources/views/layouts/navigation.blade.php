@@ -74,6 +74,19 @@
                     <span class="grow shrink w-[142px]">News</span>
                 </a>
             </li>
+            <li class="mt-12 w-full">
+                <a href="{{ route('admin.calender.index') }}"
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.calender.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M17 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9V3H15V1H17V3ZM4 9V19H20V9H4ZM6 13H11V17H6V13Z">
+                            </path>
+                        </svg>
+                    </i>
+                    <span class="grow shrink w-[142px]">Academic Calendar</span>
+                </a>
+            </li>
         @endrole
 
         @role('staff')

@@ -4,14 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CalenderController extends Controller
 {
     // Menampilkan halaman kalender
     public function index()
     {
+        $user = Auth::user();
+
+    if ($user->hasRole('student')) {
         return view('dashboard.student.academicCalender');
     }
+
+
+    if ($user->hasRole('admin')) {
+        return view('dashboard.admin.calender.index');
+    }
+
+    abort(403, 'Unauthorized action.');
+}
 
     // Mengambil semua agenda untuk ditampilkan di kalender
     public function getEvents()

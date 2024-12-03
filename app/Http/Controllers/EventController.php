@@ -17,7 +17,7 @@ class EventController extends Controller
         $user = Auth::user();
         if ($user) {
             if ($user->hasRole('staff')) {
-                $events = Event::where('user_id', $user->id)->get();
+                $events = Event::where('user_id', $user->id)->paginate(10);
             } else {
                 $events = Event::latest()->paginate(10);
             }

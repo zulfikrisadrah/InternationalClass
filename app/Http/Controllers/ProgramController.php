@@ -17,6 +17,9 @@ class ProgramController extends Controller
 {
     $user = auth()->user();
     $programs = Program::all();
+    $data = [
+        'title' => 'Manage Programs',
+    ];
 
     if ($user->hasRole('admin') || $user->hasRole('staff')) {
         if ($user->hasRole('staff')) {
@@ -28,7 +31,7 @@ class ProgramController extends Controller
         }
         // Fetch enrollments for admin/staff
         $enrollments = Program::with('students')->get();
-        return view('dashboard.admin.programs.index', compact('programs', 'enrollments'));
+        return view('dashboard.admin.programs.index', compact('programs', 'enrollments', 'data'));
     } else {
         $ieProgramId = $request->input('ie_program_id');
         $programs = Program::with('ieProgram')

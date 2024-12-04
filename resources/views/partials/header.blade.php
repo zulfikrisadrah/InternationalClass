@@ -35,8 +35,8 @@
                     <div tabindex="0" role="button" class="hover:text-gray-900">Information</div>
                     <ul tabindex="0"
                         class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-black">
-                        <li><a href="/news">News</a></li>
-                        <li><a href="/event">Event</a></li>
+                        <li><a href="{{ route('news.index') }}">News</a></li>
+                        <li><a href="{{ route('event.index') }}">Event</a></li>
                     </ul>
                 </div>
             </nav>

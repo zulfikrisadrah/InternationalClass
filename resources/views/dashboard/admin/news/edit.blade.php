@@ -1,21 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-black leading-tight">
             {{ __('Edit News') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-4">
+        <div class="w-auto mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
-
-                @if($errors->any())
-                    @foreach($errors->all() as $error)
-                        <div class="py-3 w-full rounded-3xl bg-red-500 text-white">
-                            {{$error}}
-                        </div>
-                    @endforeach
-                @endif
 
                 <!-- Form to Edit Event -->
                 <form method="POST" action="{{ route('admin.news.update', $news->ID_News) }}"
@@ -57,7 +49,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">
-                        <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                        <button type="submit" class="font-bold py-4 px-6 bg-blueThird text-white rounded-full">
                             Update News
                         </button>
                     </div>

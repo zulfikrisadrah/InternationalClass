@@ -1,4 +1,3 @@
-<!-- Hero Section -->
 <section class="flex flex-col justify-end bg-cover bg-center text-white relative overflow-hidden"
     style="background-image: url('images/hero.png'); height: calc(100vh - 110px);">
     <!-- Overlay Effect -->

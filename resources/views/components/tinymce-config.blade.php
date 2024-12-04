@@ -3,8 +3,8 @@
 <script>
   tinymce.init({
     selector: 'textarea#News_Content, textarea#Event_Content',
-    width: 1250,
-    height: 500,
+    width: '100%',
+    height: 400,
     plugins: 'code table lists image insertdatetime advlist autolink charmap preview anchor pagebreak searchplace wordcount visualblocks fullscreen media template',
     toolbar: 'undo redo | link image | blocks | bold italic underline | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
   });

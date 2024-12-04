@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-black leading-tight">
             {{ __('Edit User') }}
         </h2>
     </x-slot>
@@ -8,14 +8,6 @@
     <div class="py-12">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden p-10 shadow-sm sm:rounded-lg">
-
-                @if($errors->any())
-                    @foreach($errors->all() as $error)
-                        <div class="py-3 w-full rounded-3xl bg-red-500 text-white">
-                            {{$error}}
-                        </div>
-                    @endforeach
-                @endif
 
                 <!-- Form to Edit User -->
                 <form method="POST" action="{{ route('admin.user.update', $user->id) }}">
@@ -39,19 +31,19 @@
                     <!-- Status Active Input (Checkbox) -->
                     <div class="mb-4">
                         <x-input-label for="isActive" :value="__('Active Status')" />
-                        
+
                         <!-- Using HTML checkbox -->
-                        <input type="checkbox" id="isActive" name="isActive" 
-                            value="1" 
-                            {{ old('isActive', $user->student->isActive ?? 0) == 1 ? 'checked' : '' }} 
+                        <input type="checkbox" id="isActive" name="isActive"
+                            value="1"
+                            {{ old('isActive', $user->student->isActive ?? 0) == 1 ? 'checked' : '' }}
                             class="form-checkbox" />
-                        
+
                         <x-input-error :messages="$errors->get('isActive')" class="mt-2" />
                     </div>
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">
-                        <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                        <button type="submit" class="font-bold py-4 px-6 bg-blueThird text-white rounded-full">
                             Update User
                         </button>
                     </div>

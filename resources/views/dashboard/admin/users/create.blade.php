@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-black leading-tight">
             {{ __('Create Staff') }}
         </h2>
     </x-slot>
@@ -51,11 +51,11 @@
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('ID_study_program')" class="mt-2" />
-                    </div>                                    
+                    </div>
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">
-                        <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                        <button type="submit" class="font-bold py-4 px-6 bg-blueThird text-white rounded-full">
                             Create Staff
                         </button>
                     </div>

@@ -15,12 +15,11 @@ class Staff extends Model
     public function studyProgram()
     {
         return $this->belongsTo(StudyProgram::class, 'ID_study_program', 'ID_study_program');
-    }    
-
-    public function programs()
-    {
-        return $this->hasMany(Program::class, 'ID_Staff');
     }
+    // public function programs()
+    // {
+    //     return $this->hasMany(Program::class, 'ID_Staff');
+    // }
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

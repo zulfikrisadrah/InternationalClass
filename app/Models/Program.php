@@ -17,7 +17,8 @@ class Program extends Model
         'program_Image',
         'ID_Ie_program',
         'ID_study_program',
-        'ID_Staff'
+        'ID_Staff',
+        'user_id'
     ];
 
     public function ieProgram()
@@ -28,9 +29,9 @@ class Program extends Model
     {
         return $this->belongsTo(StudyProgram::class, 'ID_study_program');
     }
-    public function staff()
+    public function user()
     {
-        return $this->belongsTo(Staff::class, 'ID_Staff');
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function students()
     {

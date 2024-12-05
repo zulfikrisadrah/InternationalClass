@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\IeProgram;
 use App\Models\Program;
 use App\Models\Student;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,6 +18,9 @@ class ProgramController extends Controller
     {
         $user = auth()->user();
         $programs = Program::all();
+        $data = [
+            'title' => 'Manage Program',
+        ];
 
         if ($user->hasRole('admin') || $user->hasRole('staff')) {
             if ($user->hasRole('staff')) {
@@ -28,13 +32,15 @@ class ProgramController extends Controller
             }
             // Fetch enrollments for admin/staff
             $enrollments = Program::with('students')->get();
-            return view('dashboard.admin.programs.index', compact('programs', 'enrollments'));
+            return view('dashboard.admin.programs.index', compact('programs', 'enrollments','data'));
         } else {
+            $studyProgramId = $user->student->ID_study_program;
             $ieProgramId = $request->input('ie_program_id');
             $programs = Program::with('ieProgram')
                 ->when($ieProgramId, function ($query) use ($ieProgramId) {
                     return $query->where('ID_Ie_program', $ieProgramId);
                 })
+                ->where('ID_study_program', $studyProgramId)
                 ->get();
 
             $iePrograms = IeProgram::all();
@@ -118,7 +124,8 @@ class ProgramController extends Controller
     public function create()
     {
         $iePrograms = IeProgram::all();
-        return view('dashboard.admin.programs.create', compact('iePrograms'));
+        $studyPrograms = StudyProgram::all();
+        return view('dashboard.admin.programs.create', compact('iePrograms', 'studyPrograms'));
     }
 
     /**
@@ -126,35 +133,56 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'program_Name' => 'required|string|max:255',
-            'Country_of_Execution' => 'required|string|max:255',
-            'Execution_Date' => 'required|date',
-            'Participants_Count' => 'required|integer|min:1',
-            'program_Image' => 'nullable|image|max:2048',
-            'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
-            'ID_study_program' => 'required|exists:study_programs,ID_study_program', // Validasi foreign key
-            'ID_Staff' => 'required|exists:staff,ID_Staff', // Validasi foreign key
-        ]);
+        $user = auth()->user()->id;
 
-        // Proses data yang sudah tervalidasi
-        $data = $validated;
+        if (auth()->user()->hasRole('admin')) {
 
-        // Jika ada file gambar yang diunggah, simpan ke storage
+            $validated = $request->validate([
+                'program_Name' => 'required|string|max:255',
+                'Country_of_Execution' => 'required|string|max:255',
+                'Execution_Date' => 'required|date',
+                'Participants_Count' => 'required|integer|min:1',
+                'program_Image' => 'nullable|image|max:2048',
+                'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
+                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+            ]);
+
+            $data = $validated;
+            $data['user_id'] = $user;
+
+        } else {
+
+            $studyProgram = auth()->user()->staff->ID_study_program;
+
+            $validated = $request->validate([
+                'program_Name' => 'required|string|max:255',
+                'Country_of_Execution' => 'required|string|max:255',
+                'Execution_Date' => 'required|date',
+                'Participants_Count' => 'required|integer|min:1',
+                'program_Image' => 'nullable|image|max:2048',
+                'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
+            ]);
+
+            // Tambahkan data tambahan di luar validasi
+            $data = $validated;
+            $data['user_id'] = $user;
+            $data['ID_study_program'] = $studyProgram;
+        }
+
+        // Handle file upload jika ada
         if ($request->hasFile('program_Image')) {
+            // Validasi file upload
+            if (!$request->file('program_Image')->isValid()) {
+                return redirect()->back()->withErrors(['program_Image' => 'Uploaded file is invalid.']);
+            }
             $data['program_Image'] = $request->file('program_Image')->store('images/program', 'public');
         }
 
         // Buat program baru
-        $program = Program::create($data);
+        Program::create($data);
 
-        // Return respons sukses
-        return redirect()
-            ->route('admin.program.index')
-            ->with('success', 'Program added successfully.');
+        return redirect()->route('admin.program.index')->with('success', 'Program added successfully.');
     }
-
 
     /**
      * Display the specified resource.
@@ -170,7 +198,8 @@ class ProgramController extends Controller
     public function edit(Program $program)
     {
         $iePrograms = IeProgram::all();
-        return view('dashboard.admin.programs.edit', compact('program', 'iePrograms'));
+        $studyPrograms = StudyProgram::all();
+        return view('dashboard.admin.programs.edit', compact('program', 'iePrograms', 'studyPrograms'));
     }
 
     /**
@@ -179,25 +208,37 @@ class ProgramController extends Controller
     public function update(Request $request, Program $program)
     {
         // Validasi data dari request
-        $validated = $request->validate([
-            'program_Name' => 'required|string|max:255',
-            'Country_of_Execution' => 'required|string|max:255',
-            'Execution_Date' => 'required|date',
-            'Participants_Count' => 'required|integer|min:1',
-            'Program_Image' => 'nullable|image|max:2048',
-            'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
-        ]);
+        if (auth()->user()->hasRole('admin')) {
+            $validated = $request->validate([
+                'program_Name' => 'required|string|max:255',
+                'Country_of_Execution' => 'required|string|max:255',
+                'Execution_Date' => 'required|date',
+                'Participants_Count' => 'required|integer|min:1',
+                'program_Image' => 'nullable|image|max:2048',
+                'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
+                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+            ]);
+        } else {
+            $validated = $request->validate([
+                'program_Name' => 'required|string|max:255',
+                'Country_of_Execution' => 'required|string|max:255',
+                'Execution_Date' => 'required|date',
+                'Participants_Count' => 'required|integer|min:1',
+                'program_Image' => 'nullable|image|max:2048',
+                'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
+            ]);
+        }
 
         // Update data
         $data = $validated;
 
-        if ($request->hasFile('Program_Image')) {
+        if ($request->hasFile('program_Image')) {
             // Hapus gambar lama jika ada
-            if ($program->Program_Image) {
-                Storage::disk('public')->delete($program->Program_Image);
+            if ($program->program_Image) {
+                Storage::disk('public')->delete($program->program_Image);
             }
 
-            $data['Program_Image'] = $request->file('Program_Image')->store('images/program', 'public');
+            $data['program_Image'] = $request->file('program_Image')->store('images/program', 'public');
         }
 
         $program->update($data);

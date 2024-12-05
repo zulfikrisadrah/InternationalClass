@@ -78,13 +78,12 @@
         <h2 class="text-bluePrimary text-3xl font-bold mt-12" data-aos="fade-right" data-aos-duration="1200">
             Study Program
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-            <!-- Program Cards -->
+        <div class="flex flex-wrap justify-center gap-6">
             @foreach ($programs as $index => $program)
-                <div class="card bg-bluePrimary text-white w-auto shadow-lg" data-aos="flip-left"
-                    data-aos-delay="{{ 200 * ($index + 1) }}">
+                <div class="card bg-bluePrimary text-white w-64 shadow-lg justify-center"
+                    data-aos="flip-left" data-aos-delay="{{ 200 * ($index + 1) }}">
                     <figure>
-                        <img src="{{ $program['study_programs_Image'] }}" alt="{{ $program['study_program_Name'] }}"
+                        <img src="{{ asset($program->study_program_Image) }}" alt="{{ $program['study_program_Name'] }}"
                             class="w-full rounded-t-lg">
                     </figure>
                     <div class="card-body p-4">
@@ -94,6 +93,7 @@
                 </div>
             @endforeach
         </div>
+
     </section>
 
     <section class="flex overflow-hidden flex-col py-12 bg-gray-200" data-aos="fade-up">
@@ -110,13 +110,21 @@
                     <h2 class="text-black text-3xl font-semibold ps-4" data-aos="fade-right" data-aos-duration="1000">
                         Latest News</h2>
                     <div class="flex gap-10">
-                        <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5"
-                            data-aos="zoom-in" data-aos-delay="200">View all</button>
+                        <a href="{{ route('news.index') }}">
+                            <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5" data-aos="zoom-in" data-aos-delay="400">
+                                View all
+                            </button>
+                        </a>
+
                         <h2 class="text-black text-3xl font-semibold ps-4" data-aos="fade-left"
                             data-aos-duration="1000">Upcoming Events</h2>
                     </div>
-                    <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5" data-aos="zoom-in"
-                        data-aos-delay="400">View all</button>
+                    <a href="{{ route('event.index') }}">
+                        <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5" data-aos="zoom-in" data-aos-delay="400">
+                            View all
+                        </button>
+                    </a>
+
                 </div>
                 <!-- Articles Section -->
                 <div class="mt-7 w-full max-w-[1246px] max-md:max-w-full">
@@ -146,7 +154,7 @@
                                                         {{ Str::limit(html_entity_decode(strip_tags($new->News_Content)), 100) }}
                                                     </p>
                                                     <a href="{{ route('landing.page', $new->id) }}"
-                                                        class="self-center px-5 py-2 max-w-full text-center border border-black border-solid 
+                                                        class="self-center px-5 py-2 max-w-full text-center border border-black border-solid
                                                                     hover:bg-indigo-950 hover:text-white w-[150px] max-md:px-10 max-md:mt-5">
                                                         Read more
                                                     </a>

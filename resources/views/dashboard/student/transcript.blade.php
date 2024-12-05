@@ -4,12 +4,7 @@
     </x-slot>
 
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-semibold mb-4">Student Transcript</h1>
-
-        <div class="mb-4">
-            <p class="font-semibold">Nama: <span class="font-normal">{{ $namaMahasiswa }}</span></p>
-            <p class="font-semibold">NIM: <span class="font-normal">{{ $nim }}</span></p>
-        </div>
+        {{-- <h1 class="text-2xl font-semibold mb-4">Student Transcript</h1> --}}
 
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-xl font-bold mb-2">Transcript Detail</h2>
@@ -17,13 +12,13 @@
                 <table class="min-w-full table-fixed border-collapse border border-gray-300">
                     <thead>
                         <tr>
-                            <th class="border px-4 py-2 font-bold text-left bg-blue-400 text-white w-4">No</th>
-                            <th class="border px-4 py-2 font-bold text-left bg-blue-400 text-white w-20">Kode</th>
-                            <th class="border px-4 py-2 font-bold text-left bg-blue-400 text-white w-60">Mata Kuliah</th>
-                            <th class="border px-4 py-2 font-bold text-center bg-blue-400 text-white w-10">SKS</th>
-                            <th class="border px-4 py-2 font-bold text-center bg-blue-400 text-white w-10">Nilai Huruf</th>
-                            <th class="border px-4 py-2 font-bold text-center bg-blue-400 text-white w-10">Nilai Angka</th>
-                            <th class="border px-4 py-2 font-bold text-center bg-blue-400 text-white w-10">Total Nilai</th>
+                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-4">No</th>
+                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-20">Kode</th>
+                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-60">Mata Kuliah</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">SKS</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Nilai Huruf</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Nilai Angka</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Total Nilai</th>
                         </tr>
                     </thead>
                     <tbody>

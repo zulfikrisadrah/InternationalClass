@@ -15,13 +15,16 @@ class NewsController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $data = [
+            'title' => 'Manage News',
+        ];
         if ($user) {
             if ($user->hasRole('staff')) {
                 $news = News::where('user_id', $user->id)->paginate(10);
             } else {
                 $news = News::latest()->paginate(10);
             }
-            return view('dashboard.admin.news.index', compact('news'));//untuk return ke dashboard admin
+            return view('dashboard.admin.news.index', compact('news','data'));//untuk return ke dashboard admin
         }
     }
 
@@ -42,7 +45,7 @@ class NewsController extends Controller
         $validated = $request->validate([
             'News_Title' => 'required|string|max:255',
             'News_Content' => 'required|string',
-            'Publication_Date' => 'date',
+            'Publication_Date' => today(),
             'News_Image' => 'nullable|image|max:2048',
         ]);
 
@@ -82,7 +85,7 @@ class NewsController extends Controller
         $validated = $request->validate([
             'News_Title' => 'required|string|max:255',
             'News_Content' => 'required|string',
-            'Publication_Date' => 'date',
+            'Publication_Date' => today(),
             'News_Image' => 'nullable|image|max:2048',
         ]);
 

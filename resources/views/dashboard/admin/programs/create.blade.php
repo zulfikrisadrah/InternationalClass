@@ -62,6 +62,21 @@
                         <x-input-error :messages="$errors->get('ID_Ie_program')" class="mt-2" />
                     </div>
 
+                    @role('admin')
+                        <div class="mt-4">
+                            <x-input-label for="ID_study_program" :value="__('Study Program')" />
+                            <select id="ID_study_program" class="block mt-1 w-full" name="ID_study_program" required>
+                                <option value="">Select Study Program</option>
+                                @foreach($studyPrograms as $studyProgram)
+                                    <option value="{{ $studyProgram->ID_study_program }}" {{ old('ID_study_program') == $studyProgram->ID_study_program ? 'selected' : '' }}>
+                                        {{ $studyProgram->study_program_Name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('ID_study_program')" class="mt-2" />
+                        </div>
+                    @endrole
+
                     <!-- program Image -->
                     <div class="mt-4">
                         <x-input-label for="program_Image" :value="__(' program Image')" />

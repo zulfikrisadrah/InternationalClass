@@ -1,11 +1,12 @@
-<div class="flex justify-end items-center">
+<div class="flex justify-between items-center w-full">
+    <!-- Left Side: Academic Calendar Title -->
+    <div class="text-xl font-bold text-dark mt-4">{{ $data['title'] ?? '' }}</div>
+
     <!-- Right Side: Profile and User Menu -->
-    <div class="flex items-center gap-1.5 tracking-tight whitespace-nowrap text-zinc-800">
+    <div class="flex items-center gap-1.5 tracking-tight whitespace-nowrap text-black">
         <div class="dropdown dropdown-end">
             <!-- Trigger Dropdown -->
             <label tabindex="0" class="btn m-1 bg-blue-50 border-none gap-2 px-3.5 py-1.5 rounded-xl flex items-center">
-                <img src="{{ asset('images/profilePicture.png') }}"
-                    class="object-contain shrink-0 rounded-xl aspect-[1.18] w-[47px]" alt="Profile picture" />
                 <span class="my-auto">{{ Auth::user()->name ?? 'user' }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
@@ -28,3 +29,4 @@
         </div>
     </div>
 </div>
+

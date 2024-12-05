@@ -1,19 +1,19 @@
 <nav x-data="{ open: false }"
-    class="fixed inset-y-0 left-0 flex flex-col justify-between items-center bg-white  rounded-none max-w-[270px] h-screen w-3/4 sm:w-1/3 md:w-1/4 lg:w-[270px]"
+    class="fixed inset-y-0 left-0 flex flex-col justify-between items-center bg-white rounded-none max-w-[270px] h-screen w-3/4 sm:w-1/3 md:w-1/4 lg:w-[270px]"
     aria-label="Main Navigation">
     <!-- Logo and Header -->
-    <div class="flex gap-1.5 max-w-full text-2xl font-bold text-blue-500 w-[183px] pt-12">
+    <div class="flex gap-1.5 max-w-full text-2xl font-bold text-blueThird w-[183px] pt-12">
         <h1>International Class</h1>
     </div>
 
     <!-- Navigation Links -->
-    <ul class="flex flex-col justify-center items-start self-stretch pl-2.5 mt-16 w-full">
+    <ul class="flex flex-col justify-center items-start self-stretch pl-2.5 mt-9 w-auto">
         @role('admin')
             <li class="flex flex-col justify-center p-px w-full">
                 <a href="{{ route('dashboard') }}"
-                    class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 w-full {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <div class="flex gap-1">
-                        <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
+                        <i class="object-contain shrink-0 my-auto aspect-[0.96] w-6">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor">
                                 <path
                                     d="M575.8 255.5c0 18-15 32.1-32 32.1l-32 0 .7 160.2c0 2.7-.2 5.4-.5 8.1l0 16.2c0 22.1-17.9 40-40 40l-16 0c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1L416 512l-24 0c-22.1 0-40-17.9-40-40l0-24 0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32l0 64 0 24c0 22.1-17.9 40-40 40l-24 0-31.9 0c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2l-16 0c-22.1 0-40-17.9-40-40l0-112c0-.9 0-1.9 .1-2.8l0-69.7-32 0c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
@@ -21,36 +21,36 @@
                         </i>
                     </div>
                     <span
-                        class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
+                        class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blueThird' : 'text-zinc-500' }} w-full">Home</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.user.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('admin.user.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.user.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor">
                             <path
                                 d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192l42.7 0c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0L21.3 320C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7l42.7 0C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3l-213.3 0zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352l117.3 0C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7l-330.7 0c-14.7 0-26.7-11.9-26.7-26.7z" />
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Users</span>
+                    <span class="grow shrink w-full">Users</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.program.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('admin.program.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.program.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
                             <path
                                 d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z" />
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Programs</span>
+                    <span class="grow shrink w-full">Programs</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.event.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('admin.event.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.event.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -58,12 +58,12 @@
                             </path>
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Event</span>
+                    <span class="grow shrink w-full">Event</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.news.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('admin.news.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.news.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="currentColor">
                             <path
@@ -71,12 +71,12 @@
                             </path>
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">News</span>
+                    <span class="grow shrink w-full">News</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.calender.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.calender.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.calender.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -84,7 +84,7 @@
                             </path>
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Academic Calendar</span>
+                    <span class="grow shrink w-full">Academic Calendar</span>
                 </a>
             </li>
         @endrole
@@ -92,7 +92,7 @@
         @role('staff')
             <li class="flex flex-col justify-center p-px w-full">
                 <a href="{{ route('dashboard') }}"
-                    class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <div class="flex gap-1">
                         <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -103,36 +103,36 @@
                         </i>
                     </div>
                     <span
-                        class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
+                        class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blueThird' : 'text-zinc-500' }} w-[213px]">Home</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.user.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('admin.user.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.user.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor">
                             <path
                                 d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192l42.7 0c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0L21.3 320C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7l42.7 0C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3l-213.3 0zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352l117.3 0C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7l-330.7 0c-14.7 0-26.7-11.9-26.7-26.7z" />
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Users</span>
+                    <span class="grow shrink w-full">Users</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('staff.program.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.program.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.program.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
                             <path
                                 d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z" />
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Programs</span>
+                    <span class="grow shrink w-full">Programs</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('staff.news.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.news.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.news.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="currentColor">
                             <path
@@ -140,12 +140,12 @@
                             </path>
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">News</span>
+                    <span class="grow shrink w-full">News</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('staff.event.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.event.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.event.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -153,7 +153,7 @@
                             </path>
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Event</span>
+                    <span class="grow shrink w-full">Event</span>
                 </a>
             </li>
         @endrole
@@ -161,7 +161,7 @@
         @role('student')
             <li class="flex flex-col justify-center p-px w-full">
                 <a href="{{ route('dashboard') }}"
-                    class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <div class="flex gap-1">
                         <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -172,48 +172,48 @@
                         </i>
                     </div>
                     <span
-                        class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-zinc-500' }} w-[213px]">Home</span>
+                        class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blueThird' : 'text-zinc-500' }} w-[213px]">Home</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.program.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.program.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.program.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
                             <path
                                 d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z" />
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Programs</span>
+                    <span class="grow shrink w-full">Programs</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.studyPlan.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.studyPlan.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.studyPlan.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor">
                             <path
                                 d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z" />
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Study Plan Card</span>
+                    <span class="grow shrink w-full">Study Plan Card</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.transcript.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.transcript.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.transcript.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor">
                             <path
                                 d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z" />
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Transcript</span>
+                    <span class="grow shrink w-full">Transcript</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.calender.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.calender.index') ? 'bg-blue-50 text-blue-600' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.calender.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -221,7 +221,7 @@
                             </path>
                         </svg>
                     </i>
-                    <span class="grow shrink w-[142px]">Academic Calendar</span>
+                    <span class="grow shrink w-full">Academic Calendar</span>
                 </a>
             </li>
         @endrole

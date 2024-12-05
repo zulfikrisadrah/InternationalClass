@@ -15,13 +15,16 @@ class EventController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $data = [
+            'title' => 'Manage Event',
+        ];
         if ($user) {
             if ($user->hasRole('staff')) {
                 $events = Event::where('user_id', $user->id)->paginate(10);
             } else {
                 $events = Event::latest()->paginate(10);
             }
-            return view('dashboard.admin.event.index', compact('events'));//untuk return ke dashboard admin
+            return view('dashboard.admin.event.index', compact('events','data'));//untuk return ke dashboard admin
         }
     }
 
@@ -42,7 +45,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'Event_Title' => 'required|string|max:255',
             'Event_Content' => 'required|string',
-            'Publication_Date' => 'date',
+            'Publication_Date' => today(),
             'Event_Image' => 'nullable|image|max:2048',
         ]);
 
@@ -87,7 +90,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'Event_Title' => 'required|string|max:255',
             'Event_Content' => 'required|string',
-            'Publication_Date' => 'date',
+            'Publication_Date' => today(),
             'Event_Image' => 'nullable|image|max:2048',
         ]);
 

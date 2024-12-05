@@ -12,7 +12,7 @@
         </div>
     @endrole
 
-    <div class="pt-6">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex justify-between mb-5">
                 <!-- Filter Buttons -->
@@ -43,9 +43,9 @@
 
                 <!-- Waiting List Button -->
                 <a href="{{ route('admin.user.index', ['status' => 'waiting']) }}"
-                    class="font-bold py-2 px-6
-                        {{ request()->get('status') == 'waiting' ? 'bg-redPrimary text-white' : 'bg-white text-black' }}
-rounded-full ">
+                    class="font-bold py-2 px-6 
+                        {{ request()->get('status') == 'waiting' ? 'bg-yellow-500 text-white' : 'bg-white text-gray-700' }} 
+                    rounded-full relative">
                     Waiting List
                     @if ($waitingCount > 0)
                         <span

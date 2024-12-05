@@ -106,9 +106,9 @@
                         class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blueThird' : 'text-zinc-500' }} w-[213px]">Home</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.user.index') }}"
-                    class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('admin.user.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.user.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor">
                             <path
@@ -118,7 +118,7 @@
                     <span class="grow shrink w-full">Users</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('staff.program.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.program.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
@@ -130,7 +130,7 @@
                     <span class="grow shrink w-full">Programs</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('staff.news.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.news.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
@@ -143,7 +143,7 @@
                     <span class="grow shrink w-full">News</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('staff.event.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('staff.event.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
@@ -175,7 +175,7 @@
                         class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blueThird' : 'text-zinc-500' }} w-[213px]">Home</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.program.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.program.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
@@ -187,7 +187,7 @@
                     <span class="grow shrink w-full">Programs</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.studyPlan.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.studyPlan.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
@@ -199,7 +199,7 @@
                     <span class="grow shrink w-full">Study Plan Card</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.transcript.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.transcript.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
@@ -211,7 +211,7 @@
                     <span class="grow shrink w-full">Transcript</span>
                 </a>
             </li>
-            <li class="mt-12 w-full">
+            <li class="mt-8 w-full">
                 <a href="{{ route('student.calender.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.calender.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">

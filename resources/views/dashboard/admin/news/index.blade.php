@@ -60,7 +60,7 @@
                 <div class="mt-4 flex justify-center space-x-3">
                     @if ($news->currentPage() > 3)
                         <a href="{{ $news->url(1) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all
+                            class="px-4 py-2 text-xs border border-gray-300 rounded-md transition-all
                             duration-300 bg-white text-black hover:text-white hover:bg-indigo-400">1</a>
                     @endif
 
@@ -88,7 +88,7 @@
 
                     @if ($news->currentPage() < $news->lastPage() && $news->lastPage() - $news->currentPage() > 2)
                         <a href="{{ $news->url($news->lastPage()) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all
+                            class="px-4 py-2 text-xs border border-gray-300 rounded-md transition-all
                             duration-300 bg-white text-black hover:text-white hover:bg-indigo-400 ">{{ $news->lastPage() }}</a>
                     @endif
                 </div>

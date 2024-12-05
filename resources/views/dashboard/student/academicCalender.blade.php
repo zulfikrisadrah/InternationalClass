@@ -6,7 +6,7 @@
     <div class="container mx-auto px-4 pb-4">
         <div class="w-auto mx-auto">
             <!-- Header -->
-            <div class="text-2xl font-bold text-[#202224] mb-4">Academic Calendar</div>
+            {{-- <div class="text-2xl font-bold text-[#202224] mb-4">Academic Calendar</div> --}}
 
             <!-- Main Content Area -->
             <div class="flex flex-col">
@@ -99,13 +99,13 @@
                         // Reset all buttons' background color
                         const buttons = document.querySelectorAll('.calendar-view-btn');
                         buttons.forEach(button => {
-                            button.classList.remove('bg-blue-500', 'text-white');
+                            button.classList.remove('bg-blueThird', 'text-white');
                             button.classList.add('text-sm', 'font-semibold', 'py-1', 'px-3', 'rounded-lg',
                                 'text-black');
                         });
 
                         // Set the active button's background to blue
-                        activeButton.classList.add('bg-blue-500', 'text-white', 'px-3', 'py-2', 'rounded-lg');
+                        activeButton.classList.add('bg-blueThird', 'text-white', 'px-3', 'py-2', 'rounded-lg');
                     }
 
                     // Change view on button click and apply active class

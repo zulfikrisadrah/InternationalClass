@@ -32,7 +32,7 @@ class ProgramController extends Controller
             }
             // Fetch enrollments for admin/staff
             $enrollments = Program::with('students')->get();
-            return view('dashboard.admin.programs.index', compact('programs', 'enrollments', 'data'));
+            return view('dashboard.admin.programs.index', compact('programs', 'enrollments','data'));
         } else {
             $studyProgramId = $user->student->ID_study_program;
             $ieProgramId = $request->input('ie_program_id');

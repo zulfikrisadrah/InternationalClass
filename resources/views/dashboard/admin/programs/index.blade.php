@@ -4,16 +4,13 @@
     </x-slot>
 
     <!-- Manage Programs Section -->
-    <div class="flex flex-row justify-between items-center mb-6">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Manage Programs') }}
-        </h2>
-        <a href="{{ route('admin.program.create') }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+    <div class="flex flex-row justify-between items-center py-2">
+        <a href="{{ route('admin.program.create') }}"
+            class="ml-auto mr-8 font-bold py-4 px-6 bg-blueThird text-white rounded-full">
             Add New
         </a>
     </div>
-
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
                 <!-- Program List -->

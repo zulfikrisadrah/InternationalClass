@@ -42,7 +42,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'Event_Title' => 'required|string|max:255',
             'Event_Content' => 'required|string',
-            'Publication_Date' => today(),
+            'Publication_Date' => 'date',
             'Event_Image' => 'nullable|image|max:2048',
         ]);
 
@@ -87,7 +87,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'Event_Title' => 'required|string|max:255',
             'Event_Content' => 'required|string',
-            'Publication_Date' => today(),
+            'Publication_Date' => 'date',
             'Event_Image' => 'nullable|image|max:2048',
         ]);
 

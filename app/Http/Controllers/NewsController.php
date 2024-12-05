@@ -42,7 +42,7 @@ class NewsController extends Controller
         $validated = $request->validate([
             'News_Title' => 'required|string|max:255',
             'News_Content' => 'required|string',
-            'Publication_Date' => today(),
+            'Publication_Date' => 'date',
             'News_Image' => 'nullable|image|max:2048',
         ]);
 
@@ -82,7 +82,7 @@ class NewsController extends Controller
         $validated = $request->validate([
             'News_Title' => 'required|string|max:255',
             'News_Content' => 'required|string',
-            'Publication_Date' => today(),
+            'Publication_Date' => 'date',
             'News_Image' => 'nullable|image|max:2048',
         ]);
 

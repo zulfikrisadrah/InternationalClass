@@ -26,9 +26,7 @@ Route::get('/about', function () {
 Route::get('/IE', function () {
     return view('InternationalExposure');
 });
-Route::get('/studyProgram', function () {
-    return view('studyProgram');
-});
+Route::get('/studyProgram', [LandingPageController::class, 'studyProgram'])->name('studyProgram.index');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

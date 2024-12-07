@@ -17,13 +17,15 @@
             <!-- Text Column -->
             <div class="w-full lg:w-7/12" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
                 <h2 class="text-6xl font-bold text-bluePrimary pb-12">About</h2>
-                <p class="text-black mt-32 lg:mt-0">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
-                    and scrambled it to make a type specimen book. It has survived not only five centuries, but also the
-                    leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
-                    with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
-                    publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                <p class="text-black text-justify mt-32 lg:mt-0">
+                    The International Class is a separate program from regular classes, conducted in English or another
+                    foreign language as the medium of instruction. This program is specially designed to equip graduates
+                    with knowledge, skills, and proficiency in foreign languages, enabling them to compete in the global
+                    marketplace. Each student will participate in an international exposure activity, such as joint
+                    degrees,
+                    double degrees, sit-ins, internships, or other forms, at partner universities or institutions
+                    abroad, gaining
+                    valuable international learning experience.
                 </p>
             </div>
         </div>
@@ -32,7 +34,9 @@
     <!-- International Exposure Program Section -->
     <section class="mx-[70px]" data-aos="fade-up">
         <h2 class="text-bluePrimary text-3xl font-semibold mt-12" data-aos="fade-right" data-aos-duration="1200">
-            International Exposure Program</h2>
+            International Exposure Program
+        </h2>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mt-6">
             <!-- Sit In Program -->
             <div class="bg-redThird text-center p-6 rounded-[25px] h-auto w-auto" data-aos="zoom-in"
@@ -63,15 +67,20 @@
                 <h3 class="mt-4 font-semibold text-white">Enrichment Program</h3>
             </div>
         </div>
-        <p class="text-black mt-6 text-lg" data-aos="fade-up" data-aos-delay="200">Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Aenean tristique, tortor nec consequat vulputate.</p>
+
+        <p class="text-black mt-6 text-lg" data-aos="fade-up" data-aos-delay="200">
+            The International Exposure Program offers a range of opportunities for students to gain global experience.
+            These programs are designed to equip students with the necessary skills and knowledge to excel in the global
+            marketplace by providing immersive learning experiences abroad.
+        </p>
+
         <ul class="text-black list-disc pl-6 mt-4" data-aos="fade-up" data-aos-delay="400">
-            <li>Student Exchange Program</li>
-            <li>Sit In Program</li>
-            <li>Summer Course</li>
-            <li>Enrichment Program</li>
+            @foreach ($data['international_exposure_programs'] as $ie_programs)
+                <li>{{ $ie_programs }}</li>
+            @endforeach
         </ul>
     </section>
+
 
     <section class="mx-[70px] my-12" data-aos="fade-up">
         <!-- Study Program Section -->
@@ -80,8 +89,8 @@
         </h2>
         <div class="flex flex-wrap justify-center gap-6">
             @foreach ($programs as $index => $program)
-                <div class="card bg-bluePrimary text-white w-64 shadow-lg justify-center"
-                    data-aos="flip-left" data-aos-delay="{{ 200 * ($index + 1) }}">
+                <div class="card bg-bluePrimary text-white w-64 shadow-lg justify-center" data-aos="flip-left"
+                    data-aos-delay="{{ 200 * ($index + 1) }}">
                     <figure>
                         <img src="{{ asset($program->study_program_Image) }}" alt="{{ $program['study_program_Name'] }}"
                             class="w-full rounded-t-lg">
@@ -111,7 +120,8 @@
                         Latest News</h2>
                     <div class="flex gap-10">
                         <a href="{{ route('news.index') }}">
-                            <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5" data-aos="zoom-in" data-aos-delay="400">
+                            <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5"
+                                data-aos="zoom-in" data-aos-delay="400">
                                 View all
                             </button>
                         </a>
@@ -120,7 +130,8 @@
                             data-aos-duration="1000">Upcoming Events</h2>
                     </div>
                     <a href="{{ route('event.index') }}">
-                        <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5" data-aos="zoom-in" data-aos-delay="400">
+                        <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5"
+                            data-aos="zoom-in" data-aos-delay="400">
                             View all
                         </button>
                     </a>
@@ -155,7 +166,7 @@
                                                     </p>
                                                     <a href="{{ route('landing.page', $new->id) }}"
                                                         class="self-center px-5 py-2 max-w-full text-center border border-black border-solid
-                                                                    hover:bg-indigo-950 hover:text-white w-[150px] max-md:px-10 max-md:mt-5">
+                                                                                hover:bg-indigo-950 hover:text-white w-[150px] max-md:px-10 max-md:mt-5">
                                                         Read more
                                                     </a>
                                                 </div>

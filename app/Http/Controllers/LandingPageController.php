@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\StudyProgram;
 use App\Models\News;
 use App\Models\Event;
+use App\Models\IeProgram;
 
 
 class LandingPageController extends Controller
@@ -16,9 +17,31 @@ class LandingPageController extends Controller
         $programs = StudyProgram::with('faculty')->get();
         $news = News::latest()->take(3)->get(); // Mengambil 3 berita terbaru
         $events = Event::latest()->take(2)->get();
-        
-        return view('home', compact('programs', 'news', 'events'));
+        $ie_programs = IeProgram::pluck('ie_program_name');
 
+        $data = [
+            'international_exposure_programs' => $ie_programs,
+        ];
+
+        return view('home', compact('programs', 'news', 'events', 'data'));
+
+    }
+
+    public function studyProgram()
+    {
+        $programs = StudyProgram::with('faculty')->get();
+        $ie_programs = IeProgram::pluck('ie_program_name');
+        $data = [
+            'description' => 'The International Class is a program held separately from the regular classes, using 
+            English or another foreign language as the medium of instruction. This program is specifically designed to 
+            equip graduates with knowledge, skills, and foreign language proficiency, enabling them to compete in the global 
+            free market. Each student will participate in an international exposure activity at a partner university 
+            or institution abroad, such as joint degrees, double degrees, sit-ins, internships, or other forms of 
+            experience to gain international learning exposure.',
+            'international_exposure_programs' => $ie_programs,
+        ];
+
+        return view('studyProgram', compact('programs', 'data'));
     }
 
     // Untuk di halaman /news

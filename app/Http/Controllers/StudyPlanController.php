@@ -16,28 +16,73 @@ class StudyPlanController extends Controller
             $nim = $user->username;
     
             $currentYear = date('Y');
-    
-            $angkatan = intval(substr($nim, 4, 2)); 
-            $tahunMasuk = 2000 + $angkatan; 
+            
+            $angkatan = intval(substr($nim, 4, 2));
+            $tahunMasuk = 2000 + $angkatan;
     
             $maxYear = min($tahunMasuk + 7, 2024);
     
             $semesters = [];
             for ($tahun = $tahunMasuk; $tahun <= $maxYear; $tahun++) {
-                $semesters[] = "{$tahun}1"; 
-                $semesters[] = "{$tahun}2"; 
+                $semesters[] = "{$tahun}1";
+                $semesters[] = "{$tahun}2";
             }
     
-            $semester = $request->input('semester', reset($semesters)); 
+            $semester = $request->input('semester', reset($semesters));
     
             $mataKuliahData = $this->getKrsMahasiswa($nim, $semester);
             $message = $mataKuliahData ? 'Data berhasil diambil' : 'Data KRS tidak ditemukan';
+    
+            if ($request->ajax()) {
+                // Return only the table as a response
+                return response()->json([
+                    'mataKuliahTable' => $this->generateMataKuliahTable($mataKuliahData)
+                ]);
+            }
     
             return view('dashboard.student.studyPlan', compact('mataKuliahData', 'message', 'semester', 'semesters'));
         } else {
             return redirect()->route('login')->with('error', 'You need to be logged in to access this page.');
         }
     }
+    
+    private function generateMataKuliahTable($mataKuliahData)
+    {
+        if (empty($mataKuliahData)) {
+            return '<p class="text-red-500">Tidak ada mata kuliah yang ditemukan untuk semester tersebut.</p>';
+        }
+    
+        $table = '<table class="min-w-full table-fixed border-collapse border border-gray-300">
+                    <thead>
+                        <tr>
+                            <td class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-4">No</td>
+                            <td class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-15">Nama Mata Kuliah</td>
+                            <td class="border px-4 py-2 font-bold text-center bg-blueThird text-white">SKS</td>
+                        </tr>
+                    </thead>
+                    <tbody>';
+    
+        foreach ($mataKuliahData as $index => $mataKuliah) {
+            $table .= "<tr>
+                          <td class=\"border px-4 py-2 text-center\">" . ($index + 1) . "</td>
+                          <td class=\"border px-4 py-2 break-words\">" . $mataKuliah['nama_mata_kuliah'] . "</td>
+                          <td class=\"border px-4 py-2 text-center\">" . $mataKuliah['jumlah_sks'] . "</td>
+                        </tr>";
+        }
+    
+        $totalSks = array_sum(array_column($mataKuliahData, 'jumlah_sks'));
+    
+        $table .= "</tbody>
+                    <tfoot>
+                        <tr>
+                            <td class=\"border px-4 py-2 font-bold text-left bg-blueThird text-white\" colspan=\"2\">TOTAL SKS</td>
+                            <td class=\"border px-4 py-2 font-bold text-center bg-blueThird text-white\">" . $totalSks . "</td>
+                        </tr>
+                    </tfoot>
+                  </table>";
+    
+        return $table;
+    }    
     
     private function loginAndGetToken()
     {

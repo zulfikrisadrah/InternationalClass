@@ -5,7 +5,7 @@
     <section class="flex flex-col rounded-none px-6 py-6">
         <div class="w-full">
             <div class="flex gap-5 max-md:flex-col">
-                <!-- Left Chart Section -->
+                <!-- Left Chart Section (First Bar) -->
                 <div class="flex flex-col w-full md:w-[36%] max-md:w-full">
                     <article class="flex flex-col py-6 px-6 w-full h-full bg-white rounded-md shadow-2xl text-black">
                         <header class="flex flex-col px-4 w-full">
@@ -17,8 +17,8 @@
                         </div>
                     </article>
                 </div>
-
-                <!-- Right Chart Section (Center Alignment) -->
+    
+                <!-- Right Chart Section (Second Bar) -->
                 <div class="flex flex-col w-full md:w-[66%] max-md:w-full mx-auto">
                     <article class="flex flex-col py-6 mx-auto w-full bg-white rounded-md shadow-2xl">
                         <header class="flex flex-col px-8 w-full text-slate-700">
@@ -41,8 +41,48 @@
                     </article>
                 </div>
             </div>
+    
+            <!-- Second Row of Charts (Third and Fourth Bars) -->
+            <div class="flex gap-5 max-md:flex-col mt-6">
+                <!-- Third Chart Section -->
+                <div class="flex flex-col w-full md:w-[66%] max-md:w-full mx-auto">
+                    <article class="flex flex-col py-6 mx-auto w-full bg-white rounded-md shadow-2xl">
+                        <header class="flex flex-col px-8 w-full text-slate-700">
+                            <h2 class="self-start text-lg font-medium leading-loose">Student Statistic by Program</h2>
+                        </header>
+                        <div class="self-center mt-1.5 w-full">
+                            <div class="flex gap-5 flex-wrap">
+                                <!-- Grafik keempat -->
+                                <div class="flex flex-col w-full md:w-[83%] mx-auto">
+                                    <div class="flex flex-col w-full">
+                                        <div class="flex justify-between items-center w-full">
+                                            <div class="flex flex-col w-full h-[300px] max-h-[400px]">
+                                                <canvas id="studentChart4" class="w-full h-full"></canvas> <!-- Menentukan tinggi canvas -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+    
+                <!-- Fourth Chart Section -->
+                <div class="flex flex-col w-full md:w-[36%] max-md:w-full">
+                    <article class="flex flex-col py-6 px-6 w-full h-full bg-white rounded-md shadow-2xl text-black">
+                        <header class="flex flex-col px-4 w-full">
+                            <h2 class="self-start text-lg font-medium leading-loose">Student Statistic By Gender</h2>
+                        </header>
+                        <!-- Canvas untuk Chart.js -->
+                        <div class="flex justify-center w-full mt-4">
+                            <canvas id="studentChart3" class="w-full h-[260px] max-h-[260px]"></canvas>
+                        </div>
+                    </article>
+                </div>
+            </div>
         </div>
     </section>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

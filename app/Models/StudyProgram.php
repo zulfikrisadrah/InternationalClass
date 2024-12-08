@@ -13,7 +13,8 @@ class StudyProgram extends Model
         'study_program_Description',
         'International_Accreditation',
         'study_program_Image',
-        'ID_Faculty'
+        'ID_Faculty',
+        'isFilled'
     ];
 
     public function faculty()

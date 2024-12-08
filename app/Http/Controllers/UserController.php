@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\Student;
+use App\Models\Faculty;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -164,24 +165,27 @@ class UserController extends Controller
         } else {
             if (Auth::user()->hasRole('admin')) {
                 $users = User::when($role, function ($query, $role) {
-                    return $query->role($role);
-                })
+                        return $query->role($role);
+                    })
                     ->where('username', '!=', 'admin')
                     ->where(function ($query) {
-                        $query->whereHas('student');
+                        $query->whereHas('student', function ($subQuery) {
+                            $subQuery->where('isVerified', 1); 
+                        });
                     })
                     ->get();
             } else {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
-
+        
                 $users = User::role('student')
                     ->whereHas('student', function ($query) use ($staffStudyProgram) {
                         $query->whereIn('isActive', [1, 0])
+                            ->where('isVerified', 1) 
                             ->where('ID_study_program', $staffStudyProgram);
                     })
                     ->get();
             }
-        }
+        }        
 
         return view('dashboard.admin.users.index', compact('users', 'waitingCount', 'programNames', 'data'));
     }
@@ -191,7 +195,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $studyPrograms = StudyProgram::all();
+        $studyPrograms = StudyProgram::where('isFilled', 1)->get();
         return view('dashboard.admin.users.create', compact('studyPrograms'));
     }
 
@@ -255,51 +259,94 @@ class UserController extends Controller
     {
         if ($user->student && isset($user->student->isActive)) {
             $isActive = $request->input('isActive') ? 1 : 0;
-
+    
             $user->student->isActive = $isActive;
             $user->student->save();
         }
-
+    
         $action = $request->input('action');
-
+    
         if (in_array($action, ['accept', 'reject'])) {
             $tokenData = $this->loginAndGetToken();
-
+    
             if ($tokenData['status'] == 200) {
                 $accessToken = $tokenData['access_token'];
-
+    
                 $response = Http::withOptions(['verify' => false])
                     ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
                     ->withBody(json_encode(['nim' => $user->username]), 'application/json')
                     ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
             }
+    
             if (!$response->successful()) {
                 abort(500, 'Failed to fetch program data from API.');
             }
-
+    
             $data = $response->json();
             if (!isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
                 abort(500, 'Invalid response structure from API.');
             }
-
+    
             $programName = $data['mahasiswas'][0]['prodi']['nama_resmi'];
-
-            $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
-
+            $facultyCode = substr($user->username, 0, 1);
+            $faculty = Faculty::where('Faculty_Code', $facultyCode)->first();
+    
+            $images = [
+                'A' => 'images/studyprogram/Fakultas-Ekonomi-dan-Bisnis.png',
+                'B' => 'images/studyprogram/FH-UNHAS-10.png',
+                'C' => 'images/studyprogram/FK-unhas.png',
+                'D' => 'images/studyprogram/infor.png',
+                'E' => 'images/studyprogram/hi.png',
+                'F' => 'images/studyprogram/FIB.jpg',
+                'G' => 'images/studyprogram/FPertanian.png',
+                'H' => 'images/studyprogram/FMIPA.jpg', 
+                'I' => 'images/studyprogram/FPeternakan.jpg',
+                'J' => 'images/studyprogram/doktergigi.png',
+                'K' => 'images/studyprogram/kesmas.png',
+                'L' => 'images/studyprogram/FIKP.png',
+                'M' => 'images/studyprogram/FKehutanan.png',                      
+                'N' => 'images/studyprogram/Farmasi.png',                      
+                'R' => 'images/studyprogram/keperawatan.png',                      
+            ];
+    
+            $studyProgramImage = $images[$facultyCode] ?? 'images/studyprogram/default.png';
+    
+            $isFilled = $action === 'accept' ? 1 : null;
+    
+            $studyProgram = StudyProgram::firstOrCreate(
+                ['study_program_Name' => $programName],
+                [
+                    'degree' => 'Undergraduate',
+                    'study_program_Description' => null,
+                    'International_Accreditation' => null,
+                    'study_program_Image' => $studyProgramImage,
+                    'ID_Faculty' => $faculty->ID_Faculty,
+                    'isFilled' => $isFilled,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+    
+            if ($studyProgram->wasRecentlyCreated === false && $isFilled !== null) {
+                $studyProgram->update(['isFilled' => $isFilled]);
+            }
+    
             if (!$studyProgram) {
                 return response()->json(['error' => 'Program studi not found.'], 404);
             }
-
+    
             $studyProgramId = $studyProgram->ID_study_program;
-
+    
             if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
-
+    
                 if ($staffStudyProgram != $studyProgramId) {
                     return redirect()->route('admin.user.index')->with('error', 'Anda tidak memiliki akses untuk mahasiswa di program studi ini.');
                 }
             }
-
+    
+            $isVerified = $action === 'accept' ? 1 : 0;
+    
             Student::updateOrCreate(
                 ['user_id' => $user->id],
                 [
@@ -307,52 +354,54 @@ class UserController extends Controller
                     'Student_ID_Number' => $user->username,
                     'Student_Email' => $user->email,
                     'isActive' => $action === 'accept' ? 1 : 0,
+                    'isVerified' => $isVerified,
                     'ID_study_program' => $studyProgramId,
                 ]
             );
-
+    
             if ($action === 'accept') {
                 $user->givePermissionTo('choose program');
             } else {
                 $user->revokePermissionTo('choose program');
             }
-
+    
             return redirect()->route('admin.user.index')->with('success', 'Action performed successfully.');
         }
-
+    
+        // Validasi input lainnya dan update user
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
         ]);
-
+    
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
         ]);
-
+    
         if ($user->student) {
             $user->student->update([
                 'Student_Name' => $validated['name'],
                 'Student_Email' => $validated['email'],
                 'isActive' => $request->has('isActive') ? 1 : 0,
             ]);
-
+    
             if ($request->has('isActive')) {
                 $user->givePermissionTo('choose program');
             } else {
                 $user->revokePermissionTo('choose program');
             }
         }
-
+    
         if ($request->filled('password')) {
             $user->update([
                 'password' => Hash::make($request->password),
             ]);
         }
-
+    
         return redirect()->route('admin.user.index')->with('success', 'User updated successfully.');
-    }
-
+    }    
+    
     /**
      * Remove the specified resource from storage.
      */

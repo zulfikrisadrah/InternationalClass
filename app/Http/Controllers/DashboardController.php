@@ -53,7 +53,7 @@ class DashboardController extends Controller
                         $namaProdi = $data['mahasiswa']['prodi']['nama_resmi'] ?? 'Tidak Tersedia';
                         $angkatan = $data['mahasiswa']['angkatan'];
 
-                        $nilai_huruf_valid = ["A", "A-", "B+", "B", "B-", "C+", "C"];
+                        $nilai_huruf_valid = ["A", "A-", "B+", "B", "B-", "C+", "C", "D"];
                         $sks_dilulusi = 0;
 
                         $transkrip_terakhir = array_slice($data['transkrips'], -1); 

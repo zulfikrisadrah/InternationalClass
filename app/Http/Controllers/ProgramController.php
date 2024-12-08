@@ -124,7 +124,7 @@ class ProgramController extends Controller
     public function create()
     {
         $iePrograms = IeProgram::all();
-        $studyPrograms = StudyProgram::all();
+        $studyPrograms = StudyProgram::where('isFilled', 1)->get();
         return view('dashboard.admin.programs.create', compact('iePrograms', 'studyPrograms'));
     }
 

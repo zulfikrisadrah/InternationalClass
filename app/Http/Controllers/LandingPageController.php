@@ -52,7 +52,9 @@ class LandingPageController extends Controller
         $popular_news_page = News::latest()->take(4)->get(); // Ambil 4 berita terbaru
         $data = [
             'title' => 'News',
-            'description' => '',
+            'description' => 'Explore the latest updates from Hasanuddin University International Class, 
+            featuring student achievements, international collaborations, and important developments that 
+            showcase our dedication to global academic excellence.',
         ];
 
         return view('news', compact('news_page', 'popular_news_page', 'data'));
@@ -65,7 +67,9 @@ class LandingPageController extends Controller
         $upcoming_events_page = Event::latest()->take(4)->get(); // Sementara pakai latest event
         $data = [
             'title' => 'Event',
-            'description' => '',
+            'description' => 'Discover upcoming activities and programs from Hasanuddin University International Class. 
+            From academic workshops to cultural exchanges, these events are designed to enhance learning experiences, 
+            foster global connections, and celebrate our diverse community.',
         ];
         return view('event', compact('events_page', 'big_events_page', 'upcoming_events_page', 'data'));
     }
@@ -73,7 +77,10 @@ class LandingPageController extends Controller
     {
         $data = [
             'title' => 'About',
-            'description' => '',
+            'description' => 'The International Class at Hasanuddin University is a prestigious program 
+            established in 2006 to provide world-class education. It aims to produce globally competitive 
+            graduates through innovative learning, international collaborations, and a focus on the unique 
+            potential of the Indonesian Maritime Continent.',
         ];
         return view('about', compact('data'));
     }

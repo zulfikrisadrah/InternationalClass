@@ -85,7 +85,7 @@ class StudyProgramSeeder extends Seeder
                     'study_program_Name' => $program['study_program_Name'],
                     'study_program_Image' => $program['study_program_Image'],
                     'degree' => 'Undergraduate',
-                    'study_program_Description' => null,
+                    'study_program_Description' => $program['study_program_Description'],
                     'International_Accreditation' => null,
                     'ID_Faculty' => $faculty->ID_Faculty,
                     'created_at' => now(),

@@ -43,7 +43,7 @@
 
                 <!-- Waiting List Button -->
                 <a href="{{ route('admin.user.index', ['status' => 'waiting']) }}"
-                    class="font-bold py-2 px-6 
+                    class="font-bold py-3 px-6 
                         {{ request()->get('status') == 'waiting' ? 'bg-yellow-500 text-white' : 'bg-white text-gray-700' }} 
                     rounded-full relative">
                     Waiting List
@@ -118,62 +118,32 @@
                                         Delete
                                     </button>
                                 </form>
-                            @else
+                                @else
+                                <!-- Toggle Active/Inactive -->
                                 <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
-
                                     <button type="submit"
-                                        class="status-button {{ $user->student->isActive ? 'active' : 'inactive' }}"
+                                        class="font-bold py-4 px-6 rounded-full text-white
+                                        {{ $user->student->isActive ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600' }}"
                                         name="isActive" value="{{ $user->student->isActive ? 0 : 1 }}">
                                         {{ $user->student->isActive ? 'Aktif' : 'Tidak Aktif' }}
                                     </button>
                                 </form>
 
-                                <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST"
-                                    onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                <!-- Delete Button -->
+                                <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                        class="font-bold py-4 px-6 bg-redPrimary text-white rounded-full">
+                                    <button type="submit" class="font-bold py-4 px-6 bg-red-500 text-white rounded-full hover:bg-red-600">
                                         Delete
                                     </button>
                                 </form>
                             @endif
                         </div>
-
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
 </x-app-layout>
-
-<style>
-    .status-button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-size: 16px;
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .status-button.active {
-        background-color: #4CAF50;
-    }
-
-    .status-button.inactive {
-        background-color: #F44336;
-    }
-
-    .status-button:focus {
-        outline: none;
-        transform: scale(1.05);
-    }
-
-    .status-button:hover {
-        transform: scale(1.05);/
-    }
-</style>

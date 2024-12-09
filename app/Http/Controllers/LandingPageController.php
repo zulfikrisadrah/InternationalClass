@@ -14,7 +14,7 @@ class LandingPageController extends Controller
     public function index()
     {
         // Mengambil berbagai data yang dibutuhkan
-        $programs = StudyProgram::with('faculty')->get();
+        $programs = StudyProgram::where('isFilled', 1)->get();        
         $news = News::latest()->take(3)->get(); // Mengambil 3 berita terbaru
         $events = Event::latest()->take(2)->get();
         $ie_programs = IeProgram::pluck('ie_program_name');
@@ -29,7 +29,7 @@ class LandingPageController extends Controller
 
     public function studyProgram()
     {
-        $programs = StudyProgram::with('faculty')->get();
+        $programs = StudyProgram::where('isFilled', 1)->get();        
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
             'description' => 'The International Class is a program held separately from the regular classes, using 

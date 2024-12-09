@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('study_program_Description')->nullable();
             $table->string('study_program_Image')->nullable();
             $table->string('International_Accreditation')->nullable();
+            $table->boolean('isFilled')->nullable()->default(0);
             $table->unsignedBigInteger('ID_Faculty');
 
             $table->foreign('ID_Faculty')->references('ID_Faculty')->on('faculties')->onDelete('cascade');

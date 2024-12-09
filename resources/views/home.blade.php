@@ -87,13 +87,13 @@
         <h2 class="text-bluePrimary text-3xl font-bold mt-12" data-aos="fade-right" data-aos-duration="1200">
             Study Program
         </h2>
-        <div class="flex flex-wrap justify-center gap-6">
+        <div class="flex flex-wrap justify-center gap-6 mt-6">
             @foreach ($programs as $index => $program)
                 <div class="card bg-bluePrimary text-white w-64 shadow-lg justify-center" data-aos="flip-left"
                     data-aos-delay="{{ 200 * ($index + 1) }}">
                     <figure>
                         <img src="{{ asset($program->study_program_Image) }}" alt="{{ $program['study_program_Name'] }}"
-                            class="w-full rounded-t-lg">
+                            class="w-full rounded-t-lg" style="width: 260px; height: 242px">
                     </figure>
                     <div class="card-body p-4">
                         <h3 class="mt-2 text-lg font-semibold">{{ $program['study_program_Name'] }}</h3>

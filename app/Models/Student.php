@@ -15,6 +15,7 @@ class Student extends Model
         'Country_of_Origin',
         'Profile_Photo',
         'isActive',
+        'isVerified',
         'user_id',
         'ID_study_program'
     ];

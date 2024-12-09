@@ -18,7 +18,6 @@
             <!-- Dropdown Menu -->
             <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow">
                 <li><a href="{{ route('profile.edit') }}">Profile</a></li>
-                <li><a href="{{ route('profile.edit') }}">Settings</a></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

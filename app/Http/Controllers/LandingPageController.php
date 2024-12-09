@@ -21,10 +21,11 @@ class LandingPageController extends Controller
 
         $data = [
             'international_exposure_programs' => $ie_programs,
+            'title' => 'International Class',
+            'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
         ];
 
         return view('home', compact('programs', 'news', 'events', 'data'));
-
     }
 
     public function studyProgram()
@@ -32,11 +33,11 @@ class LandingPageController extends Controller
         $programs = StudyProgram::with('faculty')->get();
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
-            'description' => 'The International Class is a program held separately from the regular classes, using 
-            English or another foreign language as the medium of instruction. This program is specifically designed to 
-            equip graduates with knowledge, skills, and foreign language proficiency, enabling them to compete in the global 
-            free market. Each student will participate in an international exposure activity at a partner university 
-            or institution abroad, such as joint degrees, double degrees, sit-ins, internships, or other forms of 
+            'description' => 'The International Class is a program held separately from the regular classes, using
+            English or another foreign language as the medium of instruction. This program is specifically designed to
+            equip graduates with knowledge, skills, and foreign language proficiency, enabling them to compete in the global
+            free market. Each student will participate in an international exposure activity at a partner university
+            or institution abroad, such as joint degrees, double degrees, sit-ins, internships, or other forms of
             experience to gain international learning exposure.',
             'international_exposure_programs' => $ie_programs,
         ];
@@ -47,18 +48,33 @@ class LandingPageController extends Controller
     // Untuk di halaman /news
     public function news()
     {
-        $news_page = News::latest()->paginate(4); // Tampil per page 4 
+        $news_page = News::latest()->paginate(4); // Tampil per page 4
         $popular_news_page = News::latest()->take(4)->get(); // Ambil 4 berita terbaru
+        $data = [
+            'title' => 'News',
+            'description' => '',
+        ];
 
-        return view('news', compact('news_page', 'popular_news_page'));
+        return view('news', compact('news_page', 'popular_news_page', 'data'));
     }
     // Untuk di halaman /events
     public function event()
     {
-        $events_page = Event::latest()->paginate(4); // Tampil per page 4 
+        $events_page = Event::latest()->paginate(4); // Tampil per page 4
         $big_events_page = Event::latest()->take(4)->get(); // Sementara pakai latest event
         $upcoming_events_page = Event::latest()->take(4)->get(); // Sementara pakai latest event
-
-        return view('event', compact('events_page', 'big_events_page', 'upcoming_events_page'));
+        $data = [
+            'title' => 'Event',
+            'description' => '',
+        ];
+        return view('event', compact('events_page', 'big_events_page', 'upcoming_events_page', 'data'));
+    }
+    public function about()
+    {
+        $data = [
+            'title' => 'About',
+            'description' => '',
+        ];
+        return view('about', compact('data'));
     }
 }

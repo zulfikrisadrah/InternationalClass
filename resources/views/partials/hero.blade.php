@@ -5,7 +5,7 @@
 
     <!-- Content -->
     <div data-aos="fade-up-right" class="relative container mx-auto px-6 pb-12 z-10">
-        <h1 class="text-5xl font-semibold animate-slide-in">International Class</h1>
-        <p class="mt-4 text-lg animate-fade-in">Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.</p>
+        <h1 class="text-5xl font-semibold animate-slide-in">{{ $data['title'] ?? '' }}</h1>
+        <p class="mt-4 text-lg animate-fade-in">{{ $data['description'] ?? '' }}</p>
     </div>
 </section>

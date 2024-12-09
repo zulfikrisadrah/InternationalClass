@@ -17,7 +17,7 @@
                         </div>
                     </article>
                 </div>
-    
+
                 <!-- Right Chart Section (Second Bar) -->
                 <div class="flex flex-col w-full md:w-[66%] max-md:w-full mx-auto">
                     <article class="flex flex-col py-6 mx-auto w-full bg-white rounded-md shadow-2xl">
@@ -41,7 +41,7 @@
                     </article>
                 </div>
             </div>
-    
+
             <!-- Second Row of Charts (Third and Fourth Bars) -->
             <div class="flex gap-5 max-md:flex-col mt-6">
                 <!-- Third Chart Section -->
@@ -66,7 +66,7 @@
                         </div>
                     </article>
                 </div>
-    
+
                 <!-- Fourth Chart Section -->
                 <div class="flex flex-col w-full md:w-[36%] max-md:w-full">
                     <article class="flex flex-col py-6 px-6 w-full h-full bg-white rounded-md shadow-2xl text-black">
@@ -82,7 +82,7 @@
             </div>
         </div>
     </section>
-    
+
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

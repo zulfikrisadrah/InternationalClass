@@ -24,6 +24,16 @@ class UserController extends Controller
         $data = [
             'title' => 'Manage User',
         ];
+        // $query = User::query();
+
+        // if ($request->has('search')) {
+        //     $search = $request->search;
+        //     $query->where(function ($q) use ($search) {
+        //         $q->where('name', 'like', "%$search%")
+        //             ->orWhere('email', 'like', "%$search%");
+        //     });
+        // }
+
 
         if (Auth::user()->hasRole('admin')) {
             $waitingCount = User::role('student')
@@ -78,7 +88,7 @@ class UserController extends Controller
                 $users = User::role('student')
                     ->whereHas('student', function ($query) {
                         $query->where('isActive', 1);
-                    })->get();
+                    })->paginate(5);;
             } else if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
 
@@ -86,10 +96,10 @@ class UserController extends Controller
                     ->whereHas('student', function ($query) use ($staffStudyProgram) {
                         $query->where('isActive', 1)
                             ->where('ID_study_program', $staffStudyProgram);
-                    })->get();
+                    })->paginate(5);;
             }
         } elseif ($role == 'staff') {
-            $users = User::role('staff')->get();
+            $users = User::role('staff')->paginate(5);;
         } elseif ($status == 'waiting') {
             if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->studyProgram->study_program_Name;
@@ -97,7 +107,7 @@ class UserController extends Controller
                 $users = User::role('student')
                     ->whereDoesntHave('student')
                     ->whereNotIn('username', Student::pluck('Student_ID_Number'))
-                    ->get();
+                    ->paginate(5);;
 
                 $validUsers = [];
                 foreach ($users as $user) {
@@ -129,7 +139,7 @@ class UserController extends Controller
                     $users = User::role('student')
                         ->whereDoesntHave('student')
                         ->whereNotIn('username', Student::pluck('Student_ID_Number'))
-                        ->get();
+                        ->paginate(5);;
                 } else if (Auth::user()->hasRole('staff')) {
                     $staffStudyProgram = auth()->user()->staff->ID_study_program;
 
@@ -139,7 +149,7 @@ class UserController extends Controller
                         ->whereHas('student', function ($query) use ($staffStudyProgram) {
                             $query->where('ID_study_program', $staffStudyProgram);
                         })
-                        ->get();
+                        ->paginate(5);;
                 }
 
                 foreach ($users as $user) {
@@ -170,7 +180,7 @@ class UserController extends Controller
                     ->where(function ($query) {
                         $query->whereHas('student');
                     })
-                    ->get();
+                    ->paginate(5);;
             } else {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
 
@@ -179,7 +189,7 @@ class UserController extends Controller
                         $query->whereIn('isActive', [1, 0])
                             ->where('ID_study_program', $staffStudyProgram);
                     })
-                    ->get();
+                    ->paginate(5);;
             }
         }
 

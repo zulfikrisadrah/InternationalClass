@@ -148,6 +148,17 @@ class StudyProgramSeeder extends Seeder
                 The program also covers ethical issues in accounting, as well as the use of accounting information for business decision-making, 
                 ensuring that graduates are equipped to contribute effectively in the financial sector.'
             ],
+            [
+                'study_program_Name' => 'SISTEM INFORMASI - S1',
+                'ID_Faculty' => 8,
+                'study_program_Image' => 'images/studyprogram/Fakultas-Ekonomi-dan-Bisnis.png',
+                'study_program_Description' =>
+                    '(PRODI TESTING) The Accounting program provides students with a thorough understanding of financial and managerial accounting principles. 
+                Students will learn about financial reporting, auditing, taxation, and accounting systems, 
+                preparing them for careers in accounting, finance, and business analysis. 
+                The program also covers ethical issues in accounting, as well as the use of accounting information for business decision-making, 
+                ensuring that graduates are equipped to contribute effectively in the financial sector.'
+            ],
         ];
 
 

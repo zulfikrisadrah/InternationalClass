@@ -13,6 +13,7 @@ class Student extends Model
         'Student_ID_Number',
         'Student_Email',
         'isActive',
+        'isVerified',
         'user_id',
         'ID_study_program'
     ];

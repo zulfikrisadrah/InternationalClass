@@ -180,20 +180,6 @@ class LoginRequest extends FormRequest
                     ]);
                 }
 
-                $programName = $mahasiswaData['mahasiswas'][0]['prodi']['nama_resmi'];
-
-                StudyProgram::firstOrCreate(
-                    ['study_program_Name' => $programName],
-                    [
-                        'degree' => 'Undergraduate', 
-                        'study_program_Description' => null,
-                        'International_Accreditation' => null,
-                        'ID_Faculty' => $faculty->ID_Faculty,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]
-                );
-
                 // Buat akun mahasiswa di database lokal jika status_login = 1
                 $user = \App\Models\User::create([
                     'username' => $usernameOrEmail,

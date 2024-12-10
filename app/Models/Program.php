@@ -11,6 +11,7 @@ class Program extends Model
 
     protected $fillable = [
         'program_Name',
+        'program_description',
         'Country_of_Execution',
         'Execution_Date',
         'Participants_Count',

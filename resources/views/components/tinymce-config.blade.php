@@ -2,7 +2,7 @@
   referrerpolicy="origin"></script>
 <script>
   tinymce.init({
-    selector: 'textarea#News_Content, textarea#Event_Content',
+    selector: 'textarea#News_Content, textarea#Event_Content, textarea#program_description',
     width: '100%',
     height: 400,
     plugins: 'code table lists image insertdatetime advlist autolink charmap preview anchor pagebreak searchplace wordcount visualblocks fullscreen media template',

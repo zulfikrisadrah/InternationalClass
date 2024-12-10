@@ -15,10 +15,8 @@ return new class extends Migration
             $table->id('ID_Student');
             $table->string('Student_Name', 100);
             $table->string('Student_ID_Number', 20)->unique('NIM');
-            $table->string('Student_Email', 100)->nullable();
-            $table->string('Country_of_Origin', 50)->nullable();
+            $table->string('Student_Email', 100);
             $table->boolean('isActive')->default(1);
-            $table->string('Profile_Photo')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('ID_study_program');
 

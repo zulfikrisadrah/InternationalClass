@@ -14,7 +14,7 @@
     <!-- Main Navbar -->
     <div class="bg-redPrimary text-white py-4" style="box-shadow: 0 -2px 18px rgba(0, 0, 0, 0.2);">
         <div class="container mx-auto flex justify-between items-center px-6">
-            <a href="/">
+            <a href="{{ route('landing.page') }}">
                 <div class="flex items-center gap-4">
                     <img src="{{ asset('images/logoUnhas.png') }}" alt="Logo" class="w-10">
                     <div class="w-px h-8 bg-white"></div>
@@ -22,13 +22,13 @@
                 </div>
             </a>
             <nav class="flex space-x-6">
-                <a href="/about" class="hover:text-gray-900">About</a>
+                <a href="{{ route('about.index') }}" class="hover:text-gray-900">About</a>
                 <div class="dropdown dropdown-hover">
                     <div tabindex="0" role="button" class="hover:text-gray-900">Program</div>
                     <ul tabindex="0"
                         class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-black">
-                        <li><a href="/studyProgram">Study Program</a></li>
-                        <li><a href="/IE">International exposure program</a></li>
+                        <li><a href="{{ route('studyProgram.index') }}">Study Program</a></li>
+                        <li><a href="{{ route('news.index') }}">International exposure program</a></li>
                     </ul>
                 </div>
                 <div class="dropdown dropdown-hover">

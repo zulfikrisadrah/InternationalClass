@@ -22,17 +22,19 @@
         <!-- Navigation Links -->
         <nav class="space-y-8 px-8">
             <h3 class="font-semibold text-lg">Pages</h3>
-            <a href="#about" class="hover:text-gray-300 block pt-4">About</a>
-            <a href="#program" class="hover:text-gray-300 block">Program</a>
-            <a href="#information" class="hover:text-gray-300 block">Information</a>
+            <a href="{{ route('about.index') }}" class="hover:text-gray-300 block pt-4">About</a>
+            <a href="{{ route('studyProgram.index') }}" class="hover:text-gray-300 block">Study Program</a>
+            <a href="{{ route('studyProgram.index') }}" class="hover:text-gray-300 block">IE Program</a>
+            <a href="{{ route('news.index') }}" class="hover:text-gray-300 block">News</a>
+            <a href="{{ route('event.index') }}" class="hover:text-gray-300 block">Event</a>
         </nav>
 
 
         <nav class="space-y-8 px-8">
             <h3 class="font-semibold text-lg">Quick Links</h3>
-            <a href="#about" class="hover:text-gray-300 block pt-4">Library</a>
-            <a href="#program" class="hover:text-gray-300 block">Jurnal</a>
-            <a href="#information" class="hover:text-gray-300 block">Our Service</a>
+            <a href="https://neosia.unhas.ac.id/login" class="hover:text-gray-300 block pt-4">Portal Mahasiswa</a>
+            <a href="https://journal.unhas.ac.id/" class="hover:text-gray-300 block">Jurnal</a>
+            <a href="https://sikola-v2.unhas.ac.id/login/index.php" class="hover:text-gray-300 block">Sikola</a>
         </nav>
 
         <nav class="space-y-8 px-8">

@@ -20,7 +20,7 @@
 
     <div class="mt-6 text-black">
         <h3 class="text-2xl font-semibold mb-2">Deskripsi Program</h3>
-        <p>{{ $data['description'] }}</p>
+        <p>{{ $data_config['description'] }}</p>
     </div>
 
     <div class="mt-6 text-black">
@@ -28,7 +28,7 @@
             Why Should You Choose <span class="capitalize">{{ $programs->study_program_Name }}</span>
         </h3>
 
-        <p>{{ $data['description'] }}</p>
+        <p>{{ $data_config['whychoose'] }}</p>
     </div>
 
     <div class="mt-8">
@@ -38,8 +38,8 @@
             @foreach($prospects as $prospect)
                 <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl">
                     <div class="flex flex-col space-y-4">
-                        <h4 class="text-xl font-semibold text-blueThird">{{ $prospect->name }}</h4>
-                        <p class="text-neutral-600">{{ $prospect->description }}</p>
+                        <h4 class="text-xl font-semibold text-blueThird">{{ $prospect['name'] }}</h4>
+                        <p class="text-neutral-600">{{ $prospect['description'] }}</p>
                     </div>
                 </div>
             @endforeach

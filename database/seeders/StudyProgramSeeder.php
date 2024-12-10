@@ -18,51 +18,45 @@ class StudyProgramSeeder extends Seeder
                 'ID_Faculty' => 3,
                 'study_program_Image' => 'images/studyprogram/FK-unhas.png',
                 'study_program_Description' =>
-                    "The Medical Education program offers comprehensive training in medicine with a curriculum 
-                    designed to develop competent and professional medical practitioners. Students are equipped 
-                    with the knowledge, skills, and attitudes necessary to address healthcare challenges. 
-                    The program includes rigorous theoretical studies combined with hands-on clinical training 
-                    in hospitals and healthcare facilities.",
+                    "The Medical Education program provides comprehensive training with a curriculum to develop 
+                    professional medical practitioners. Students gain knowledge, skills, and attitudes through 
+                    theoretical studies and clinical training.",
             ],
             [
                 'study_program_Name' => 'PENDIDIKAN DOKTER GIGI - S1',
                 'ID_Faculty' => 10,
                 'study_program_Image' => 'images/studyprogram/doktergigi.png',
                 'study_program_Description' =>
-                    "The Dentistry Education program focuses on developing students into skilled dental professionals 
-                    who can diagnose, treat, and prevent oral and dental diseases. The curriculum combines academic 
-                    excellence with clinical practice to ensure students are well-prepared to provide high-quality 
-                    oral healthcare services.",
+                    "The Dentistry Education program develops skilled professionals to diagnose, treat, and 
+                    prevent oral diseases. The curriculum combines academic excellence with clinical practice 
+                    for high-quality oral healthcare.",
             ],
             [
                 'study_program_Name' => 'ILMU KEPERAWATAN - S1',
                 'ID_Faculty' => 15,
                 'study_program_Image' => 'images/studyprogram/keperawatan.png',
                 'study_program_Description' =>
-                    "The Nursing Science program is dedicated to training compassionate and competent nurses who can 
-                    provide comprehensive care to individuals, families, and communities. The program emphasizes 
-                    a strong foundation in health sciences, nursing ethics, and practical experiences in various 
-                    healthcare settings.",
+                    "The Nursing Science program trains compassionate, competent nurses to provide care for 
+                    individuals, families, and communities. It emphasizes health sciences, nursing ethics, 
+                    and practical experiences in healthcare settings.",
             ],
             [
                 'study_program_Name' => 'KESEHATAN MASYARAKAT - S1',
                 'ID_Faculty' => 11,
                 'study_program_Image' => 'images/studyprogram/kesmas.png',
                 'study_program_Description' =>
-                    "The Public Health program aims to educate future public health leaders who can tackle global 
-                    health challenges. The curriculum covers a wide range of topics, including epidemiology, health 
-                    promotion, environmental health, and health policy. Students will develop the skills needed 
-                    to improve population health through innovative solutions.",
+                    "The Public Health program educates future leaders to tackle global health challenges. 
+                    The curriculum covers epidemiology, health promotion, environmental health, and policy, 
+                    equipping students to improve population health.",
             ],
             [
                 'study_program_Name' => 'TEKNIK SIPIL - S1',
                 'ID_Faculty' => 4,
                 'study_program_Image' => 'images/studyprogram/sipil.png',
                 'study_program_Description' =>
-                    "The Civil Engineering program provides a robust education in designing, constructing, and 
-                    maintaining infrastructure. Students will learn about structural analysis, geotechnical 
-                    engineering, and sustainable construction practices, preparing them to contribute to urban 
-                    development and infrastructure projects.",
+                    "The Civil Engineering program offers robust training in designing, constructing, and maintaining 
+                    infrastructure. Students study structural analysis, geotechnical engineering, and sustainable 
+                    practices, preparing for urban development projects.",
             ],
             [
                 'study_program_Name' => 'TEKNIK INFORMATIKA - S1',
@@ -79,74 +73,63 @@ class StudyProgramSeeder extends Seeder
                 'ID_Faculty' => 4,
                 'study_program_Image' => 'images/studyprogram/arsitektur.png',
                 'study_program_Description' =>
-                    'The Architecture program focuses on the design, planning, and construction of buildings and other physical structures. 
-                Students will gain a deep understanding of architectural theory, history, and technology, 
-                preparing them for a career in creating sustainable and innovative designs in the built environment. 
-                They will learn to integrate functionality, aesthetics, and environmental considerations to develop architectural solutions.'
+                    'The Architecture program focuses on designing and constructing buildings and structures. 
+                    Students explore architectural theory, history, and technology, preparing for careers in 
+                    sustainable designs that integrate functionality, aesthetics, and environmental considerations.'
             ],
             [
                 'study_program_Name' => 'TEKNIK GEOLOGI - S1',
                 'ID_Faculty' => 4,
                 'study_program_Image' => 'images/studyprogram/geo.png',
                 'study_program_Description' =>
-                    'The Geology program trains students to study the Earth’s physical structure and processes. 
-                It covers a wide range of topics including mineralogy, petrology, sedimentology, and geophysics, 
-                providing graduates with the knowledge to explore and manage natural resources and understand environmental challenges. 
-                Students will also learn about the Earth’s history and the processes that shape its landscapes, 
-                with a focus on sustainable practices and environmental preservation.'
+                    'The Geology program trains students to study Earth’s structure and processes. 
+                    It covers mineralogy, petrology, sedimentology, and geophysics, preparing graduates to explore 
+                    resources and address environmental challenges with a focus on sustainability.'
             ],
             [
                 'study_program_Name' => 'ILMU HUKUM - S1',
                 'ID_Faculty' => 2,
                 'study_program_Image' => 'images/studyprogram/FH-UNHAS-10.png',
                 'study_program_Description' =>
-                    'The Law program provides students with a comprehensive understanding of legal principles, frameworks, and practices. 
-                It prepares students to work in a wide range of legal careers including litigation, corporate law, public policy, and more. 
-                The curriculum emphasizes the importance of ethical reasoning, critical thinking, and international law, 
-                while also covering various branches such as civil law, criminal law, and constitutional law. 
-                Graduates will be equipped to advocate for justice, protect human rights, and contribute to legal reforms.'
+                    '"The Law program provides an understanding of legal principles and practices. It prepares students 
+                    for careers in litigation, corporate law, public policy, and more. The curriculum emphasizes ethical 
+                    reasoning, critical thinking, and international law, covering civil, criminal, and constitutional law.'
             ],
             [
                 'study_program_Name' => 'ILMU HUBUNGAN INTERNASIONAL - S1',
                 'ID_Faculty' => 5,
                 'study_program_Image' => 'images/studyprogram/hi.png',
                 'study_program_Description' =>
-                    'The International Relations program focuses on understanding the political, economic, and cultural interactions between nations. 
-                Students will explore topics such as diplomacy, international organizations, human rights, and conflict resolution, 
-                preparing them for careers in government, NGOs, or international businesses. 
-                The program also emphasizes the importance of global cooperation, the challenges of international security, and the role of international law in addressing global issues.'
+                    'The International Relations program covers political, economic, and cultural interactions between 
+                    nations, focusing on diplomacy, human rights, and conflict resolution, preparing students for careers 
+                    in government, NGOs, or international business.'
             ],
             [
                 'study_program_Name' => 'ILMU KOMUNIKASI - S1',
                 'ID_Faculty' => 5,
                 'study_program_Image' => 'images/studyprogram/ilkom.png',
                 'study_program_Description' =>
-                    'The Communication Studies program covers a wide range of topics in communication theory, media studies, journalism, and public relations. 
-                Students will develop skills in writing, speaking, and media production, equipping them for careers in various sectors such as media, advertising, 
-                corporate communication, and public relations. 
-                The program also includes the study of digital media, the role of communication in society, and the impact of technology on the communication process.'
+                    'The Communication Studies program covers communication theory, media studies, journalism, and public 
+                    relations. Students develop skills in writing, speaking, and media production for careers in media, 
+                    advertising, corporate communication, and public relations.'
             ],
             [
                 'study_program_Name' => 'MANAJEMEN - S1',
                 'ID_Faculty' => 1,
                 'study_program_Image' => 'images/studyprogram/Fakultas-Ekonomi-dan-Bisnis.png',
                 'study_program_Description' =>
-                    'The Management program equips students with the knowledge and skills to lead and manage organizations effectively. 
-                It covers areas such as organizational behavior, strategy, human resource management, and finance, 
-                preparing students for leadership roles in diverse industries. 
-                The program also emphasizes the development of critical thinking, decision-making, and problem-solving skills, 
-                enabling graduates to navigate the complexities of the modern business environment.'
+                    'The Management program equips students with skills to lead and manage organizations. It covers 
+                    organizational behavior, strategy, HR management, and finance, preparing students for leadership 
+                    roles in various industries.'
             ],
             [
                 'study_program_Name' => 'AKUTANSI - S1',
                 'ID_Faculty' => 1,
                 'study_program_Image' => 'images/studyprogram/Fakultas-Ekonomi-dan-Bisnis.png',
                 'study_program_Description' =>
-                    'The Accounting program provides students with a thorough understanding of financial and managerial accounting principles. 
-                Students will learn about financial reporting, auditing, taxation, and accounting systems, 
-                preparing them for careers in accounting, finance, and business analysis. 
-                The program also covers ethical issues in accounting, as well as the use of accounting information for business decision-making, 
-                ensuring that graduates are equipped to contribute effectively in the financial sector.'
+                    'The Accounting program teaches financial and managerial accounting principles, including reporting, 
+                    auditing, taxation, and systems. It prepares students for careers in accounting, finance, and business 
+                    analysis, emphasizing ethics and decision-making.'
             ],
         ];
 

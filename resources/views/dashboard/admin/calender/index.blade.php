@@ -5,89 +5,85 @@
 
     <div class="container mx-auto px-4">
         <div class="w-full lg:w-3/4 mx-auto">
+            <!-- Header -->
+            <div class="text-2xl font-bold text-[#202224] mb-4">Academic Calendar</div>
+
             <!-- Main Content Area -->
             <div class="flex flex-col lg:flex-row gap-8">
 
                 <!-- Left Section for Events -->
                 <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 w-fit h-fit lg:w-1/3">
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg mb-6">
-                        + Add New Event
-                    </button>
-                    <div class="text-lg font-bold text-[#202224] mb-4">You are going to</div>
+                    <a href="{{ route('admin.calender.create') }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg mb-6">
+                        + Add New Events
+                    </a>
+
+                    <div class="text-lg font-bold text-[#202224] mb-4">Upcoming Events</div>
 
                     <div class="space-y-6">
-                        <!-- Event Item -->
-                        <div class="flex items-start space-x-4">
-                            <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/62x62" alt="Event Image">
-                            <div>
-                                <div class="font-bold text-sm">Design Conference</div>
-                                <div class="text-gray-500 text-xs">Today 07:19 AM</div>
-                                <div class="text-gray-500 text-xs">56 Davion Mission Suite 157</div>
-                                <div class="text-gray-500 text-xs">Meaghanberg</div>
+                    @forelse($agendas as $agenda)
+                        <div class="flex items-center space-x-4 mb-6">
+                            <img class="w-12 h-12 rounded-full" src="{{ $agenda->image_url ?? 'https://via.placeholder.com/62x62' }}" alt="Agenda Image">
+                            <div class="flex-1">
+                                <div class="font-bold text-sm">{{ $agenda->title }}</div>
+                                <div class="text-gray-500 text-xs">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y \a\t h:i A') }}</div>
+                                <div class="text-gray-500 text-xs">{{ $agenda->location }}</div>
                             </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/62x62" alt="Event Image">
-                            <div>
-                                <div class="font-bold text-sm">Weekend Festival</div>
-                                <div class="text-gray-500 text-xs">16 October 2024 at 5:00 PM</div>
-                                <div class="text-gray-500 text-xs">853 Moore Flats Suite 158, Sweden</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <img class="w-12 h-12 rounded-full" src="https://via.placeholder.com/62x62" alt="Event Image">
-                            <div>
-                                <div class="font-bold text-sm">Glastonbury Festival</div>
-                                <div class="text-gray-500 text-xs">20-22 October 2019 at 8:00 PM</div>
-                                <div class="text-gray-500 text-xs">646 Walter Road Apt. 571, Turks and Caicos Islands</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <button class="bg-gray-200 text-[#202224] font-bold py-2 px-4 rounded-lg mt-6">
-                        See More
-                    </button>
+                            <!-- Action Buttons -->
+                            <div class="flex space-x-2">
+                                <!-- Edit Button -->
+                                <a href="{{ route('admin.calender.edit', $agenda->id) }}" class="text-blue-500 hover:text-blue-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                        <path d="M2 20h20v2H2v-2zM17.59 5.59L19 7 9.41 16.59 8 15.17l9.59-9.58zM15.5 3c.78 0 1.5.67 1.5 1.5S16.28 6 15.5 6 14 5.33 14 4.5 14.72 3 15.5 3z" />
+                                    </svg>
+                                </a>
+
+
+                                <!-- Delete Button -->
+                                <form method="POST" action="{{ route('admin.calender.destroy', $agenda->id) }}" onsubmit="return confirm('Are you sure?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-500 hover:text-red-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center text-gray-500">No events found.</div>
+                    @endforelse
+
+                    </div>
                 </div>
 
                 <!-- Right Section for Calendar -->
                 <div class="flex-1 flex-col bg-white rounded-lg shadow-lg p-6 max-w-full h-full lg:w-2/3">
                     <!-- Calendar Header -->
                     <div class="flex justify-between items-center pb-2 mb-4">
-                        <!-- Previous Button and Title Section -->
                         <div class="flex items-center w-full justify-between">
                             <div class="flex">
                                 <button id="prev-btn" class="text-black px-3 rounded-lg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="w-8 h-8">
-                                        <path
-                                            d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z">
-                                        </path>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                                        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
                                     </svg>
                                 </button>
 
-                                <!-- Calendar Title in the center -->
-                                <div class="text-xl font-bold text-black text-center" id="calendar-title">
-                                </div>
+                                <div class="text-xl font-bold text-black text-center" id="calendar-title"></div>
 
                                 <button id="next-btn" class="text-black px-3 rounded-lg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="w-8 h-8">
-                                        <path
-                                            d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z">
-                                        </path>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                                        <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
                                     </svg>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- View Mode Buttons -->
                         <div class="flex items-center space-x-2 mt-2">
-                            <button class="calendar-view-btn text-lg font-bold py-1 px-2 rounded-lg w-full text-center"
-                                id="day-view">Day</button>
-                            <button class="calendar-view-btn text-lg font-bold py-1 px-2 rounded-lg w-full text-center"
-                                id="week-view">Week</button>
-                            <button class="calendar-view-btn text-lg font-bold py-1 px-2 rounded-lg w-full text-center"
-                                id="month-view">Month</button>
+                            <button class="calendar-view-btn text-lg font-bold py-1 px-2 rounded-lg w-full text-center" id="day-view">Day</button>
+                            <button class="calendar-view-btn text-lg font-bold py-1 px-2 rounded-lg w-full text-center" id="week-view">Week</button>
+                            <button class="calendar-view-btn text-lg font-bold py-1 px-2 rounded-lg w-full text-center" id="month-view">Month</button>
                         </div>
                     </div>
 
@@ -96,87 +92,194 @@
                 </div>
             </div>
 
-
             <!-- Add FullCalendar JS and CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
             <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet" />
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function() {
                     var calendarEl = document.getElementById('calendar');
+
                     var calendar = new FullCalendar.Calendar(calendarEl, {
                         initialView: 'dayGridMonth',
-                        headerToolbar: false, // Disable default toolbar
-                        events: '/calendar/events',
-                        eventsContent: function(arg) {
-                            // Custom event rendering, you can format the text here if needed
-                            return {
-                                html: `<div class="text-xs font-bold text-white">${arg.event.title}</div>`
-                            }
+                        headerToolbar: false,
+                        events: 'calendar/events', 
+
+                        eventContent: function() {
+                            return { domNodes: [] };
                         },
-                        eventClick: function(info) {
-                            alert('Event: ' + info.event.title);
+
+                        eventsSet: function() {
+                            document.querySelectorAll('.fc-event').forEach(function(event) {
+                                event.classList.add('border-0', 'border-white', 'bg-transparent', 'text-transparent');
+                            });
+                            updateEventDots();  
                         },
-                        // Update title dynamically based on view change
-                        dateDidMount: function(info) {
-                            // This is used to update the title based on the view
-                            updateCalendarTitle(calendar.view.title);
+
+                        datesSet: function() {
+                            updateEventDots();  
                         },
-                        viewDidMount: function(info) {
-                            // This also triggers when the view is mounted
-                            updateCalendarTitle(info.view.title);
+
+                        dateClick: function(info) {
+                            console.log('Tanggal yang diklik: ' + info.dateStr);
                         },
+
                         datesSet: function() {
                             updateCalendarTitle(calendar.view.title);
-                        },
+                        }
                     });
 
                     calendar.render();
 
-                    // Function to change active button style
                     function setActiveButton(activeButton) {
-                        // Reset all buttons' background color
                         const buttons = document.querySelectorAll('.calendar-view-btn');
                         buttons.forEach(button => {
                             button.classList.remove('bg-blue-500', 'text-white');
-                            button.classList.add('text-sm', 'font-semibold', 'py-1', 'px-3', 'rounded-lg',
-                                'text-black');
+                            button.classList.add('text-sm', 'font-semibold', 'py-1', 'px-3', 'rounded-lg', 'text-black');
                         });
 
-                        // Set the active button's background to blue
                         activeButton.classList.add('bg-blue-500', 'text-white', 'px-3', 'py-2', 'rounded-lg');
                     }
 
-                    // Change view on button click and apply active class
+                    function updateCalendarTitle(title) {
+                        document.getElementById('calendar-title').innerText = title;
+                    }
+
                     document.getElementById('day-view').addEventListener('click', function() {
                         calendar.changeView('timeGridDay');
                         setActiveButton(this);
+                        document.querySelectorAll('.fc-event').forEach(function(event) {
+                                event.classList.add('border-0', 'border-white', 'bg-transparent', 'text-transparent');
+                            });
                     });
 
                     document.getElementById('week-view').addEventListener('click', function() {
                         calendar.changeView('timeGridWeek');
                         setActiveButton(this);
+                        document.querySelectorAll('.fc-event').forEach(function(event) {
+                                event.classList.add('border-0', 'border-white', 'bg-transparent', 'text-transparent');
+                            });
                     });
 
                     document.getElementById('month-view').addEventListener('click', function() {
                         calendar.changeView('dayGridMonth');
                         setActiveButton(this);
+                        document.querySelectorAll('.fc-event').forEach(function(event) {
+                                event.classList.add('border-0', 'border-white', 'bg-transparent', 'text-transparent');
+                            });
                     });
 
-                    // Set the initial active button (Month is active by default)
                     setActiveButton(document.getElementById('month-view'));
 
-                    function updateCalendarTitle(title) {
-                        document.getElementById('calendar-title').innerText = title;
-                    }
                     document.getElementById('prev-btn').addEventListener('click', function() {
                         calendar.prev();
+                        document.querySelectorAll('.fc-event').forEach(function(event) {
+                                event.classList.add('border-0', 'border-white', 'bg-transparent', 'text-transparent');
+                            });
                     });
 
-                    // Change to next month/day
                     document.getElementById('next-btn').addEventListener('click', function() {
                         calendar.next();
+                        document.querySelectorAll('.fc-event').forEach(function(event) {
+                                event.classList.add('border-0', 'border-white', 'bg-transparent', 'text-transparent');
+                            });
                     });
-                });
-    </script>
 
+                    function updateEventDots() {
+                        document.querySelectorAll('.events-dot').forEach(el => el.remove());
+
+                        calendar.getEvents().forEach(event => {
+                            let eventDateStr = event.startStr;
+                            let dayCell = document.querySelector(`[data-date="${eventDateStr}"] .fc-daygrid-day-frame`);
+
+                            if (dayCell) {
+                                let existingDots = dayCell.querySelectorAll('.events-dot');
+                                let leftOffset = existingDots.length * 15;
+
+                                let dot = document.createElement('div');
+                                dot.classList.add(
+                                    'events-dot',
+                                    'absolute',
+                                    'bottom-1',
+                                    'left-1',
+                                    'w-3',
+                                    'h-3',
+                                    'rounded-full'
+                                );
+
+                                let eventColor = event.backgroundColor || 'orange';
+                                dot.style.backgroundColor = eventColor;
+
+                                dot.style.left = `${1 + leftOffset}px`;
+                                dayCell.appendChild(dot);
+                                dayCell.style.border = 'none';
+
+                                dot.addEventListener('mouseover', function() {
+                                    console.log(event);
+                                    let allDots = document.querySelectorAll('.events-dot');
+                                    allDots.forEach(d => {
+                                        if (d.style.backgroundColor === dot.style.backgroundColor) {
+                                            const dotColor = d.style.backgroundColor;
+                                            let rgbaColor;
+                                            
+                                            if (dotColor.startsWith('rgb')) {
+                                                rgbaColor = dotColor.replace('rgb', 'rgba').replace(')', ', 0.5)').replace('rgb(', 'rgba(');
+                                            } else if (dotColor.startsWith('#')) {
+                                                const r = parseInt(dotColor.slice(1, 3), 16);
+                                                const g = parseInt(dotColor.slice(3, 5), 16);
+                                                const b = parseInt(dotColor.slice(5, 7), 16);
+                                                rgbaColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
+                                            }
+
+                                            d.parentElement.style.backgroundColor = rgbaColor;
+                                        }
+                                    });
+                                    let tooltip = document.createElement('div');
+                                    tooltip.classList.add('event-tooltip');
+                                    tooltip.style.position = 'absolute';
+                                    tooltip.style.maxWidth = '250px';
+                                    tooltip.style.maxHeight = '150px'; 
+                                    tooltip.style.backgroundColor = '#333';
+                                    tooltip.style.color = '#fff';
+                                    tooltip.style.borderRadius = '4px';
+                                    tooltip.style.padding = '5px';
+                                    tooltip.style.fontSize = '12px';
+                                    tooltip.style.zIndex = '1000';
+
+                                    tooltip.style.whiteSpace = 'normal'; 
+                                    tooltip.style.overflow = 'hidden'; 
+                                    tooltip.style.textOverflow = 'ellipsis'; 
+                                    tooltip.style.lineHeight = '1.5'; 
+
+                                    tooltip.innerHTML = `                                        
+                                        <strong> ${event.extendedProps.startDate} -  ${event.extendedProps.endDate} : ${event.title} </strong> <br>
+                                        `;
+                                        
+                                        document.body.appendChild(tooltip);
+                                        
+                                    // <strong>Title:</strong> ${event.title} <br>
+                                    // <strong>Description:</strong> ${event.extendedProps.description || 'No description available'} <br>
+                                    // <strong>Location:</strong> ${event.extendedProps.location || 'No location available'}
+                                    
+                                    const dotRect = dot.getBoundingClientRect();
+                                    tooltip.style.left = `${dotRect.left + dotRect.width / 2 - tooltip.offsetWidth / 2}px`;
+                                    tooltip.style.top = `${dotRect.top - tooltip.offsetHeight - 5}px`; 
+                                });
+
+                                dot.addEventListener('mouseout', function() {
+                                    let allCells = document.querySelectorAll('.fc-daygrid-day-frame');
+                                    allCells.forEach(cell => {
+                                        cell.style.backgroundColor = ''; 
+                                    });
+
+                                    let tooltip = document.querySelector('.event-tooltip');
+                                    if (tooltip) {
+                                        tooltip.remove();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            </script>
+    </div>
 </x-app-layout>

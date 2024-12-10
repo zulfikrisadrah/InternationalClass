@@ -53,7 +53,6 @@ class LandingPageController extends Controller
         ];
         // Mengambil data program studi dari konfigurasi
         $data_config = config("studyprogram.$ID_study_program", [
-            // 'title' => 'Program Studi Tidak Ditemukan',
             'description' => 'Deskripsi tidak tersedia',
             'whychoose' => 'Alasan tidak tersedia',
             'prospects' => [],

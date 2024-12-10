@@ -3,11 +3,19 @@
         @include('dashboard.partials.header')
     </x-slot>
 
-    <div class="flex flex-row justify-between items-center py-2">
-        <a href="{{ route('admin.news.create') }}"
-            class="ml-auto mr-8 font-bold py-4 px-6 bg-blueThird text-white rounded-full">
-            Add New
-        </a>
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="flex justify-between">
+                <form method="GET" action="{{ route('admin.news.index') }}" class="flex items-center gap-4 pt-2">
+                    <input type="text" name="search" value="{{ request()->get('search') }}" placeholder="Search newss by title"
+                        class="py-2 px-4 border rounded-lg">
+                    <button type="submit" class="bg-blueThird text-white py-2 px-6 rounded-lg">Search</button>
+                </form>
+
+                <a href="{{ route('admin.news.create') }}"
+                    class="ml-auto font-bold py-4 px-6 bg-blueThird text-white rounded-3xl">
+                    Add New
+                </a>
+        </div>
     </div>
 
     <div class="py-6">
@@ -41,7 +49,7 @@
 
                         <div class="hidden md:flex flex-row items-center gap-x-3">
                             <a href="{{ route('admin.news.edit', $new->ID_News) }}"
-                                class="font-bold py-4 px-6 bg-blueThird text-white rounded-full">
+                                class="font-bold py-4 px-6 bg-blueThird text-white rounded-3xl">
                                 Edit
                             </a>
 
@@ -49,48 +57,15 @@
                                 onsubmit="return confirm('Are you sure you want to delete this news?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="font-bold py-4 px-6 bg-redPrimary text-white rounded-full">
+                                <button type="submit" class="font-bold py-4 px-6 bg-redPrimary text-white rounded-3xl">
                                     Delete
                                 </button>
                             </form>
                         </div>
                     </div>
                 @endforeach
-                <!--Pagination-->
-                <div class="mt-4 flex justify-center space-x-3">
-                    @if ($news->currentPage() > 3)
-                        <a href="{{ $news->url(1) }}"
-                            class="px-4 py-2 text-xs border border-gray-300 rounded-md transition-all
-                            duration-300 bg-white text-black hover:text-white hover:bg-indigo-400">1</a>
-                    @endif
-
-                    @if ($news->currentPage() > 4)
-                        <span class="text-gray-500">...</span>
-                    @endif
-
-                    @php
-                        $start = max(1, $news->currentPage() - 2);
-                        $end = min($news->lastPage(), $news->currentPage() + 2);
-                    @endphp
-
-                    @for ($i = $start; $i <= $end; $i++)
-                        <a href="{{ $news->url($i) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all
-                            duration-300 {{ $news->currentPage() == $i ? 'bg-blueSecondary text-white' : 'hover:text-white
-                            hover:bg-indigo-400 ' }}">
-                            {{ $i }}
-                        </a>
-                    @endfor
-
-                    @if ($news->currentPage() < $news->lastPage() - 2)
-                        <span class="text-gray-500">...</span>
-                    @endif
-
-                    @if ($news->currentPage() < $news->lastPage() && $news->lastPage() - $news->currentPage() > 2)
-                        <a href="{{ $news->url($news->lastPage()) }}"
-                            class="px-4 py-2 text-xs border border-gray-300 rounded-md transition-all
-                            duration-300 bg-white text-black hover:text-white hover:bg-indigo-400 ">{{ $news->lastPage() }}</a>
-                    @endif
+                <div class="mt-6 ">
+                    {{ $news->appends(request()->query())->links('vendor.pagination.custom') }}
                 </div>
             </div>
         </div>

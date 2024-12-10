@@ -12,21 +12,38 @@ class NewsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $user = Auth::user();
-        $data = [
-            'title' => 'Manage News',
-        ];
-        if ($user) {
-            if ($user->hasRole('staff')) {
-                $news = News::where('user_id', $user->id)->paginate(10);
-            } else {
-                $news = News::latest()->paginate(10);
-            }
-            return view('dashboard.admin.news.index', compact('news','data'));//untuk return ke dashboard admin
+    public function index(Request $request)
+{
+    $user = Auth::user();
+    $data = [
+        'title' => 'Manage News',
+    ];
+
+    // Ambil query pencarian
+    $search = $request->input('search');
+
+    if ($user) {
+        if ($user->hasRole('staff')) {
+            // Berita milik staff yang sedang login
+            $news = News::where('user_id', $user->id)
+                ->when($search, function ($query, $search) {
+                    $query->where('News_Title', 'like', '%' . $search . '%');
+                })
+                ->paginate(10);
+        } else {
+            // Semua berita untuk admin
+            $news = News::when($search, function ($query, $search) {
+                    $query->where('News_Title', 'like', '%' . $search . '%');
+                })
+                ->latest()
+                ->paginate(10);
         }
+
+        // Pastikan query pagination tetap membawa input pencarian
+        return view('dashboard.admin.news.index', compact('news', 'data'));
     }
+}
+
 
 
     /**

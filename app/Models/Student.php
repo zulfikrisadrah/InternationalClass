@@ -6,14 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $primaryKey = 'ID_Student'; 
+    protected $primaryKey = 'ID_Student';
 
     protected $fillable = [
         'Student_Name',
         'Student_ID_Number',
         'Student_Email',
-        'Country_of_Origin',
-        'Profile_Photo',
         'isActive',
         'user_id',
         'ID_study_program'

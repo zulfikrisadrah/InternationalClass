@@ -17,10 +17,17 @@ class ProgramController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $programs = Program::all();
+        $programs = Program::query();  // Ubah dari all() ke query() untuk menambahkan kondisi pencarian
         $data = [
             'title' => 'Manage Program',
         ];
+
+        // Menangani pencarian
+        $search = $request->input('search');
+        if ($search) {
+            // Jika ada input pencarian, filter berdasarkan nama atau deskripsi program
+            $programs = $programs->where('program_Name', 'like', '%' . $search . '%');
+        }
 
         if ($user->hasRole('admin') || $user->hasRole('staff')) {
             if ($user->hasRole('staff')) {
@@ -28,11 +35,12 @@ class ProgramController extends Controller
                 $studyProgramId = $user->staff->ID_study_program;
 
                 // Ambil program yang sesuai dengan study program staff
-                $programs = Program::where('ID_study_program', $studyProgramId)->get();
+                $programs = $programs->where('ID_study_program', $studyProgramId);
             }
             // Fetch enrollments for admin/staff
             $enrollments = Program::with('students')->get();
-            return view('dashboard.admin.programs.index', compact('programs', 'enrollments','data'));
+            $programs = $programs->paginate(5);  // Ambil data program setelah difilter
+            return view('dashboard.admin.programs.index', compact('programs', 'enrollments', 'data'));
         } else {
             $studyProgramId = $user->student->ID_study_program;
             $ieProgramId = $request->input('ie_program_id');
@@ -41,12 +49,13 @@ class ProgramController extends Controller
                     return $query->where('ID_Ie_program', $ieProgramId);
                 })
                 ->where('ID_study_program', $studyProgramId)
-                ->get();
+                ->paginate(5);
 
             $iePrograms = IeProgram::all();
             return view('dashboard.student.programs.index', compact('programs', 'iePrograms'));
         }
     }
+
 
 
 
@@ -105,7 +114,7 @@ class ProgramController extends Controller
             $approvedCount = $program->students()->wherePivot('status', 'approved')->count();
 
             // Hapus semua peserta pending jika batas tercapai
-            if ($approvedCount >= $program->participants_count) {
+            if ($approvedCount >= $program->Participants_Count) {
                 $program->students()->wherePivot('status', 'pending')->detach();
             }
 
@@ -139,6 +148,7 @@ class ProgramController extends Controller
 
             $validated = $request->validate([
                 'program_Name' => 'required|string|max:255',
+                'program_description' => 'required|string',
                 'Country_of_Execution' => 'required|string|max:255',
                 'Execution_Date' => 'required|date',
                 'Participants_Count' => 'required|integer|min:1',
@@ -156,6 +166,7 @@ class ProgramController extends Controller
 
             $validated = $request->validate([
                 'program_Name' => 'required|string|max:255',
+                'program_description' => 'required|string',
                 'Country_of_Execution' => 'required|string|max:255',
                 'Execution_Date' => 'required|date',
                 'Participants_Count' => 'required|integer|min:1',
@@ -189,7 +200,11 @@ class ProgramController extends Controller
      */
     public function show(Program $program)
     {
-        //
+        $acceptedStudents = $program->students()
+        ->wherePivot('status', 'approved')
+        ->paginate(10);
+
+        return view('dashboard.admin.programs.show', compact('program', 'acceptedStudents'));
     }
 
     /**
@@ -211,6 +226,7 @@ class ProgramController extends Controller
         if (auth()->user()->hasRole('admin')) {
             $validated = $request->validate([
                 'program_Name' => 'required|string|max:255',
+                'program_description' => 'required|string',
                 'Country_of_Execution' => 'required|string|max:255',
                 'Execution_Date' => 'required|date',
                 'Participants_Count' => 'required|integer|min:1',
@@ -221,6 +237,7 @@ class ProgramController extends Controller
         } else {
             $validated = $request->validate([
                 'program_Name' => 'required|string|max:255',
+                'program_description' => 'required|string',
                 'Country_of_Execution' => 'required|string|max:255',
                 'Execution_Date' => 'required|date',
                 'Participants_Count' => 'required|integer|min:1',

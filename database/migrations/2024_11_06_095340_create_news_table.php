@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('News_Content');
             $table->timestamp('Publication_Date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('News_Image')->nullable();
+            $table->integer('views')->default(0);
             $table->unsignedBigInteger('user_id');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

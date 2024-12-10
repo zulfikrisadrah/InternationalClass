@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\StudyProgram;
 use App\Models\News;
 use App\Models\Event;
 use App\Models\IeProgram;
+use App\Models\StudyProgram;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 
 class LandingPageController extends Controller
@@ -68,8 +69,10 @@ class LandingPageController extends Controller
     // Untuk di halaman /news
     public function news()
     {
-        $news_page = News::latest()->paginate(4); // Tampil per page 4
-        $popular_news_page = News::latest()->take(4)->get(); // Ambil 4 berita terbaru
+        $news_page = News::latest()->paginate(4);
+        $popular_news_page = Cache::remember('news_popular', now()->addMinutes(10), function () {
+            return News::orderBy('views', 'desc')->limit(4)->get();
+        });
         $data = [
             'title' => 'News',
             'description' => 'Explore the latest updates from Hasanuddin University International Class,
@@ -77,21 +80,50 @@ class LandingPageController extends Controller
             showcase our dedication to global academic excellence.',
         ];
 
-        return view('news', compact('news_page', 'popular_news_page', 'data'));
+        return view('news.index', compact('news_page', 'popular_news_page', 'data'));
+    }
+    public function newsShow($ID_News)
+    {
+        $newsItem = News::findOrFail($ID_News);
+        $newsItem->increment('views');
+        Cache::forget('news_popular');
+
+        $data = [
+            'title' => 'News',
+            'description' => 'Explore the latest updates from Hasanuddin University International Class,
+            featuring student achievements, international collaborations, and important developments that
+            showcase our dedication to global academic excellence.',
+        ];
+
+        return view('news.show', compact('newsItem', 'data'));
     }
     // Untuk di halaman /events
     public function event()
     {
-        $events_page = Event::latest()->paginate(4); // Tampil per page 4
-        $big_events_page = Event::latest()->take(4)->get(); // Sementara pakai latest event
-        $upcoming_events_page = Event::latest()->take(4)->get(); // Sementara pakai latest event
+        $events_page = Event::latest()->paginate(4);
+        $upcoming_events_page = Event::where('Event_Date', '>=', now())
+            ->latest()
+            ->take(4)
+            ->get();
         $data = [
             'title' => 'Event',
             'description' => 'Discover upcoming activities and programs from Hasanuddin University International Class.
             From academic workshops to cultural exchanges, these events are designed to enhance learning experiences,
             foster global connections, and celebrate our diverse community.',
         ];
-        return view('event', compact('events_page', 'big_events_page', 'upcoming_events_page', 'data'));
+        return view('event.index', compact('events_page', 'upcoming_events_page', 'data'));
+    }
+    public function eventShow($ID_Event)
+    {
+        $eventItem = Event::findOrFail($ID_Event);
+        $data = [
+            'title' => 'Event',
+            'description' => 'Explore the latest updates from Hasanuddin University International Class,
+            featuring student achievements, international collaborations, and important developments that
+            showcase our dedication to global academic excellence.',
+        ];
+
+        return view('event.show', compact('eventItem', 'data'));
     }
     public function about()
     {

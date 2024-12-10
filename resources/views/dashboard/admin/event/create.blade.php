@@ -16,7 +16,7 @@
                     <div>
                         <x-input-label for="Event_Title" :value="__('Event Title')" />
                         <x-text-input id="Event_Title" class="block mt-1 w-full" type="text" name="Event_Title"
-                            :value="old('Event_Title')" required minlength="16"  autofocus autocomplete="Event_Title" />
+                            :value="old('Event_Title')" required minlength="16" autofocus autocomplete="Event_Title" />
                         <x-input-error :messages="$errors->get('Event_Title')" class="mt-2" />
                     </div>
 
@@ -27,6 +27,14 @@
                         <textarea id="Event_Content" name="Event_Content" class="block mt-1 w-full"
                             rows="4">{{ old('Event_Content') }}</textarea>
                         <x-input-error :messages="$errors->get('Event_Content')" class="mt-2" />
+                    </div>
+
+                    <!-- Event Date -->
+                    <div class="mt-4">
+                        <x-input-label for="Event_Date" :value="__('Event Date')" />
+                        <x-text-input id="Event_Date" class="block mt-1 w-full" type="date" name="Event_Date"
+                            :value="old('Event_Date')" required />
+                        <x-input-error :messages="$errors->get('Event_Date')" class="mt-2" />
                     </div>
 
                     <!-- Event Image -->

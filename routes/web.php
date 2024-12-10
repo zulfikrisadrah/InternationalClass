@@ -17,8 +17,10 @@ use App\Http\Controllers\TranscriptController;
 Route::get('/', [LandingPageController::class, 'index'])->name('landing.page');
 
 Route::get('/event', [LandingPageController::class, 'event'])->name('event.index');
+Route::get('/event/{id}', [LandingPageController::class, 'eventShow'])->name('event.show');
 
 Route::get('/news', [LandingPageController::class, 'news'])->name('news.index');
+Route::get('/news/{id}', [LandingPageController::class, 'newsShow'])->name('news.show');
 
 Route::get('/about', [LandingPageController::class, 'about'])->name('about.index');
 

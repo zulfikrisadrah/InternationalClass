@@ -108,7 +108,7 @@
                 <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
                     @foreach ($big_events_page as $big_event)
                         <div
-                            class="w-full max-w-[650px] mb-8 bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_20px_rgba(0,0,0,0.25)] border-gray-200">
+                            class="w-full max-w-[650px] mb-8 bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_20px_rgba(0,0,0,0.25)]">
                             <div class="p-6">
                                 <h2 class="text-lg md:text-xl font-semibold text-black mb-3 ">
                                 {{ Str::limit($big_event->Event_Title, 150) }}

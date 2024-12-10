@@ -32,6 +32,15 @@
                         <x-input-error :messages="$errors->get('Event_Content')" class="mt-2" />
                     </div>
 
+                    <!-- Event Date -->
+                    <div class="mt-4">
+                        <x-input-label for="Event_Date" :value="__('Event Date')" />
+                        <x-text-input id="Event_Date" class="block mt-1 w-full" type="date" name="Event_Date"
+                            :value="old('Event_Date', $event->Event_Date ? $event->Event_Date->format('Y-m-d') : '')" required />
+                        <x-input-error :messages="$errors->get('Event_Date')" class="mt-2" />
+                    </div>
+
+
                     <!-- Event Image -->
                     <div x-data="{ preview: '{{ asset('storage/' . $event->Event_Image) }}' }" class="mt-4">
                         <x-input-label for="Event_Image" :value="__('Event Image')" />
@@ -49,8 +58,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-6">
-                        <button type="submit"
-                            class="font-bold py-3 px-6 bg-blueThird text-white rounded-full">
+                        <button type="submit" class="font-bold py-3 px-6 bg-blueThird text-white rounded-full">
                             Update Event
                         </button>
                     </div>
@@ -58,9 +66,4 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 </x-app-layout>

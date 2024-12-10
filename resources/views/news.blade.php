@@ -3,7 +3,7 @@
 @section('title', 'News - Hasanuddin University')
 
 @section('content')
-<section class="flex flex-col items-start mx-[70px] my-[70px]">
+<section class="flex flex-col items-start mx-16 my-16">
     <div class="self-stretch w-full max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col">
             <!-- Main News -->
@@ -29,68 +29,8 @@
                             more</a>
                     </div>
                 @endforeach
-
-                <!--Pagination-->
-                <div class="mt-4 flex justify-center space-x-3 items-center">
-                    <nav class="self-center text-5xl font-semibold text-black max-md:mt-10"
-                        aria-label="News navigation">
-                        @if ($news_page->currentPage() > 1)
-                            <a href="{{ $news_page->previousPageUrl() }}"
-                                class="focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                &lt;
-                            </a>
-                        @else
-                            <span class="text-gray-400 cursor-not-allowed">
-                                &lt;
-                            </span>
-                        @endif
-
-                        @if ($news_page->hasMorePages())
-                            <a href="{{ $news_page->nextPageUrl() }}"
-                                class="focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                &gt;
-                            </a>
-                        @else
-                            <span class="text-gray-400 cursor-not-allowed">
-                                &gt;
-                            </span>
-                        @endif
-                    </nav>
-                </div>
-
-                <div class="mt-4 flex justify-center space-x-3 items-center">
-                    <!-- Pagination Links -->
-                    @if ($news_page->currentPage() > 3)
-                        <a href="{{ $news_page->url(1) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400">1</a>
-                    @endif
-
-                    @if ($news_page->currentPage() > 4)
-                        <span class="text-gray-500">...</span>
-                    @endif
-
-                    @php
-                        $start = max(1, $news_page->currentPage() - 2);
-                        $end = min($news_page->lastPage(), $news_page->currentPage() + 2);
-                    @endphp
-
-                    @for ($i = $start; $i <= $end; $i++)
-                        <a href="{{ $news_page->url($i) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 {{ $news_page->currentPage() == $i ? 'bg-indigo-950 text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
-                            {{ $i }}
-                        </a>
-                    @endfor
-
-                    @if ($news_page->currentPage() < $news_page->lastPage() - 2)
-                        <span class="text-gray-500">...</span>
-                    @endif
-
-                    @if ($news_page->currentPage() < $news_page->lastPage() && $news_page->lastPage() - $news_page->currentPage() > 2)
-                        <a href="{{ $news_page->url($news_page->lastPage()) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400 ">
-                            {{ $news_page->lastPage() }}
-                        </a>
-                    @endif
+                <div class="mt-6 ">
+                    {{ $news_page->appends(request()->query())->links('vendor.pagination.custom') }}
                 </div>
             </article>
 
@@ -98,7 +38,7 @@
             <aside class="flex flex-col ml-5 w-[45%] max-md:ml-0 max-md:w-full">
                 <div class="flex flex-col max-md:mt-10 max-md:max-w-full">
                     <h3
-                        class="px-6 py-2 mt-5 mb-5 text-lg font-semibold text-white bg-indigo-950 rounded-md text-center w-full max-w-[650px] mx-auto">
+                        class="px-6 py-2 mt-5 mb-5 text-lg font-semibold text-white bg-blueSecondary rounded-md text-center w-full max-w-full mx-auto">
                         Popular News
                     </h3>
                     <div class="flex flex-col gap-5 mt-3 w-full max-md:mt-10 max-md:mr-1.5 max-md:max-w-full">

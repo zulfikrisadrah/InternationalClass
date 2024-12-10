@@ -34,12 +34,10 @@ class LandingPageController extends Controller
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
             'title' => 'Study Program',
-            'description' => 'The International Class is a program held separately from the regular classes, using
-            English or another foreign language as the medium of instruction. This program is specifically designed to
-            equip graduates with knowledge, skills, and foreign language proficiency, enabling them to compete in the global
-            free market. Each student will participate in an international exposure activity at a partner university
-            or institution abroad, such as joint degrees, double degrees, sit-ins, internships, or other forms of
-            experience to gain international learning exposure.',
+            'description' => 'The International Class is a program conducted in English or another foreign language, 
+            designed to equip graduates with the skills and language proficiency to compete globally. Students will 
+            engage in international exposure activities, such as joint degrees, double degrees, internships, or other 
+            opportunities at partner universities or institutions abroad.',
             'international_exposure_programs' => $ie_programs,
         ];
 
@@ -51,30 +49,21 @@ class LandingPageController extends Controller
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
             'title' => $programs->study_program_Name,
-            'description' => 'The International Class is a program held separately from the regular classes, using
-            English or another foreign language as the medium of instruction. This program is specifically designed to
-            equip graduates with knowledge, skills, and foreign language proficiency, enabling them to compete in the global
-            free market. Each student will participate in an international exposure activity at a partner university
-            or institution abroad, such as joint degrees, double degrees, sit-ins, internships, or other forms of
-            experience to gain international learning exposure.',
-            'international_exposure_programs' => $ie_programs,
+            'description' => $programs->study_program_Description,
         ];
-        $prospects = [
-            (object)[
-                'name' => 'Software Engineer',
-                'description' => 'Membangun aplikasi perangkat lunak untuk berbagai platform.',
-            ],
-            (object)[
-                'name' => 'Data Scientist',
-                'description' => 'Menganalisis data untuk membuat keputusan bisnis berbasis data.',
-            ],
-            (object)[
-                'name' => 'Project Manager',
-                'description' => 'Mengelola dan mengawasi proyek dari awal hingga selesai.',
-            ],
-        ];
+        // Mengambil data program studi dari konfigurasi
+        $data_config = config("studyprogram.$ID_study_program", [
+            // 'title' => 'Program Studi Tidak Ditemukan',
+            'description' => 'Deskripsi tidak tersedia',
+            'whychoose' => 'Alasan tidak tersedia',
+            'prospects' => [],
+        ]);
 
-        return view('studyProgram.show', compact('programs', 'data', 'prospects'));
+        // Menyiapkan data untuk dikirim ke view
+        $program = $data_config;  // Program studi yang ditemukan
+        $prospects = $data_config['prospects']; // Prospek yang relevan
+
+        return view('studyProgram.show', compact('programs', 'data','data_config', 'prospects'));
     }
 
     // Untuk di halaman /news

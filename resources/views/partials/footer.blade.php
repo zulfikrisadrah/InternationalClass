@@ -2,7 +2,7 @@
 <footer class="bg-bluePrimary text-white relative overflow-hidden">
     <!-- Background Logo -->
     <div class="absolute inset-0 z-0 opacity-10">
-        <img src="images/logoUnhasWhite.png" alt="Logo Unhas" class="max-h-full">
+        <img src="{{ asset('images/logoUnhasWhite.png') }}" alt="Logo Unhas" class="max-h-full">
     </div>
 
     <!-- Main Footer Content -->
@@ -10,7 +10,7 @@
         <!-- University Info with Logo -->
         <div class="space-y-4 pe-2">
             <div class="flex items-center gap-4">
-                <img src="images/logoUnhasWhite.png" alt="Logo" class="w-14">
+                <img src="{{ asset('images/logoUnhas.png') }}" alt="Logo" class="w-14">
                 <div class="w-px h-16 bg-white"></div>
                 <span class="font-bold text-2xl">Hasanuddin <br> University</span>
             </div>

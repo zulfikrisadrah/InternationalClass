@@ -1,5 +1,5 @@
 <section class="flex flex-col justify-end bg-cover bg-center text-white relative overflow-hidden"
-    style="background-image: url('images/hero.png'); height: calc(100vh - 110px);">
+    style="background-image: url('{{ asset('images/hero.png') }}'); height: calc(100vh - 110px);">
     <!-- Overlay Effect -->
     <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-black/10"></div>
 

@@ -16,7 +16,7 @@
         <div class="container mx-auto flex justify-between items-center px-6">
             <a href="/">
                 <div class="flex items-center gap-4">
-                    <img src="images/logoUnhas.png" alt="Logo" class="w-10">
+                    <img src="{{ asset('images/logoUnhas.png') }}" alt="Logo" class="w-10">
                     <div class="w-px h-8 bg-white"></div>
                     <span class="font-semibold text-xs">Kelas Internasional <br> Universitas Hasanuddin</span>
                 </div>

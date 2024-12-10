@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Agenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class CalenderController extends Controller
 {
@@ -12,63 +13,122 @@ class CalenderController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $data = [
-            'title' => 'Academic Calender',
-        ];
-
-    if ($user->hasRole('student')) {
-        return view('dashboard.student.academicCalender');
+        $agendas = Agenda::where('end', '>=', Carbon::now())->get(); 
+    
+        if ($user->hasRole('student')) {
+            return view('dashboard.student.academicCalender', compact('agendas'));
+        }
+    
+        if ($user->hasRole('admin')) {
+            return view('dashboard.admin.calender.index', compact('agendas'));
+        }
+    
+        abort(403, 'Unauthorized action.');
     }
-
-
-    if ($user->hasRole('admin')) {
-        return view('dashboard.admin.calender.index', compact('data'));
-    }
-
-    abort(403, 'Unauthorized action.');
-}
-
-    // Mengambil semua agenda untuk ditampilkan di kalender
+    
+    // Mengambil semua agenda dalam format JSON
     public function getEvents()
     {
-        // Ambil semua agenda dari database
-        $events = Agenda::all();
+        $colors = ['#f5472c','#edbc4a', '#72c42f', '#eb661a', '#6fdeed',' #9c66ed', '#a586ad',' #00ff3c',' #0c95f7'];
+        $colorIndex = 0;
+    
+        $events = Agenda::all()->flatMap(function ($agenda) use (&$colors, &$colorIndex) {
+            $startDate = Carbon::parse($agenda->start);
+            $endDate = Carbon::parse($agenda->end ?? $agenda->start);
+    
+            if ($startDate && $endDate && $startDate <= $endDate) {
+                $eventColor = $colors[$colorIndex];
+                $colorIndex = ($colorIndex + 1) % count($colors); 
 
-        // Format data agenda untuk FullCalendar
-        $events = $events->map(function($event) {
-            return [
-                'title' => $event->title,
-                'start' => $event->start->toIso8601String(),  // Pastikan format ISO 8601 untuk FullCalendar
-                'end' => $event->end->toIso8601String(),
-                'description' => $event->description,
-                'location' => $event->location,
-            ];
+                $eventData =  collect(range(0, $startDate->diffInDays($endDate)))->map(fn($offset) => [
+                    'start' => $startDate->copy()->addDays($offset)->toDateString(),
+                    'end' => $endDate->copy()->addDays($offset)->toDateString(),  
+                    'title' => $agenda->title,
+                    'description' => $agenda->description,
+                    'location' => $agenda->location,
+                    'color' => $eventColor, 
+                ]);
+
+                $eventData = $eventData->map(function($item) use ($startDate, $endDate) {
+                    $item['startDate'] = $startDate->format('d F Y'); 
+                    $item['endDate'] = $endDate->format('d F Y');      
+                    return $item;
+                });
+                }
+    
+            return $eventData;
         });
-
+    
         return response()->json($events);
+    }
+
+    public function create()
+    {
+        return view('dashboard.admin.calender.create');
     }
 
     // Menyimpan agenda baru
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'start' => 'required|date',
-            'end' => 'required|date|after_or_equal:start',
-            'description' => 'nullable|string',
-            'location' => 'nullable|string',
+            'agenda_title' => 'required|string|max:255',
+            'agenda_start' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),  
+            'agenda_end' => 'required|date|after_or_equal:agenda_start', 
+            'agenda_description' => 'nullable|string',
+            'agenda_location' => 'nullable|string|max:255',
         ]);
-
+    
         // Simpan agenda ke database
-        $agenda = Agenda::create([
-            'title' => $request->title,
-            'start' => $request->start,
-            'end' => $request->end,
-            'description' => $request->description,
-            'location' => $request->location,
+        Agenda::create([
+            'title' => $request->agenda_title,
+            'start' => $request->agenda_start,
+            'end' => $request->agenda_end,
+            'description' => $request->agenda_description,
+            'location' => $request->agenda_location,
+        ]);
+    
+        return redirect()->route('admin.calender.index')->with('success', 'Agenda successfully created!');
+    }
+
+    public function edit($id)
+    {
+        $agenda = Agenda::findOrFail($id);
+
+        $agenda->start = Carbon::parse($agenda->start)->format('Y-m-d\TH:i');
+        $agenda->end = Carbon::parse($agenda->end)->format('Y-m-d\TH:i');
+        
+        return view('dashboard.admin.calender.edit', compact('agenda')); 
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'agenda_title' => 'required|string|max:255',
+            'agenda_start' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
+            'agenda_end' => 'required|date|after_or_equal:agenda_start',
+            'agenda_description' => 'nullable|string',
+            'agenda_location' => 'nullable|string|max:255',
         ]);
 
-        return response()->json($agenda, 201);
+        $agenda = Agenda::findOrFail($id);
+
+        $agenda->update([
+            'title' => $request->agenda_title,
+            'start' => $request->agenda_start,
+            'end' => $request->agenda_end,
+            'description' => $request->agenda_description,
+            'location' => $request->agenda_location,
+        ]);
+
+        return redirect()->route('admin.calender.index')->with('success', 'Agenda successfully updated!');
+    }
+
+
+    public function destroy ($id){
+        $agenda = Agenda::find($id);
+
+        $agenda->delete();
+        return redirect()->route('admin.calender.index')->with('success', 'Agenda deleted successfully!');
     }
 }
 

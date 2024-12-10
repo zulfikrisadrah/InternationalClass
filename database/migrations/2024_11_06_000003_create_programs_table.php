@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('programs', function (Blueprint $table) {
             $table->id('ID_program');
             $table->string('program_Name');
+            $table->text('program_description');
             $table->string('Country_of_Execution', 50);
             $table->date('Execution_Date');
             $table->integer('Participants_Count');
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ie_activities');
+        Schema::dropIfExists('programs');
     }
 };

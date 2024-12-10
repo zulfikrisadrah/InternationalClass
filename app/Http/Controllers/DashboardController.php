@@ -6,6 +6,7 @@ use App\Models\Program;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
@@ -120,8 +121,70 @@ class DashboardController extends Controller
             }
             // Cek apakah user memiliki peran staff
             if ($user->hasRole('staff')) {
-                return view('dashboard.staff.home');
+                // Ambil ID study program dari staff yang login
+                $studyProgramId = $user->staff->ID_study_program;
+
+                // Query program counts yang hanya terkait dengan study program staff
+                $programCounts = Program::selectRaw('count(*) as count, ID_Ie_program')
+                    ->where('ID_study_program', $studyProgramId) // Filter by study program
+                    ->groupBy('ID_Ie_program')
+                    ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
+                    ->get();
+
+                // Query student counts by year yang hanya terkait dengan study program staff
+                $studentCountsByYear = Program::selectRaw('YEAR(execution_date) as year, count(*) as student_count')
+                    ->join('program_enrollment', 'program_enrollment.ID_program', '=', 'programs.ID_program')
+                    ->where('program_enrollment.status', 'approved')
+                    ->where('programs.ID_study_program', $studyProgramId) // Filter by study program
+                    ->groupByRaw('YEAR(execution_date)')
+                    ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
+                    ->get();
+
+                // Ambil data mahasiswa aktif berdasarkan program studi yang sesuai dengan staff
+                $activeStudents = Student::where('students.isActive', 1)  // Menambahkan alias tabel 'students'
+                    ->join('study_programs', 'students.ID_study_program', '=', 'study_programs.ID_study_program')
+                    ->select('students.Student_ID_Number', 'study_programs.study_program_Name as program_name')
+                    ->where('study_programs.ID_study_program', $studyProgramId)  // Menambahkan alias tabel 'study_programs'
+                    ->get();
+
+                $tokenData = $this->loginAndGetToken();
+                $studentBatches = [];
+
+                if ($tokenData['status'] == 200) {
+                    $accessToken = $tokenData['access_token'];
+
+                    foreach ($activeStudents as $student) {
+                        // Lakukan request ke API untuk setiap mahasiswa berdasarkan NIM
+                        $response = Http::withOptions(['verify' => false])
+                            ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
+                            ->withBody(json_encode(['nim' => $student->Student_ID_Number]), 'application/json')
+                            ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+
+                        if ($response->successful()) {
+                            $data = $response->json();
+
+                            // Memeriksa apakah ada data angkatan
+                            if (isset($data['mahasiswas'][0]['angkatan'])) {
+                                $angkatan = $data['mahasiswas'][0]['angkatan'];  // Mendapatkan angkatan mahasiswa
+
+                                // Inisialisasi jika belum ada data untuk angkatan ini
+                                if (!isset($studentBatches[$angkatan])) {
+                                    $studentBatches[$angkatan] = 0;
+                                }
+
+                                // Menambahkan mahasiswa ke batch sesuai angkatan
+                                $studentBatches[$angkatan]++;
+                            }
+                        }
+                    }
+                }
+
+                // Kirimkan data ke view
+                return view('dashboard.staff.home', compact('programCounts', 'studentCountsByYear', 'studentBatches'));
             }
+
+
+
 
             // Cek apakah user memiliki peran student
             if ($user->hasRole('student')) {

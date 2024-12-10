@@ -6,7 +6,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="flex justify-between">
                 <form method="GET" action="{{ route('admin.news.index') }}" class="flex items-center gap-4 pt-2">
-                    <input type="text" name="search" value="{{ request()->get('search') }}" placeholder="Search newss by title"
+                    <input type="text" name="search" value="{{ request()->get('search') }}" placeholder="Search news by title"
                         class="py-2 px-4 border rounded-lg">
                     <button type="submit" class="bg-blueThird text-white py-2 px-6 rounded-lg">Search</button>
                 </form>

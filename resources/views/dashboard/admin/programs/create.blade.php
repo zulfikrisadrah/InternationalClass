@@ -27,6 +27,14 @@
                         <x-input-error :messages="$errors->get('program_Name')" class="mt-2" />
                     </div>
 
+                    <div class="mt-4">
+                        <x-tinymce-config />
+                        <x-input-label for="program_description" :value="__('program description')" />
+                        <textarea id="program_description" name="program_description" class="block mt-1 w-full"
+                            rows="6">{{ old('program_description') }}</textarea> <!-- Memperlebar textarea -->
+                        <x-input-error :messages="$errors->get('program_description')" class="mt-2" />
+                    </div>
+
                     <!-- Country of Execution -->
                     <div class="mt-4">
                         <x-input-label for="Country_of_Execution" :value="__('Country of Execution')" />

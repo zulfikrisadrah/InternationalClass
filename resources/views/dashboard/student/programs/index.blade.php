@@ -42,7 +42,7 @@
                         <!-- Program Image and Name -->
                         <div class="flex flex-row items-center gap-x-3 flex-grow">
                             @if ($program->program_Image)
-                                <img src="{{ asset('public/images/program/' . $program->program_Image) }}" alt="Program Image" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                                <img src="{{ asset('storage/' . $program->program_Image) }}" alt="Program Image" class="rounded-2xl object-cover w-[120px] h-[90px]">
                             @else
                                 <div class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center text-gray-500">
                                     No Image
@@ -112,6 +112,11 @@
                                 <div>
                                     <p class="text-sm text-gray-500">Program Name:</p>
                                     <h3 class="text-lg font-semibold text-gray-800">{{ $program->program_Name }}</h3>
+                                </div>
+
+                                <div>
+                                    <p class="text-sm text-gray-500">Program Description:</p>
+                                    <p class="text-gray-800">{{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 150, '...') }}</p>
                                 </div>
 
                                 <div>

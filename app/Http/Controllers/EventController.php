@@ -12,21 +12,38 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $data = [
             'title' => 'Manage Event',
         ];
+
+        // Ambil query pencarian
+        $search = $request->input('search');
+
         if ($user) {
             if ($user->hasRole('staff')) {
-                $events = Event::where('user_id', $user->id)->paginate(10);
+                // Event milik staff yang sedang login
+                $events = Event::where('user_id', $user->id)
+                    ->when($search, function ($query, $search) {
+                        $query->where('Event_Title', 'like', '%' . $search . '%');
+                    })
+                    ->paginate(10);
             } else {
-                $events = Event::latest()->paginate(10);
+                // Semua event untuk admin
+                $events = Event::when($search, function ($query, $search) {
+                        $query->where('Event_Title', 'like', '%' . $search . '%');
+                    })
+                    ->latest()
+                    ->paginate(10);
             }
-            return view('dashboard.admin.event.index', compact('events','data'));//untuk return ke dashboard admin
+
+            // Pastikan query pagination tetap membawa input pencarian
+            return view('dashboard.admin.event.index', compact('events', 'data'));
         }
     }
+
 
     /**
      * Show the form for creating a new resource.

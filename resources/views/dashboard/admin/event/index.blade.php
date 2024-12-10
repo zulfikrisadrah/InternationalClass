@@ -2,13 +2,21 @@
     <x-slot name="header">
         @include('dashboard.partials.header')
     </x-slot>
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="flex justify-between">
+            <form method="GET" action="{{ route('admin.event.index') }}" class="flex items-center gap-4 pt-2">
+                <input type="text" name="search" value="{{ request()->get('search') }}" placeholder="Search events by title"
+                    class="py-2 px-4 border rounded-lg">
+                <button type="submit" class="bg-blueThird text-white py-2 px-6 rounded-lg">Search</button>
+            </form>
 
-    <div class="flex flex-row justify-between items-center py-2">
-        <a href="{{ route('admin.event.create') }}"
-            class="ml-auto mr-8 font-bold py-4 px-6 bg-blueThird text-white rounded-full">
-            Add New
-        </a>
+            <a href="{{ route('admin.event.create') }}"
+                class="ml-auto font-bold py-4 px-6 bg-blueThird text-white rounded-3xl">
+                Add New
+            </a>
     </div>
+</div>
+
 
 
     <div class="py-6">
@@ -43,7 +51,7 @@
 
                         <div class="hidden md:flex flex-row items-center gap-x-3">
                             <a href="{{ route('admin.event.edit', $event->ID_Event) }}"
-                                class="font-bold py-4 px-6 bg-blueThird text-white rounded-full">
+                                class="font-bold py-4 px-6 bg-blueThird text-white rounded-3xl">
                                 Edit
                             </a>
 
@@ -51,44 +59,15 @@
                                 onsubmit="return confirm('Are you sure you want to delete this event?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="font-bold py-4 px-6 bg-redPrimary text-white rounded-full">
+                                <button type="submit" class="font-bold py-4 px-6 bg-redPrimary text-white rounded-3xl">
                                     Delete
                                 </button>
                             </form>
                         </div>
                     </div>
                 @endforeach
-                <!--Pagination-->
-                <div class="mt-4 flex justify-center space-x-3">
-                    @if ($events->currentPage() > 3)
-                        <a href="{{ $events->url(1) }}"
-                            class="px-4 py-2 text-xs border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400">1</a>
-                    @endif
-
-                    @if ($events->currentPage() > 4)
-                        <span class="text-gray-500">...</span>
-                    @endif
-
-                    @php
-                        $start = max(1, $events->currentPage() - 2);
-                        $end = min($events->lastPage(), $events->currentPage() + 2);
-                    @endphp
-
-                    @for ($i = $start; $i <= $end; $i++)
-                        <a href="{{ $events->url($i) }}"
-                            class="px-4 py-2 text-xs text-black border border-gray-300 rounded-md transition-all duration-300 {{ $events->currentPage() == $i ? 'bg-blueSecondary text-white' : 'hover:text-white hover:bg-indigo-400 ' }}">
-                            {{ $i }}
-                        </a>
-                    @endfor
-
-                    @if ($events->currentPage() < $events->lastPage() - 2)
-                        <span class="text-gray-500">...</span>
-                    @endif
-
-                    @if ($events->currentPage() < $events->lastPage() && $events->lastPage() - $events->currentPage() > 2)
-                        <a href="{{ $events->url($events->lastPage()) }}"
-                            class="px-4 py-2 text-xs border border-gray-300 rounded-md transition-all duration-300 bg-white text-black hover:text-white hover:bg-indigo-400 ">{{ $events->lastPage() }}</a>
-                    @endif
+                <div class="mt-6 ">
+                    {{ $events->appends(request()->query())->links('vendor.pagination.custom') }}
                 </div>
             </div>
         </div>

@@ -5,9 +5,6 @@
 
     <div class="container mx-auto px-4">
         <div class="w-full lg:w-3/4 mx-auto">
-            <!-- Header -->
-            <div class="text-2xl font-bold text-[#202224] mb-4">Academic Calendar</div>
-
             <!-- Main Content Area -->
             <div class="flex flex-col lg:flex-row gap-8">
 

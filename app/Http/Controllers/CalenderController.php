@@ -12,6 +12,9 @@ class CalenderController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $data = [
+            'title' => 'Academic Calender',
+        ];
 
     if ($user->hasRole('student')) {
         return view('dashboard.student.academicCalender');
@@ -19,7 +22,7 @@ class CalenderController extends Controller
 
 
     if ($user->hasRole('admin')) {
-        return view('dashboard.admin.calender.index');
+        return view('dashboard.admin.calender.index', compact('data'));
     }
 
     abort(403, 'Unauthorized action.');

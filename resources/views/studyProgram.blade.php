@@ -6,14 +6,7 @@
 <div class="flex flex-col leading-none whitespace-nowrap">
     <div
         class="flex flex-col justify-center items-start px-16 py-12 w-full bg-indigo-950 max-md:px-5 max-md:max-w-full">
-        <ul class="flex gap-5 justify-between max-w-full w-[254px]">
-            <li>
-                <a href="#overview" class="text-xl text-white">Overview</a>
-            </li>
-            <li>
-                <a href="#curriculum" class="text-xl text-stone-500">Curriculum</a>
-            </li>
-        </ul>
+        
     </div>
 </div>
 

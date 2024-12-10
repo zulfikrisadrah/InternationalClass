@@ -20,9 +20,8 @@ Route::get('/event', [LandingPageController::class, 'event'])->name('event.index
 
 Route::get('/news', [LandingPageController::class, 'news'])->name('news.index');
 
-Route::get('/about', function () {
-    return view('about');
-});
+Route::get('/about', [LandingPageController::class, 'about'])->name('about.index');
+
 Route::get('/IE', function () {
     return view('InternationalExposure');
 });

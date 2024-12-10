@@ -12,15 +12,19 @@ class CalenderController extends Controller
     // Menampilkan halaman kalender
     public function index()
     {
+        $data = [
+            'title' => 'Academic Calendar',
+        ];
+
         $user = Auth::user();
         $agendas = Agenda::where('end', '>=', Carbon::now())->get(); 
     
         if ($user->hasRole('student')) {
-            return view('dashboard.student.academicCalender', compact('agendas'));
+            return view('dashboard.student.academicCalender', compact('agendas', 'data'));
         }
     
         if ($user->hasRole('admin')) {
-            return view('dashboard.admin.calender.index', compact('agendas'));
+            return view('dashboard.admin.calender.index', compact('agendas', 'data'));
         }
     
         abort(403, 'Unauthorized action.');

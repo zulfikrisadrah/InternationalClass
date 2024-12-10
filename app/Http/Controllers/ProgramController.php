@@ -42,6 +42,10 @@ class ProgramController extends Controller
             $programs = $programs->paginate(5);  // Ambil data program setelah difilter
             return view('dashboard.admin.programs.index', compact('programs', 'enrollments', 'data'));
         } else {
+            if (!$user->student || !$user->student->ID_study_program) {
+                abort(403, 'This action is unauthorized.');
+            }
+            
             $studyProgramId = $user->student->ID_study_program;
             $ieProgramId = $request->input('ie_program_id');
             $programs = Program::with('ieProgram')

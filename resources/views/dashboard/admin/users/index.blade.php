@@ -33,6 +33,26 @@
                     @endrole
                 </div>
 
+                @role('admin')
+                    <div class="flex flex-row justify-between items-center">
+                        <a href="{{ route('admin.user.create') }}"
+                            class="ml-auto font-bold py-4 px-6 bg-blueThird text-white rounded-full">
+                            Add Staff
+                        </a>
+                    </div>
+                @endrole
+            </div>
+
+            <div class="flex justify-between mb-5">
+                <form method="GET" action="{{ route('admin.user.index') }}" class="flex items-center gap-4">
+                    <input type="hidden" name="status" value="{{ request()->get('status') }}"> <!-- Menambahkan status -->
+                    <input type="hidden" name="role" value="{{ request()->get('role') }}">
+                    
+                    <input type="text" name="search" value="{{ request()->get('search') }}" placeholder="Search users by name or email" class="py-2 px-4 border rounded-lg">
+                    
+                    <button type="submit" class="bg-blueThird text-white py-2 px-6 rounded-lg">Search</button>
+                </form>                
+
                 <!-- Waiting List Button -->
                 <div class="flex flex-row justify-between items-center">
                     @if (request()->get('role') == 'student' || !request()->has('role'))
@@ -49,25 +69,9 @@
                             @endif
                         </a>
                     @endif
-
-                    @role('admin')
-                        @if (request()->get('role') == 'staff')
-                            <a href="{{ route('admin.user.create') }}"
-                                class="ml-auto font-bold py-4 px-6 bg-blueThird text-white rounded-full">
-                                Add Staff
-                            </a>
-                        @endif
-                    @endrole
                 </div>
             </div>
-
-            <div class="mb-5">
-                <form method="GET" action="{{ route('admin.user.index') }}" class="flex items-center gap-4">
-                    <input type="text" name="search" value="{{ request()->get('search') }}" placeholder="Search users by name or email" class="py-2 px-4 border rounded-lg">
-                    <button type="submit" class="bg-blueThird text-white py-2 px-6 rounded-lg">Search</button>
-                </form>
-            </div>
-
+            
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
                 @if ($users->isEmpty())
                     <div class="text-center py-6">

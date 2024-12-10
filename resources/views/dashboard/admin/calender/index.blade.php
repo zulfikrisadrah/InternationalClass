@@ -4,57 +4,53 @@
     </x-slot>
 
     <div class="container mx-auto px-4">
-        <div class="w-full lg:w-3/4 mx-auto">
-            <!-- Header -->
-            <div class="text-2xl font-bold text-[#202224] mb-4">Academic Calendar</div>
+        <div class="w-full px-4 lg:px-8">
 
             <!-- Main Content Area -->
-            <div class="flex flex-col lg:flex-row gap-8">
+            <div class="flex flex-col lg:flex-row gap-8 mt-8">
 
                 <!-- Left Section for Events -->
-                <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 w-fit h-fit lg:w-1/3">
+                <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 w-fit h-fit lg:w-1/4">
                     <a href="{{ route('admin.calender.create') }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg mb-6">
                         + Add New Events
                     </a>
 
                     <div class="text-lg font-bold text-[#202224] mb-4">Upcoming Events</div>
 
-                    <div class="space-y-6">
-                    @forelse($agendas as $agenda)
-                        <div class="flex items-center space-x-4 mb-6">
-                            <img class="w-12 h-12 rounded-full" src="{{ $agenda->image_url ?? 'https://via.placeholder.com/62x62' }}" alt="Agenda Image">
-                            <div class="flex-1">
-                                <div class="font-bold text-sm">{{ $agenda->title }}</div>
-                                <div class="text-gray-500 text-xs">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y \a\t h:i A') }}</div>
-                                <div class="text-gray-500 text-xs">{{ $agenda->location }}</div>
-                            </div>
+                    <div class="space-y-6 overflow-y-auto" style="max-height: 350px;">
+                        @forelse($agendas as $agenda)
+                            <div class="flex items-center space-x-4 mb-6">
+                                <img class="w-12 h-12 rounded-full" src="{{ $agenda->image_url ?? 'https://via.placeholder.com/62x62' }}" alt="Agenda Image">
+                                <div class="flex-1">
+                                    <div class="font-bold text-sm">{{ $agenda->title }}</div>
+                                    <div class="text-gray-500 text-xs">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - <br> {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
+                                    <div class="text-gray-500 text-xs">{{ $agenda->location }}</div>
+                                </div>
 
-                            <!-- Action Buttons -->
-                            <div class="flex space-x-2">
-                                <!-- Edit Button -->
-                                <a href="{{ route('admin.calender.edit', $agenda->id) }}" class="text-blue-500 hover:text-blue-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                        <path d="M2 20h20v2H2v-2zM17.59 5.59L19 7 9.41 16.59 8 15.17l9.59-9.58zM15.5 3c.78 0 1.5.67 1.5 1.5S16.28 6 15.5 6 14 5.33 14 4.5 14.72 3 15.5 3z" />
-                                    </svg>
-                                </a>
-
-
-                                <!-- Delete Button -->
-                                <form method="POST" action="{{ route('admin.calender.destroy', $agenda->id) }}" onsubmit="return confirm('Are you sure?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                <!-- Action Buttons -->
+                                <div class="flex space-x-2">
+                                    <!-- Edit Button -->
+                                    <a href="{{ route('admin.calender.edit', $agenda->id) }}" class="text-blue-500 hover:text-blue-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                            <path d="M2 20h20v2H2v-2zM17.59 5.59L19 7 9.41 16.59 8 15.17l9.59-9.58zM15.5 3c.78 0 1.5.67 1.5 1.5S16.28 6 15.5 6 14 5.33 14 4.5 14.72 3 15.5 3z" />
                                         </svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center text-gray-500">No events found.</div>
-                    @endforelse
+                                    </a>
 
+                                    <!-- Delete Button -->
+                                    <form method="POST" action="{{ route('admin.calender.destroy', $agenda->id) }}" onsubmit="return confirm('Are you sure?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center text-gray-500">No events found.</div>
+                        @endforelse
                     </div>
                 </div>
 
@@ -213,6 +209,23 @@
                                 dayCell.appendChild(dot);
                                 dayCell.style.border = 'none';
 
+                                dot.addEventListener('click', function () {
+                                    document.getElementById('modal-title').innerText = event.title || 'Event Details';
+                                    document.getElementById('modal-start').innerText = event.extendedProps.startDate || event.startStr;
+                                    document.getElementById('modal-end').innerText = event.extendedProps.endDate || event.endStr;
+                                    document.getElementById('modal-description').innerText = event.extendedProps.description || 'No description provided';
+
+                                    document.getElementById('event-modal').classList.remove('hidden');
+                                });
+
+                                document.getElementById('close-modal').addEventListener('click', function () {
+                                    document.getElementById('event-modal').classList.add('hidden');
+                                });
+
+                                document.getElementById('close-modal-footer').addEventListener('click', function () {
+                                    document.getElementById('event-modal').classList.add('hidden');
+                                });
+
                                 dot.addEventListener('mouseover', function() {
                                     console.log(event);
                                     let allDots = document.querySelectorAll('.events-dot');
@@ -281,5 +294,37 @@
                     }
                 });
             </script>
+    </div>
+    <!-- Modal -->
+    <div id="event-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-[600px]">
+        
+            <!-- Header -->
+            <div class="flex justify-center items-center border-b pb-4 relative">
+                <h2 class="text-3xl font-bold">Agenda Akademik</h2>
+                <button id="close-modal" class="absolute right-0 text-gray-500 text-2xl">&times;</button>
+            </div>
+        
+            <!-- Body -->
+            <div class="modal-body mt-4 text-center space-y-6 pt-[10px]">
+                <!-- Modal Title -->
+                <h3 id="modal-title" class="text-3xl font-bold w-[400px] mx-auto text-center">Judul Agenda</h3>
+        
+                <!-- Start & End Dates -->
+                <div class="flex justify-center items-center space-x-4" style="margin-top: 5px">
+                    <p><span id="modal-start">Start Date</span></p>
+                    <p>-</p>
+                    <p><span id="modal-end">End Date</span></p>
+                </div>
+                
+                <!-- Description -->
+                <p id="modal-description" class="mt-2 text-gray-700 border-b pb-4 pb-[40px]">Deskripsi</p>
+            </div>
+        
+            <!-- Footer -->
+            <div class="modal-footer mt-6 flex justify-end">
+                <button id="close-modal-footer" class="bg-red-500 text-white px-6 py-2 rounded-lg">Close</button>
+            </div>            
+        </div>
     </div>
 </x-app-layout>

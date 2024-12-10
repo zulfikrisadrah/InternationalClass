@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('Student_ID_Number', 20)->unique('NIM');
             $table->string('Student_Email', 100);
             $table->boolean('isActive')->default(1);
+            $table->boolean('isVerified')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('ID_study_program');
 

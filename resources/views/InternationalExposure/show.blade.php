@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="mt-6 text-center">
-                    <a href="" class="btn btn-primary">
+                    <a href="/login" class="btn btn-primary">
                         Register Now
                     </a>
                 </div>

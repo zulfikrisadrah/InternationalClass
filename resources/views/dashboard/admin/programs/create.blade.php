@@ -22,14 +22,14 @@
 
                     <!-- Activity Name -->
                     <div>
-                        <x-input-label for="program_Name" :value="__('program Name')" />
+                        <x-input-label for="program_Name" :value="__('Program Name')" />
                         <x-text-input id="program_Name" class="block mt-1 w-full" type="text" name="program_Name" :value="old('program_Name')" required autofocus autocomplete="program_Name" />
                         <x-input-error :messages="$errors->get('program_Name')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">
                         <x-tinymce-config />
-                        <x-input-label for="program_description" :value="__('program description')" />
+                        <x-input-label for="program_description" :value="__('Program Description')" />
                         <textarea id="program_description" name="program_description" class="block mt-1 w-full"
                             rows="6">{{ old('program_description') }}</textarea> <!-- Memperlebar textarea -->
                         <x-input-error :messages="$errors->get('program_description')" class="mt-2" />
@@ -87,8 +87,8 @@
 
                     <!-- program Image -->
                     <div class="mt-4">
-                        <x-input-label for="program_Image" :value="__(' program Image')" />
-                        <x-text-input id="program_Image" class="block mt-1 w-full" type="file" name="program_Image" accept="image/*" autocomplete="program_Image" />
+                        <x-input-label for="program_Image" :value="__(' Program Image')" />
+                        <x-text-input id="program_Image" class="block mt-1 w-full" type="file" name="program_Image" accept="image/*" required autocomplete="program_Image" />
                         <x-input-error :messages="$errors->get('program_Image')" class="mt-2" />
                     </div>
 

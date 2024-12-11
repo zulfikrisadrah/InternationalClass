@@ -69,7 +69,7 @@ class NewsController extends Controller
                 'News_Title' => 'required|string|max:255',
                 'News_Content' => 'required|string',
                 'Publication_Date' => today(),
-                'News_Image' => 'nullable|image|max:2048',
+                'News_Image' => 'required|image|max:2048',
                 'ID_study_program' => 'required|exists:study_programs,ID_study_program',
             ]);
 
@@ -84,7 +84,7 @@ class NewsController extends Controller
                 'News_Title' => 'required|string|max:255',
                 'News_Content' => 'required|string',
                 'Publication_Date' => today(),
-                'News_Image' => 'nullable|image|max:2048',
+                'News_Image' => 'required|image|max:2048',
             ]);
 
             $data = $validated;

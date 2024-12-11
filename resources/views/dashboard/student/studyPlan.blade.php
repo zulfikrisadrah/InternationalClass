@@ -4,7 +4,6 @@
     </x-slot>
 
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-semibold mb-4">Rencana Studi Mahasiswa</h1>
 
         <!-- Menampilkan Pesan Sukses -->
         @if(session('success'))
@@ -29,7 +28,7 @@
                         {{ $availableSemester }}
                     </option>
                 @endforeach
-            </select>          
+            </select>
         </div>
 
         <!-- Menampilkan daftar mata kuliah dan SKS berdasarkan semester yang dipilih -->
@@ -77,7 +76,7 @@
     <script>
         document.getElementById('semester').addEventListener('change', function() {
             var semester = this.value;
-            
+
             fetch("{{ route('student.studyPlan.index') }}?semester=" + semester, {
                 method: 'GET',
                 headers: {
@@ -93,5 +92,5 @@
             });
         });
     </script>
-    
+
 </x-app-layout>

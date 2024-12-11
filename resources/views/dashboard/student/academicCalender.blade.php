@@ -5,13 +5,11 @@
 
     <div class="container mx-auto px-4 pb-4">
         <div class="w-auto mx-auto">
-            <!-- Header -->
-            {{-- <div class="text-2xl font-bold text-[#202224] mb-4">Academic Calendar</div> --}}
-
             <div class="flex flex-col lg:flex-row gap-8 mt-8">
                 <!-- Main Content Area -->
                 <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 w-fit h-fit lg:w-1/4">
-                <div class="text-lg font-bold text-[#202224] mb-4 border-b-2 border-blueThird">Upcoming Events</div>
+                    <div class="text-lg font-bold text-black mb-4">Upcoming Events</div>
+
                     <div class="space-y-6 overflow-y-auto" style="max-height: 350px;">
                         @forelse($agendas as $agenda)
                             <div class="flex items-center space-x-4 mb-6 border-b">

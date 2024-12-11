@@ -13,6 +13,9 @@ class TranscriptController extends Controller
         $nim = $user->username;
 
         $transcriptData = $this->getTranscript($nim);
+        $data = [
+            'title' => 'Student Transcript',
+        ];
 
         $message = $transcriptData['status'] === 200 ? 'Data berhasil diambil' : 'Gagal mengambil data: ' . $transcriptData['message'];
 
@@ -21,7 +24,7 @@ class TranscriptController extends Controller
             'namaMahasiswa' => $transcriptData['namaMahasiswa'] ?? 'Tidak Tersedia',
             'nim' => $transcriptData['nim'] ?? 'Tidak Tersedia',
             'message' => $message,
-        ]);
+        ], compact('data'));
     }
 
     private function loginAndGetToken()

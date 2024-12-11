@@ -14,44 +14,46 @@ class StudyPlanController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             $nim = $user->username;
-    
+            $data = [
+                'title' => 'Study Plan Card',
+            ];
             $currentYear = date('Y');
-            
+
             $angkatan = intval(substr($nim, 4, 2));
             $tahunMasuk = 2000 + $angkatan;
-    
+
             $maxYear = min($tahunMasuk + 7, 2024);
-    
+
             $semesters = [];
             for ($tahun = $tahunMasuk; $tahun <= $maxYear; $tahun++) {
                 $semesters[] = "{$tahun}1";
                 $semesters[] = "{$tahun}2";
             }
-    
+
             $semester = $request->input('semester', reset($semesters));
-    
+
             $mataKuliahData = $this->getKrsMahasiswa($nim, $semester);
             $message = $mataKuliahData ? 'Data berhasil diambil' : 'Data KRS tidak ditemukan';
-    
+
             if ($request->ajax()) {
                 // Return only the table as a response
                 return response()->json([
                     'mataKuliahTable' => $this->generateMataKuliahTable($mataKuliahData)
                 ]);
             }
-    
-            return view('dashboard.student.studyPlan', compact('mataKuliahData', 'message', 'semester', 'semesters'));
+
+            return view('dashboard.student.studyPlan', compact('mataKuliahData', 'message', 'semester', 'semesters', 'data'));
         } else {
             return redirect()->route('login')->with('error', 'You need to be logged in to access this page.');
         }
     }
-    
+
     private function generateMataKuliahTable($mataKuliahData)
     {
         if (empty($mataKuliahData)) {
             return '<p class="text-red-500">Tidak ada mata kuliah yang ditemukan untuk semester tersebut.</p>';
         }
-    
+
         $table = '<table class="min-w-full table-fixed border-collapse border border-gray-300">
                     <thead>
                         <tr>
@@ -61,7 +63,7 @@ class StudyPlanController extends Controller
                         </tr>
                     </thead>
                     <tbody>';
-    
+
         foreach ($mataKuliahData as $index => $mataKuliah) {
             $table .= "<tr>
                           <td class=\"border px-4 py-2 text-center\">" . ($index + 1) . "</td>
@@ -69,9 +71,9 @@ class StudyPlanController extends Controller
                           <td class=\"border px-4 py-2 text-center\">" . $mataKuliah['jumlah_sks'] . "</td>
                         </tr>";
         }
-    
+
         $totalSks = array_sum(array_column($mataKuliahData, 'jumlah_sks'));
-    
+
         $table .= "</tbody>
                     <tfoot>
                         <tr>
@@ -80,16 +82,16 @@ class StudyPlanController extends Controller
                         </tr>
                     </tfoot>
                   </table>";
-    
+
         return $table;
-    }    
-    
+    }
+
     private function loginAndGetToken()
     {
         $loginResponse = Http::withOptions(['verify' => false])
             ->post('https://sipakamase.unhas.ac.id:8107/login', [
-                'username' => 'admin', 
-                'password' => 'UnhasTamalanreaMakassar', 
+                'username' => 'admin',
+                'password' => 'UnhasTamalanreaMakassar',
             ]);
 
         if ($loginResponse->successful()) {
@@ -118,18 +120,18 @@ class StudyPlanController extends Controller
     public function getKrsMahasiswa($nim, $semester)
     {
         $tokenData = $this->loginAndGetToken();
-        
+
         if ($tokenData['status'] == 200) {
             $accessToken = $tokenData['access_token'];
-        
+
             $response = Http::withOptions(['verify' => false])
                 ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
                 ->withBody(json_encode(['nim' => $nim, 'semester' => $semester]), 'application/json')
                 ->get('https://sipakamase.unhas.ac.id:8107/get_krs_mahasiswa');
-        
+
             if ($response->successful()) {
                 $krsData = $response->json();
-                
+
                 if (isset($krsData['krs']) && is_array($krsData['krs'])) {
                     $mataKuliahData = [];
                     foreach ($krsData['krs'] as $item) {
@@ -140,14 +142,14 @@ class StudyPlanController extends Controller
                             ];
                         }
                     }
-        
-                    return $mataKuliahData;  
+
+                    return $mataKuliahData;
                 } else {
-                    return null;  
+                    return null;
                 }
             }
         } else {
-            return null; 
+            return null;
         }
     }
 }

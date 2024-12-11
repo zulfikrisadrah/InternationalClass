@@ -8,20 +8,21 @@
             <div class="flex flex-col lg:flex-row gap-8 mt-8">
                 <!-- Main Content Area -->
                 <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 w-fit h-fit lg:w-1/4">
-                    <div class="text-lg font-bold text-black mb-4">Upcoming Events</div>
+                    <div class="text-lg font-bold text-black mb-4 border-b-2 border-blueThird">Upcoming Events</div>
 
-                    <div class="space-y-6 overflow-y-auto" style="max-height: 350px;">
+                    <div class="overflow-y-auto" style="max-height: 350px;">
                         @forelse($agendas as $agenda)
-                            <div class="flex items-center space-x-4 mb-6 border-b">
-                                <div class="flex-1 cursor-pointer" onclick="openModal('{{ $agenda->title }}', '{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }}', '{{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}', '{{ $agenda->description }}')">
-                                    <div class="font-bold text-sm">{{ $agenda->title }}</div>
-                                    <div class="text-gray-500 text-xs ">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
+                            <div class="flex items-center cursor-pointer hover:bg-gray-200 hover:bg-opacity-75 py-2 px-3 rounded-lg transition duration-300 ease-in-out">
+                                <div class="flex-1 cursor-pointer" 
+                                    onclick="openModal('{{ $agenda->title }}', '{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }}', '{{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}', '{{ $agenda->description }}')">
+                                    <div class="font-bold text-sm text-blue-500">{{ $agenda->title }}</div>
+                                    <div class="text-xs text-blue-400">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
                                 </div>
                             </div>
                         @empty
                             <div class="text-center text-gray-500">No events found.</div>
                         @endforelse
-                    </div>
+                    </div>    
                 </div>
 
                 <div class="flex-1 flex-col bg-white rounded-lg shadow-lg p-6 max-w-full h-full lg:w-2/3">

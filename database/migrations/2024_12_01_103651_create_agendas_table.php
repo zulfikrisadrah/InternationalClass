@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('agendas', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->text('description');
             $table->dateTime('start');
             $table->dateTime('end');
             $table->timestamps();

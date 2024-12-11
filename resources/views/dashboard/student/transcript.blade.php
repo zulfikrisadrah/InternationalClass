@@ -12,13 +12,13 @@
                 <table class="min-w-full table-fixed border-collapse border border-gray-300">
                     <thead>
                         <tr>
-                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-4">No</th>
-                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-20">Kode</th>
-                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-60">Mata Kuliah</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-4">No</th>
+                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-20">Code</th>
+                            <th class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-60">Subject</th>
                             <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">SKS</th>
-                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Nilai Huruf</th>
-                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Nilai Angka</th>
-                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Total Nilai</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Letter Grade</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Numeric Grade</th>
+                            <th class="border px-4 py-2 font-bold text-center bg-blueThird text-white w-10">Total Grade</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,7 +36,7 @@
                     </tbody>
                 </table>
             @else
-                <p class="text-red-500 mt-4">Data transkrip tidak ditemukan.</p>
+                <p class="text-red-500 mt-4">Unable to retrieve transcript data. Please try again later.</p>
             @endif
         </div>
     </div>

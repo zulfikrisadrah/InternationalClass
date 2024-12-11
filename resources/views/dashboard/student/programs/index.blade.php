@@ -16,6 +16,12 @@
         </div>
     @endif
 
+    @if (session('pending'))
+        <div class="alert alert-error bg-yellow-200 text-yellow-800 p-4 rounded-lg mb-4">
+            {{ session('pending') }}
+        </div>
+    @endif
+
     <!-- Dropdown untuk memilih jenis IE -->
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

@@ -17,52 +17,51 @@ class CalenderController extends Controller
         ];
 
         $user = Auth::user();
-        $agendas = Agenda::where('end', '>=', Carbon::now())->get(); 
-    
+        $agendas = Agenda::where('end', '>=', Carbon::now())->get();
+
         if ($user->hasRole('student')) {
             return view('dashboard.student.academicCalender', compact('agendas', 'data'));
         }
-    
+
         if ($user->hasRole('admin')) {
             return view('dashboard.admin.calender.index', compact('agendas', 'data'));
         }
-    
+
         abort(403, 'Unauthorized action.');
     }
-    
+
     // Mengambil semua agenda dalam format JSON
     public function getEvents()
     {
-        $colors = ['#f5472c','#edbc4a', '#72c42f', '#eb661a', '#6fdeed',' #9c66ed', '#a586ad',' #00ff3c',' #0c95f7'];
+        $colors = ['#f5472c','#edbc4a', '#72c42f', '#0c95f7', '#6fdeed',' #9c66ed', '#a586ad',' #00ff3c'];
         $colorIndex = 0;
-    
+
         $events = Agenda::all()->flatMap(function ($agenda) use (&$colors, &$colorIndex) {
             $startDate = Carbon::parse($agenda->start);
             $endDate = Carbon::parse($agenda->end ?? $agenda->start);
-    
+
             if ($startDate && $endDate && $startDate <= $endDate) {
                 $eventColor = $colors[$colorIndex];
-                $colorIndex = ($colorIndex + 1) % count($colors); 
+                $colorIndex = ($colorIndex + 1) % count($colors);
 
                 $eventData =  collect(range(0, $startDate->diffInDays($endDate)))->map(fn($offset) => [
                     'start' => $startDate->copy()->addDays($offset)->toDateString(),
-                    'end' => $endDate->copy()->addDays($offset)->toDateString(),  
+                    'end' => $endDate->copy()->addDays($offset)->toDateString(),
                     'title' => $agenda->title,
                     'description' => $agenda->description,
-                    'location' => $agenda->location,
-                    'color' => $eventColor, 
+                    'color' => $eventColor,
                 ]);
 
                 $eventData = $eventData->map(function($item) use ($startDate, $endDate) {
-                    $item['startDate'] = $startDate->format('d F Y'); 
-                    $item['endDate'] = $endDate->format('d F Y');      
+                    $item['startDate'] = $startDate->format('d F Y');
+                    $item['endDate'] = $endDate->format('d F Y');
                     return $item;
                 });
                 }
-    
+
             return $eventData;
         });
-    
+
         return response()->json($events);
     }
 
@@ -76,21 +75,19 @@ class CalenderController extends Controller
     {
         $request->validate([
             'agenda_title' => 'required|string|max:255',
-            'agenda_start' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),  
-            'agenda_end' => 'required|date|after_or_equal:agenda_start', 
+            'agenda_start' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
+            'agenda_end' => 'required|date|after_or_equal:agenda_start',
             'agenda_description' => 'nullable|string',
-            'agenda_location' => 'nullable|string|max:255',
         ]);
-    
+
         // Simpan agenda ke database
         Agenda::create([
             'title' => $request->agenda_title,
             'start' => $request->agenda_start,
             'end' => $request->agenda_end,
             'description' => $request->agenda_description,
-            'location' => $request->agenda_location,
         ]);
-    
+
         return redirect()->route('admin.calender.index')->with('success', 'Agenda successfully created!');
     }
 
@@ -100,8 +97,8 @@ class CalenderController extends Controller
 
         $agenda->start = Carbon::parse($agenda->start)->format('Y-m-d\TH:i');
         $agenda->end = Carbon::parse($agenda->end)->format('Y-m-d\TH:i');
-        
-        return view('dashboard.admin.calender.edit', compact('agenda')); 
+
+        return view('dashboard.admin.calender.edit', compact('agenda'));
     }
 
     public function update(Request $request, $id)
@@ -111,7 +108,6 @@ class CalenderController extends Controller
             'agenda_start' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
             'agenda_end' => 'required|date|after_or_equal:agenda_start',
             'agenda_description' => 'nullable|string',
-            'agenda_location' => 'nullable|string|max:255',
         ]);
 
         $agenda = Agenda::findOrFail($id);
@@ -121,7 +117,6 @@ class CalenderController extends Controller
             'start' => $request->agenda_start,
             'end' => $request->agenda_end,
             'description' => $request->agenda_description,
-            'location' => $request->agenda_location,
         ]);
 
         return redirect()->route('admin.calender.index')->with('success', 'Agenda successfully updated!');

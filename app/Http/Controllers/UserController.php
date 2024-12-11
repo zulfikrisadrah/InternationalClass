@@ -390,6 +390,12 @@ class UserController extends Controller
 
             $user->student->isActive = $isActive;
             $user->student->save();
+
+            if ($isActive == 1) {
+                $user->givePermissionTo('choose program');
+            } else {
+                $user->revokePermissionTo('choose program');
+            }
         }
 
         $action = $request->input('action');
@@ -453,36 +459,6 @@ class UserController extends Controller
             }
 
             return redirect()->route('admin.user.index')->with('success', 'Action performed successfully.');
-        }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-        ]);
-
-        $user->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
-
-        if ($user->student) {
-            $user->student->update([
-                'Student_Name' => $validated['name'],
-                'Student_Email' => $validated['email'],
-                'isActive' => $request->has('isActive') ? 1 : 0,
-            ]);
-
-            if ($request->has('isActive')) {
-                $user->givePermissionTo('choose program');
-            } else {
-                $user->revokePermissionTo('choose program');
-            }
-        }
-
-        if ($request->filled('password')) {
-            $user->update([
-                'password' => Hash::make($request->password),
-            ]);
         }
 
         return redirect()->route('admin.user.index')->with('success', 'User updated successfully.');

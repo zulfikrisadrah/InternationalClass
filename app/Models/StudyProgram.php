@@ -36,4 +36,12 @@ class StudyProgram extends Model
     {
         return $this->hasMany(Student::class, 'ID_study_program', 'ID_study_program');
     }
+    public function news()
+    {
+        return $this->hasMany(News::class, 'ID_study_program');
+    }
+    public function event()
+    {
+        return $this->hasMany(Event::class, 'ID_study_program');
+    }
 }

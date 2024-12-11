@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('News_Image')->nullable();
             $table->integer('views')->default(0);
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('ID_study_program');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('ID_study_program')->references('ID_study_program')->on('study_programs')->onDelete('cascade');
             $table->timestamps();
         });
     }

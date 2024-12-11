@@ -20,8 +20,10 @@ return new class extends Migration
             $table->timestamp('Publication_Date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('Event_Image')->nullable();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('ID_study_program');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('ID_study_program')->references('ID_study_program')->on('study_programs')->onDelete('cascade');
             $table->timestamps();
         });
     }

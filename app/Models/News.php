@@ -13,7 +13,8 @@ class News extends Model
         'News_Content',
         'Publication_Date',
         'News_Image',
-        'user_id'
+        'user_id',
+        'ID_study_program',
     ];
 
     protected $casts = [
@@ -23,6 +24,10 @@ class News extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function studyProgram()
+    {
+        return $this->belongsTo(StudyProgram::class, 'ID_study_program');
     }
 
 }

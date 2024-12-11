@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -51,7 +52,8 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('dashboard.admin.news.create');
+        $studyPrograms = StudyProgram::all();
+        return view('dashboard.admin.news.create', compact('studyPrograms'));
     }
 
     /**
@@ -59,15 +61,36 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'News_Title' => 'required|string|max:255',
-            'News_Content' => 'required|string',
-            'Publication_Date' => today(),
-            'News_Image' => 'nullable|image|max:2048',
-        ]);
+        $user = auth()->user()->id;
 
-        $data = $validated;
-        $data['user_id'] = auth()->id();
+        if (auth()->user()->hasRole('admin')) {
+
+            $validated = $request->validate([
+                'News_Title' => 'required|string|max:255',
+                'News_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'News_Image' => 'nullable|image|max:2048',
+                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+            ]);
+
+            $data = $validated;
+            $data['user_id'] = $user;
+
+        } else {
+
+            $studyProgram = auth()->user()->staff->ID_study_program;
+
+            $validated = $request->validate([
+                'News_Title' => 'required|string|max:255',
+                'News_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'News_Image' => 'nullable|image|max:2048',
+            ]);
+
+            $data = $validated;
+            $data['user_id'] = $user;
+            $data['ID_study_program'] = $studyProgram;
+        }
 
         if ($request->hasFile('News_Image')) {
             $data['News_Image'] = $request->file('News_Image')->store('images/news', 'public');
@@ -91,7 +114,8 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        return view('dashboard.admin.news.edit', compact('news'));
+        $studyPrograms = StudyProgram::all();
+        return view('dashboard.admin.news.edit', compact('news', 'studyPrograms'));
     }
 
     /**
@@ -99,12 +123,26 @@ class NewsController extends Controller
      */
     public function update(Request $request, News $news)
     {
-        $validated = $request->validate([
-            'News_Title' => 'required|string|max:255',
-            'News_Content' => 'required|string',
-            'Publication_Date' => today(),
-            'News_Image' => 'nullable|image|max:2048',
-        ]);
+        if (auth()->user()->hasRole('admin')) {
+
+            $validated = $request->validate([
+                'News_Title' => 'required|string|max:255',
+                'News_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'News_Image' => 'nullable|image|max:2048',
+                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+            ]);
+
+        } else {
+
+            $validated = $request->validate([
+                'News_Title' => 'required|string|max:255',
+                'News_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'News_Image' => 'nullable|image|max:2048',
+            ]);
+
+        }
 
         $data = $validated;
 

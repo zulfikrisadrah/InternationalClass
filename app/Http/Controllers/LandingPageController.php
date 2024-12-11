@@ -35,9 +35,9 @@ class LandingPageController extends Controller
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
             'title' => 'Study Program',
-            'description' => 'The International Class is a program conducted in English or another foreign language, 
-            designed to equip graduates with the skills and language proficiency to compete globally. Students will 
-            engage in international exposure activities, such as joint degrees, double degrees, internships, or other 
+            'description' => 'The International Class is a program conducted in English or another foreign language,
+            designed to equip graduates with the skills and language proficiency to compete globally. Students will
+            engage in international exposure activities, such as joint degrees, double degrees, internships, or other
             opportunities at partner universities or institutions abroad.',
             'international_exposure_programs' => $ie_programs,
         ];
@@ -63,7 +63,18 @@ class LandingPageController extends Controller
         $program = $data_config;  // Program studi yang ditemukan
         $prospects = $data_config['prospects']; // Prospek yang relevan
 
-        return view('studyProgram.show', compact('programs', 'data','data_config', 'prospects'));
+        // Mengambil berita yang relevan dengan program studi
+        $news = News::where('ID_study_program', $ID_study_program)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        $events = Event::where('ID_study_program', $ID_study_program)
+                    ->latest()
+                    ->take(2)
+                    ->get();
+
+        return view('studyProgram.show', compact('programs', 'data','data_config', 'prospects', 'news', 'events'));
     }
 
     // Untuk di halaman /news

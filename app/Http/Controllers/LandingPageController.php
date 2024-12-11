@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\News;
 use App\Models\Event;
 use App\Models\IeProgram;
+use App\Models\Program;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -70,11 +71,11 @@ class LandingPageController extends Controller
             ->get();
 
         $events = Event::where('ID_study_program', $ID_study_program)
-                    ->latest()
-                    ->take(2)
-                    ->get();
+            ->latest()
+            ->take(2)
+            ->get();
 
-        return view('studyProgram.show', compact('programs', 'data','data_config', 'prospects', 'news', 'events'));
+        return view('studyProgram.show', compact('programs', 'data', 'data_config', 'prospects', 'news', 'events'));
     }
 
     // Untuk di halaman /news
@@ -146,5 +147,22 @@ class LandingPageController extends Controller
             potential of the Indonesian Maritime Continent.',
         ];
         return view('about', compact('data'));
+    }
+    public function InternationalExposure()
+    {
+        $programs = Program::latest()->paginate(5);
+        $data = [
+            'title' => 'International Exposure',
+            'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
+        ];
+        return view('InternationalExposure.index', compact('data', 'programs'));
+    }
+    public function InternationalExposureShow()
+    {
+        $data = [
+            'title' => 'International Exposure',
+            'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
+        ];
+        return view('InternationalExposure.show', compact('data'));
     }
 }

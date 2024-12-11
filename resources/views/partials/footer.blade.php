@@ -24,7 +24,7 @@
             <h3 class="font-semibold text-lg">Pages</h3>
             <a href="{{ route('about.index') }}" class="hover:text-gray-300 block pt-4">About</a>
             <a href="{{ route('studyProgram.index') }}" class="hover:text-gray-300 block">Study Program</a>
-            <a href="{{ route('studyProgram.index') }}" class="hover:text-gray-300 block">IE Program</a>
+            <a href="{{ route('InternationalExposure.index') }}" class="hover:text-gray-300 block">IE Program</a>
             <a href="{{ route('news.index') }}" class="hover:text-gray-300 block">News</a>
             <a href="{{ route('event.index') }}" class="hover:text-gray-300 block">Event</a>
         </nav>

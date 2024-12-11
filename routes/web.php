@@ -24,9 +24,9 @@ Route::get('/news/{id}', [LandingPageController::class, 'newsShow'])->name('news
 
 Route::get('/about', [LandingPageController::class, 'about'])->name('about.index');
 
-Route::get('/IE', function () {
-    return view('InternationalExposure');
-});
+Route::get('/InternationalExposure', [LandingPageController::class, 'InternationalExposure'])->name('InternationalExposure.index');
+Route::get('/InternationalExposure/{id}', [LandingPageController::class, 'InternationalExposureShow'])->name('InternationalExposure.show');
+
 Route::get('/studyProgram', [LandingPageController::class, 'studyProgram'])->name('studyProgram.index');
 Route::get('/studyProgram/{id}', [LandingPageController::class, 'studyProgramShow'])->name('studyProgram.show');
 

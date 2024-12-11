@@ -10,7 +10,7 @@
                 </li>
             @else
                 <li>
-                    <a href="{{ $paginator->previousPageUrl() }}" class="text-blue-600 hover:text-blue-800">
+                    <a href="{{ $paginator->previousPageUrl() }}" class="text-blueSecondary hover:text-blueThird">
                         &laquo; Previous
                     </a>
                 </li>
@@ -24,7 +24,7 @@
                 @elseif (is_array($element))
                     @foreach ($element as $page => $url)
                         <li>
-                            <a href="{{ $url }}" class="px-3 py-1 rounded-md {{ $page == $paginator->currentPage() ? 'bg-blue-500 text-white' : 'text-gray-500 hover:text-blue-600' }}">
+                            <a href="{{ $url }}" class="px-3 py-1 rounded-md {{ $page == $paginator->currentPage() ? 'bg-blueThird text-white' : 'text-gray-500 hover:text-blueSecondary' }}">
                                 {{ $page }}
                             </a>
                         </li>
@@ -34,7 +34,7 @@
 
             @if ($paginator->hasMorePages())
                 <li>
-                    <a href="{{ $paginator->nextPageUrl() }}" class="text-blue-600 hover:text-blue-800">
+                    <a href="{{ $paginator->nextPageUrl() }}" class="text-blueSecondary hover:text-blueThird">
                         Next &raquo;
                     </a>
                 </li>

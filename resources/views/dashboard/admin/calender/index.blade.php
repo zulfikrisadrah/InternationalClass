@@ -11,29 +11,27 @@
 
                 <!-- Left Section for Events -->
                 <div class="flex flex-col bg-white rounded-lg shadow-lg p-6 w-fit h-fit lg:w-1/4">
-                    <a href="{{ route('admin.calender.create') }}" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg mb-6">
+                    <a href="{{ route('admin.calender.create') }}" class="bg-blueThird text-white font-bold py-2 px-4 rounded-lg mb-6">
                         + Add New Events
                     </a>
 
-                    <div class="text-lg font-bold text-[#202224] mb-4">Upcoming Events</div>
+                    <div class="text-lg font-bold text-[#202224] mb-4 border-b-2 border-blueThird">Upcoming Events</div>
 
                     <div class="space-y-6 overflow-y-auto" style="max-height: 350px;">
                         @forelse($agendas as $agenda)
-                            <div class="flex items-center space-x-4 mb-6">
-                                <img class="w-12 h-12 rounded-full" src="{{ $agenda->image_url ?? 'https://via.placeholder.com/62x62' }}" alt="Agenda Image">
-                                <div class="flex-1">
+                            <div class="flex items-center space-x-4 mb-6 border-b">
+                                <div class="flex-1 cursor-pointer" onclick="openModal('{{ $agenda->title }}', '{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }}', '{{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}', '{{ $agenda->description }}')">
                                     <div class="font-bold text-sm">{{ $agenda->title }}</div>
                                     <div class="text-gray-500 text-xs">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - <br> {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
-                                    <div class="text-gray-500 text-xs">{{ $agenda->location }}</div>
                                 </div>
 
                                 <!-- Action Buttons -->
                                 <div class="flex space-x-2">
                                     <!-- Edit Button -->
                                     <a href="{{ route('admin.calender.edit', $agenda->id) }}" class="text-blue-500 hover:text-blue-700">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                            <path d="M2 20h20v2H2v-2zM17.59 5.59L19 7 9.41 16.59 8 15.17l9.59-9.58zM15.5 3c.78 0 1.5.67 1.5 1.5S16.28 6 15.5 6 14 5.33 14 4.5 14.72 3 15.5 3z" />
-                                        </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-blueThird">
+                                        <path d="M2 20h20v2H2v-2zM17.59 5.59L19 7 9.41 16.59 8 15.17l9.59-9.58zM15.5 3c.78 0 1.5.67 1.5 1.5S16.28 6 15.5 6 14 5.33 14 4.5 14.72 3 15.5 3z" />
+                                    </svg>
                                     </a>
 
                                     <!-- Delete Button -->
@@ -41,7 +39,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-500 hover:text-red-700">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-redPrimary">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
@@ -98,7 +96,7 @@
                     var calendar = new FullCalendar.Calendar(calendarEl, {
                         initialView: 'dayGridMonth',
                         headerToolbar: false,
-                        events: 'calendar/events', 
+                        events: 'calendar/events',
 
                         eventContent: function() {
                             return { domNodes: [] };
@@ -108,11 +106,11 @@
                             document.querySelectorAll('.fc-event').forEach(function(event) {
                                 event.classList.add('border-0', 'border-white', 'bg-transparent', 'text-transparent');
                             });
-                            updateEventDots();  
+                            updateEventDots();
                         },
 
                         datesSet: function() {
-                            updateEventDots();  
+                            updateEventDots();
                         },
 
                         dateClick: function(info) {
@@ -129,11 +127,11 @@
                     function setActiveButton(activeButton) {
                         const buttons = document.querySelectorAll('.calendar-view-btn');
                         buttons.forEach(button => {
-                            button.classList.remove('bg-blue-500', 'text-white');
+                            button.classList.remove('bg-blueThird', 'text-white');
                             button.classList.add('text-sm', 'font-semibold', 'py-1', 'px-3', 'rounded-lg', 'text-black');
                         });
 
-                        activeButton.classList.add('bg-blue-500', 'text-white', 'px-3', 'py-2', 'rounded-lg');
+                        activeButton.classList.add('bg-blueThird', 'text-white', 'px-3', 'py-2', 'rounded-lg');
                     }
 
                     function updateCalendarTitle(title) {
@@ -233,7 +231,7 @@
                                         if (d.style.backgroundColor === dot.style.backgroundColor) {
                                             const dotColor = d.style.backgroundColor;
                                             let rgbaColor;
-                                            
+
                                             if (dotColor.startsWith('rgb')) {
                                                 rgbaColor = dotColor.replace('rgb', 'rgba').replace(')', ', 0.5)').replace('rgb(', 'rgba(');
                                             } else if (dotColor.startsWith('#')) {
@@ -250,7 +248,7 @@
                                     tooltip.classList.add('event-tooltip');
                                     tooltip.style.position = 'absolute';
                                     tooltip.style.maxWidth = '250px';
-                                    tooltip.style.maxHeight = '150px'; 
+                                    tooltip.style.maxHeight = '150px';
                                     tooltip.style.backgroundColor = '#333';
                                     tooltip.style.color = '#fff';
                                     tooltip.style.borderRadius = '4px';
@@ -258,30 +256,30 @@
                                     tooltip.style.fontSize = '12px';
                                     tooltip.style.zIndex = '1000';
 
-                                    tooltip.style.whiteSpace = 'normal'; 
-                                    tooltip.style.overflow = 'hidden'; 
-                                    tooltip.style.textOverflow = 'ellipsis'; 
-                                    tooltip.style.lineHeight = '1.5'; 
+                                    tooltip.style.whiteSpace = 'normal';
+                                    tooltip.style.overflow = 'hidden';
+                                    tooltip.style.textOverflow = 'ellipsis';
+                                    tooltip.style.lineHeight = '1.5';
 
-                                    tooltip.innerHTML = `                                        
+                                    tooltip.innerHTML = `
                                         <strong> ${event.extendedProps.startDate} -  ${event.extendedProps.endDate} : ${event.title} </strong> <br>
                                         `;
-                                        
+
                                         document.body.appendChild(tooltip);
-                                        
+
                                     // <strong>Title:</strong> ${event.title} <br>
                                     // <strong>Description:</strong> ${event.extendedProps.description || 'No description available'} <br>
                                     // <strong>Location:</strong> ${event.extendedProps.location || 'No location available'}
-                                    
+
                                     const dotRect = dot.getBoundingClientRect();
                                     tooltip.style.left = `${dotRect.left + dotRect.width / 2 - tooltip.offsetWidth / 2}px`;
-                                    tooltip.style.top = `${dotRect.top - tooltip.offsetHeight - 5}px`; 
+                                    tooltip.style.top = `${dotRect.top - tooltip.offsetHeight - 5}px`;
                                 });
 
                                 dot.addEventListener('mouseout', function() {
                                     let allCells = document.querySelectorAll('.fc-daygrid-day-frame');
                                     allCells.forEach(cell => {
-                                        cell.style.backgroundColor = ''; 
+                                        cell.style.backgroundColor = '';
                                     });
 
                                     let tooltip = document.querySelector('.event-tooltip');
@@ -294,37 +292,55 @@
                     }
                 });
             </script>
+
+            <script>
+                function openModal(title, start, end, description) {
+                    document.getElementById('modal-title').textContent = title;
+                    document.getElementById('modal-start').textContent = start;
+                    document.getElementById('modal-end').textContent = end;
+                    document.getElementById('modal-description').textContent = description;
+                    document.getElementById('event-modal').classList.remove('hidden');
+                }
+
+                document.getElementById('close-modal').addEventListener('click', () => {
+                    document.getElementById('event-modal').classList.add('hidden');
+                });
+
+                document.getElementById('close-modal-footer').addEventListener('click', () => {
+                    document.getElementById('event-modal').classList.add('hidden');
+                });
+            </script>
     </div>
     <!-- Modal -->
     <div id="event-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
         <div class="bg-white rounded-lg shadow-lg p-8 w-[600px]">
-        
+
             <!-- Header -->
             <div class="flex justify-center items-center border-b pb-4 relative">
                 <h2 class="text-3xl font-bold">Agenda Akademik</h2>
                 <button id="close-modal" class="absolute right-0 text-gray-500 text-2xl">&times;</button>
             </div>
-        
+
             <!-- Body -->
             <div class="modal-body mt-4 text-center space-y-6 pt-[10px]">
                 <!-- Modal Title -->
                 <h3 id="modal-title" class="text-3xl font-bold w-[400px] mx-auto text-center">Judul Agenda</h3>
-        
+
                 <!-- Start & End Dates -->
                 <div class="flex justify-center items-center space-x-4" style="margin-top: 5px">
                     <p><span id="modal-start">Start Date</span></p>
                     <p>-</p>
                     <p><span id="modal-end">End Date</span></p>
                 </div>
-                
+
                 <!-- Description -->
                 <p id="modal-description" class="mt-2 text-gray-700 border-b pb-4 pb-[40px]">Deskripsi</p>
             </div>
-        
+
             <!-- Footer -->
             <div class="modal-footer mt-6 flex justify-end">
                 <button id="close-modal-footer" class="bg-red-500 text-white px-6 py-2 rounded-lg">Close</button>
-            </div>            
+            </div>
         </div>
     </div>
 </x-app-layout>

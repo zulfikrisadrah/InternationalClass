@@ -52,27 +52,28 @@
                     </h2>
                     <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
                         @foreach ($upcoming_events_page as $upcoming_event)
-                            <div
-                                class="w-full max-w-[650px] mb-8 bg-white rounded-3xl border-indigo-900 border-t-[6px]
-                            shadow-[0px_2px_20px_rgba(0,0,0,0.25)]">
-                                <div class="p-6">
-                                    <h2 class="text-lg md:text-xl font-semibold text-black mb-3 ">
-                                        {{ Str::limit($upcoming_event->Event_Title, 150) }}
-                                    </h2>
-                                    <p class="text-gray-700 text-sm md:text-base leading-relaxed line-clamp-3">
-                                        {{ Str::limit(html_entity_decode(strip_tags($upcoming_event->Event_Content)), 150, '...') }}
-                                    </p>
-                                    <div class="flex gap-3.5 mt-4 text-xs text-stone-900 items-center">
-                                        <img loading="lazy"
-                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                            alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                        <time datetime="{{ $upcoming_event->event_date }}" class="text-xs text-gray-500">
-                                            {{ \Carbon\Carbon::parse($upcoming_event->event_date)->format('d M, Y') }}
-                                        </time>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                                    <a a href="{{ route('event.show', $upcoming_event->ID_Event) }}"
+                                        class="flex flex-col mb-5 items-start py-8 pr-3.5 pl-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full"
+                                        data-aos="fade-left" data-aos-delay="200">
+
+                                        <h4 class="font-semibold">
+                                            {{ Str::limit($upcoming_event->Event_Title, 100) }}
+                                        </h4>
+
+                                        <p class="self-stretch mt-1 max-md:max-w-full">
+                                            {{ Str::limit(html_entity_decode(strip_tags($upcoming_event->Event_Content)), 100, '...') }}
+                                        </p>
+                                        <div class="flex gap-1.5 mt-4 text-xs text-stone-900">
+                                            <img loading="lazy"
+                                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
+                                                alt="Calendar Icon"
+                                                class="object-contain shrink-0 self-start w-5 aspect-square" />
+                                            <time datetime="{{ $upcoming_event->Publication_Date->format('Y-m-d') }}">
+                                                {{ $upcoming_event->Publication_Date->format('d M, Y') }}
+                                            </time>
+                                        </div>
+                                    </a>
+                                @endforeach
                     </div>
                 </div>
             </div>

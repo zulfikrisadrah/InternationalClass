@@ -108,7 +108,7 @@
                                                 <p class="mt-2 flex-grow">
                                                     {{ Str::limit(html_entity_decode(strip_tags($new->News_Content)), 100) }}
                                                 </p>
-                                                <a href="{{ route('landing.page', $new->id) }}"
+                                                <a href="{{ route('news.show', $new->ID_News) }}"
                                                     class="self-center px-5 py-2 max-w-full text-center border border-black border-solid
                                                                         hover:bg-indigo-950 hover:text-white w-[150px] max-md:px-10 max-md:mt-5">
                                                     Read more
@@ -123,28 +123,28 @@
                     <!-- Sidebar Articles -->
                     <aside class="flex flex-col ml-5 w-[44%] max-md:ml-0 max-md:w-full">
                         @foreach ($events as $event)
-                            <article
-                                class="flex flex-col mb-5 items-start py-8 pr-3.5 pl-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full"
-                                data-aos="fade-left" data-aos-delay="200">
+                                    <a a href="{{ route('event.show', $event->ID_Event) }}"
+                                        class="flex flex-col mb-5 items-start py-8 pr-3.5 pl-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full"
+                                        data-aos="fade-left" data-aos-delay="200">
 
-                                <h4 class="font-semibold">
-                                    {{ Str::limit($event->Event_Title, 100) }}
-                                </h4>
+                                        <h4 class="font-semibold">
+                                            {{ Str::limit($event->Event_Title, 100) }}
+                                        </h4>
 
-                                <p class="self-stretch mt-1 max-md:max-w-full">
-                                    {{ Str::limit(html_entity_decode(strip_tags($event->Event_Content)), 100, '...') }}
-                                </p>
-                                <div class="flex gap-1.5 mt-4 text-xs text-stone-900">
-                                    <img loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                        alt="Calendar Icon"
-                                        class="object-contain shrink-0 self-start w-5 aspect-square" />
-                                    <time datetime="{{ $event->Publication_Date->format('Y-m-d') }}">
-                                        {{ $event->Publication_Date->format('d M, Y') }}
-                                    </time>
-                                </div>
-                            </article>
-                        @endforeach
+                                        <p class="self-stretch mt-1 max-md:max-w-full">
+                                            {{ Str::limit(html_entity_decode(strip_tags($event->Event_Content)), 100, '...') }}
+                                        </p>
+                                        <div class="flex gap-1.5 mt-4 text-xs text-stone-900">
+                                            <img loading="lazy"
+                                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
+                                                alt="Calendar Icon"
+                                                class="object-contain shrink-0 self-start w-5 aspect-square" />
+                                            <time datetime="{{ $event->Publication_Date->format('Y-m-d') }}">
+                                                {{ $event->Publication_Date->format('d M, Y') }}
+                                            </time>
+                                        </div>
+                                    </a>
+                                @endforeach
                     </aside>
                 </div>
             </div>

@@ -45,7 +45,7 @@ class ProgramController extends Controller
             if (!$user->student || !$user->student->ID_study_program) {
                 abort(403, 'This action is unauthorized.');
             }
-            
+
             $studyProgramId = $user->student->ID_study_program;
             $ieProgramId = $request->input('ie_program_id');
             $programs = Program::with('ieProgram')
@@ -71,8 +71,18 @@ class ProgramController extends Controller
         $student = auth()->user()->student; // Mendapatkan data student yang sedang login
 
         // Cek jika student sudah mendaftar ke program
-        if ($student->programs()->where('program_enrollment.ID_program', $programId)->exists()) {
-            return redirect()->route('student.program.index')->with('error', 'You are already enrolled.');
+        $existingEnrollment = $student->programs()->where('program_enrollment.ID_program', $programId)->first();
+        if ($existingEnrollment) {
+            // Cek status pendaftaran saat ini
+            $currentStatus = $existingEnrollment->pivot->status;
+
+            if ($currentStatus === 'pending') {
+                return redirect()->route('student.program.index')->with('pending', 'Your enrollment is still pending approval. Please wait for confirmation.');
+            }
+
+            if ($currentStatus === 'approved') {
+                return redirect()->route('student.program.index')->with('error', 'You are already enrolled.');
+            }
         }
 
         // Cek jumlah peserta yang sudah terdaftar di program

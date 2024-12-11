@@ -42,13 +42,6 @@
                         <x-input-error :messages="$errors->get('agenda_end')" class="mt-2" />
                     </div>
 
-                    <!-- Location -->
-                    <div class="mt-4">
-                        <x-input-label for="agenda_location" :value="__('Location')" />
-                        <x-text-input id="agenda_location" class="block mt-1 w-full" type="text" name="agenda_location" :value="old('agenda_location', $agenda->location)" required />
-                        <x-input-error :messages="$errors->get('agenda_location')" class="mt-2" />
-                    </div>
-
                     <!-- Description -->
                     <div class="mt-4">
                         <x-input-label for="agenda_description" :value="__('Description')" />
@@ -58,7 +51,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">
-                        <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                        <button type="submit" class="font-bold py-4 px-6 bg-blueThird text-white rounded-full">
                             Update Event
                         </button>
                     </div>

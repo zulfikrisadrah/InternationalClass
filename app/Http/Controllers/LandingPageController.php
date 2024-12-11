@@ -157,12 +157,14 @@ class LandingPageController extends Controller
         ];
         return view('InternationalExposure.index', compact('data', 'programs'));
     }
-    public function InternationalExposureShow()
+    public function InternationalExposureShow($ID_program)
     {
+        $programItem = Program::findOrFail($ID_program);
         $data = [
             'title' => 'International Exposure',
             'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
         ];
-        return view('InternationalExposure.show', compact('data'));
+
+        return view('InternationalExposure.show', compact('data', 'programItem'));
     }
 }

@@ -50,7 +50,7 @@
                                         @if ($popular->News_Image)
                                             <img loading="lazy" src="{{ asset('storage/' . $popular->News_Image) }}"
                                                 alt="Thumbnail for {{ $popular->News_Title }}"
-                                                class="max-w-[108px] w-[108px] aspect-[1.12]" />
+                                                class="max-w-[108px] w-[108px] aspect-[1.12] rounded-lg" />
                                         @endif
 
                                         <div class="flex flex-col w-full">

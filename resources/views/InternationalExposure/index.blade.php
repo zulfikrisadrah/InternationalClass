@@ -3,60 +3,55 @@
 @section('title', 'Hasanuddin University')
 
 @section('content')
-    <section class="flex flex-col">
-        <!-- Hero Section -->
-        <div
-            class="flex flex-col items-start px-16 py-28 w-full bg-blueSecondary shadow-lg max-md:px-5 max-md:py-24 max-md:max-w-full">
-            <h2 class="ml-9 text-5xl font-bold leading-10 text-white max-md:ml-2.5">
-                Recommendation <br /> Program
-            </h2>
-            <div class="grid grid-cols-5 gap-5 mt-12 mb-0 max-md:grid-cols-2 max-sm:grid-cols-1">
-                @foreach ($programs as $program)
-                    <article class="flex bg-zinc-300 shadow-lg w-full h-[285px]">
-                        <img loading="lazy" src="{{ asset('storage/' . $program->program_Image) }}"
-                            alt="{{ $program->program_Name }}"
-                            class="object-cover shrink-0 w-[130px] max-w-full aspect-[0.46]" />
-                        <div class="flex flex-col my-auto py-3">
-                            <div class="flex flex-col pl-2">
-                                <h3 class="text-[13px] font-semibold leading-4 text-stone-900">{{ $program->program_Name }}
-                                </h3>
-                                <p class="mt-3 text-[7px] leading-relaxed text-stone-500">
-                                    {{ $program->program_description }}</p>
-                            </div>
-                            <div
-                                class="flex flex-col items-start py-2 px-2 mt-4 text-[7px] leading-none text-white bg-indigo-950">
-                                <p>Lokasi: {{ $program->Country_of_Execution }}</p>
-                                <p class="mt-1">Tanggal: {{ $program->Execution_Date }}</p>
-                                <p class="mt-1">Peserta: {{ $program->Participants_Count }} Orang</p>
-                            </div>
-                            <a href=""
-                                class="self-start mt-10 pl-2 text-[7px] font-semibold leading-none text-red-700">Daftar
-                                &rarr;</a>
+<section class="flex flex-col">
+    <div class="flex flex-col items-start px-16 py-28 w-full bg-blueSecondary shadow-lg max-md:px-5 max-md:py-24 max-md:max-w-full">
+        <h2 class="text-5xl font-bold leading-10 text-white max-md:ml-2.5 text-start">
+            Recommendation <br /> Program
+        </h2>
+        <div class="grid grid-cols-5 gap-5 mt-12 mb-0 max-md:grid-cols-2 max-sm:grid-cols-1">
+            @foreach ($programs as $program)
+                <article class="flex flex-col md:flex-row bg-zinc-300 shadow-lg w-auto h-auto md:h-72">
+                    <img loading="lazy" src="{{ asset('storage/' . $program->program_Image) }}"
+                        alt="{{ $program->program_Name }}"
+                        class="object-cover w-auto md:w-32 h-72 max-w-full aspect-[0.46] md:aspect-auto rounded-lg" />
+
+                    <div class="flex flex-col my-auto py-3 w-full md:w-[calc(100%-130px)] overflow-hidden">
+                        <div class="flex flex-col px-2">
+                            <h3 class="text-base font-semibold leading-4 text-black">{{ $program->program_Name }}</h3>
+                            <p class="mt-3 text-[8px] leading-relaxed text-stone-500 max-w-full break-words line-clamp-3">
+                                {{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 25, '...') }}
+                            </p>
                         </div>
-                    </article>
-                @endforeach
-            </div>
+                        <div class="flex flex-col items-start py-2 px-2 mt-4 text-[8px] leading-none text-white bg-blueSecondary w-full">
+                            <p>Lokasi: {{ $program->Country_of_Execution }}</p>
+                            <p class="mt-1">Tanggal: {{ $program->Execution_Date }}</p>
+                            <p class="mt-1">Peserta: {{ $program->Participants_Count }} Orang</p>
+                        </div>
+                        <a href="{{ route('InternationalExposure.show', $program->ID_program) }}" class="self-start mt-10 pl-2 text-xs font-semibold leading-none text-red-700">
+                            Details &rarr;
+                        </a>
+                    </div>
+                </article>
+            @endforeach
         </div>
-    </section>
+    </div>
+</section>
+
+
 
     <section class="flex flex-col mx-16 my-16">
-        <!-- Navigation Bar -->
-        <nav class="flex flex-wrap gap-5 justify-between text-4xl leading-none text-white max-md:max-w-full">
-            <div class="text-semibold px-56 py-1 bg-bluePrimary max-md:px-5 max-md:max-w-full">All Program</div>
-            <div class="text-semibold px-24 py-1 whitespace-nowrap bg-bluePrimary max-md:px-5 max-md:max-w-full">Popular
-            </div>
-        </nav>
-        <div class="mt-6 max-md:mr-2.5 max-md:max-w-full">
+        <div class="max-md:mr-2.5 max-md:max-w-full">
             <div class="flex gap-5 max-md:flex-col">
-                <main class="flex flex-col w-[61%] max-md:ml-0 max-md:w-full">
+                <div class="flex flex-col w-[60%] max-md:ml-0 max-md:w-full">
                     @foreach ($programs as $program)
-                        <div class="flex flex-col max-w-[660px] mt-10 max-md:mt-10 max-md:max-w-full">
+                        <div class="flex flex-col max-w-[660px] mt-6 max-md:mt-6 max-md:max-w-full">
                             <img src="{{ asset('storage/' . $program->program_Image) }}" alt="{{ $program->program_Name }}"
                                 class="object-cover mr-4 w-full max-w-[660px] max-h-[300px] rounded-lg h-auto max-md:mr-2.5 max-md:max-w-full" />
                             <h2 class="mt-6 text-4xl leading-10 text-stone-900 max-md:mr-2.5 max-md:max-w-full">
                                 {{ $program->program_Name }}</h2>
-                            <h3 class="mt-3.5 text-sm leading-4 text-stone-500 max-md:mr-2.5 max-md:max-w-full">
-                                {{ $program->program_description }}</h3>
+                            <h3
+                                class="py-2.5 mt-3.5 text-sm leading-4 text-stone-500 max-md:mr-2.5 max-md:max-w-full break-words line-clamp-3">
+                                {{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 200) }}</h3>
                             <div class="flex mt-3 mr-2.5">
                                 <div
                                     class="flex justify-start items-center shrink-0 bg-bluePrimary h-16 w-56 rounded-sm text-white">
@@ -74,7 +69,7 @@
                                                 Tanggal
                                             </p>
                                             <p class="text-sm leading-4 text-white">
-                                                : {{ $program->Execution_Date }}
+                                                : {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M, Y') }}
                                             </p>
                                         </div>
                                         <div class="flex">
@@ -87,8 +82,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="" class="z-10 self-end -mt-1.5 ml-auto text-sm leading-none text-red-700">
-                                    Daftar &rarr;
+                                <a href="{{ route('InternationalExposure.show', $program->ID_program) }}" class="z-10 self-end -mt-1.5 ml-auto text-sm leading-none text-red-700">
+                                    Detail &rarr;
                                 </a>
                             </div>
                         </div>
@@ -96,7 +91,40 @@
                     <div class="mt-6">
                         {{ $programs->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>
-                </main>
+                </div>
+                <div class="flex flex-col w-[40%] max-md:ml-0 max-md:w-full">
+                    <h2
+                        class="px-6 py-2 mt-5 mb-5 text-lg font-semibold text-white bg-indigo-950 rounded-md text-center w-full max-w-[650px] mx-auto">
+                        New International Program
+                    </h2>
+                    <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
+                        @foreach ($programs as $program)
+                            <div
+                                class="w-full max-w-[650px] mb-8 bg-white rounded-xl border-[1px] border-indigo-900 shadow-lg">
+                                <div class="p-6">
+                                    <h2 class="text-lg md:text-xl font-semibold text-black mb-3">
+                                        {{ Str::limit($program->program_Name, 150) }}
+                                    </h2>
+                                    <p class="text-gray-700 text-sm md:text-base leading-relaxed line-clamp-3">
+                                        {{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 150, '...') }}
+                                    </p>
+                                    <div class="flex flex-wrap gap-4 mt-4 text-xs text-stone-900 items-center">
+                                        <img loading="lazy"
+                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
+                                            alt="" class="object-contain shrink-0 w-6 h-6" />
+                                        <time datetime="{{ $program->Execution_Date }}" class="text-xs text-gray-500">
+                                            {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M, Y') }}
+                                        </time>
+                                        <div class="flex items-center text-xs text-gray-500">
+                                            <span class="text-xs font-medium text-indigo-900">Location:</span>
+                                            <span class="ml-1 text-sm">{{ $program->Country_of_Execution }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </section>

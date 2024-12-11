@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -50,7 +51,8 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('dashboard.admin.event.create');
+        $studyPrograms = StudyProgram::all();
+        return view('dashboard.admin.event.create', compact('studyPrograms'));
     }
 
     /**
@@ -58,18 +60,39 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request
-        $validated = $request->validate([
-            'Event_Title' => 'required|string|max:255',
-            'Event_Content' => 'required|string',
-            'Event_Date' => 'required|date|after_or_equal:today',
-            'Publication_Date' => today(),
-            'Event_Image' => 'nullable|image|max:2048',
-        ]);
+        $user = auth()->user()->id;
 
-        // Prepare data for storage
-        $data = $validated;
-        $data['user_id'] = auth()->id();
+        if (auth()->user()->hasRole('admin')) {
+
+            $validated = $request->validate([
+                'Event_Title' => 'required|string|max:255',
+                'Event_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'Event_Date' => 'required|date',
+                'Event_Image' => 'nullable|image|max:2048',
+                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+            ]);
+
+            $data = $validated;
+            $data['user_id'] = $user;
+
+        } else {
+
+            $studyProgram = auth()->user()->staff->ID_study_program;
+
+            $validated = $request->validate([
+                'Event_Title' => 'required|string|max:255',
+                'Event_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'Event_Date' => 'required|date',
+                'Event_Image' => 'nullable|image|max:2048',
+            ]);
+
+            $data = $validated;
+            $data['user_id'] = $user;
+            $data['ID_study_program'] = $studyProgram;
+
+        }
 
         // Handle file upload if an image is provided
         if ($request->hasFile('Event_Image')) {
@@ -97,7 +120,8 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        return view('dashboard.admin.event.edit', compact('event'));
+        $studyPrograms = StudyProgram::all();
+        return view('dashboard.admin.event.edit', compact('event', 'studyPrograms'));
     }
 
     /**
@@ -105,13 +129,28 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $validated = $request->validate([
-            'Event_Title' => 'required|string|max:255',
-            'Event_Content' => 'required|string',
-            'Event_Date' => 'required|date|after_or_equal:today',
-            'Publication_Date' => today(),
-            'Event_Image' => 'nullable|image|max:2048',
-        ]);
+        if (auth()->user()->hasRole('admin')) {
+
+            $validated = $request->validate([
+                'Event_Title' => 'required|string|max:255',
+                'Event_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'Event_Date' => 'required|date',
+                'Event_Image' => 'nullable|image|max:2048',
+                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+            ]);
+
+        } else {
+
+            $validated = $request->validate([
+                'Event_Title' => 'required|string|max:255',
+                'Event_Content' => 'required|string',
+                'Publication_Date' => today(),
+                'Event_Date' => 'required|date',
+                'Event_Image' => 'nullable|image|max:2048',
+            ]);
+
+        }
 
         // Prepare data for storage
         $data = $validated;

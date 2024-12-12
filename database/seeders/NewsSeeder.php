@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 class NewsSeeder extends Seeder
 {
@@ -12,6 +14,8 @@ class NewsSeeder extends Seeder
      */
     public function run(): void
     {
+        Storage::disk('public')->makeDirectory('images/news');
+
         $news = [
             [
                 'News_Title' => 'Global Education Trends: The Future of Learning',
@@ -19,6 +23,7 @@ class NewsSeeder extends Seeder
                 'user_id' => 1,
                 'ID_study_program' => 1,
                 'Publication_Date' => '2024-01-01',
+                'News_Image' => public_path('images\studyprogram\Fakultas-Ekonomi-dan-Bisnis.png'),
             ],
             [
                 'News_Title' => 'International Collaboration in Higher Education',
@@ -26,6 +31,7 @@ class NewsSeeder extends Seeder
                 'user_id' => 1,
                 'ID_study_program' => 2,
                 'Publication_Date' => '2024-01-02',
+                'News_Image' => public_path('images\studyprogram\FH-UNHAS-10.png'),
             ],
             [
                 'News_Title' => 'Cultural Diversity in University Campuses: Embracing Global Perspectives',
@@ -33,6 +39,7 @@ class NewsSeeder extends Seeder
                 'user_id' => 1,
                 'ID_study_program' => 3,
                 'Publication_Date' => '2024-01-03',
+                'News_Image' => public_path('images\studyprogram\FK-unhas.png'),
             ],
             [
                 'News_Title' => 'The Rise of Global Online Education Platforms',
@@ -40,6 +47,7 @@ class NewsSeeder extends Seeder
                 'user_id' => 1,
                 'ID_study_program' => 4,
                 'Publication_Date' => '2024-01-04',
+                'News_Image' => public_path('images\studyprogram\sipil.png'),
             ],
             [
                 'News_Title' => 'Preparing International Students for Success in a Globalized World',
@@ -47,14 +55,17 @@ class NewsSeeder extends Seeder
                 'user_id' => 1,
                 'ID_study_program' => 5,
                 'Publication_Date' => '2024-01-05',
+                'News_Image' => public_path('images\studyprogram\hi.png'),
             ]
         ];
 
         foreach ($news as $item) {
+            $imagePath = Storage::disk('public')->putFile('images/news', new File($item['News_Image']));
+
             DB::table('news')->insert([
                 'News_Title' => $item['News_Title'],
                 'News_Content' => $item['News_Content'],
-                'News_Image' => null,
+                'News_Image' => $imagePath,
                 'user_id' => $item['user_id'],
                 'ID_study_program' => $item['ID_study_program'],
                 'Publication_Date' => $item['Publication_Date'],

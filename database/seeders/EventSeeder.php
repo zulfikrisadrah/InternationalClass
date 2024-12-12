@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 class EventSeeder extends Seeder
 {
@@ -12,6 +14,8 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
+        Storage::disk('public')->makeDirectory('images/events');
+
         $events = [
             [
                 'Event_Title' => 'International Business Management Workshop',
@@ -20,6 +24,7 @@ class EventSeeder extends Seeder
                 'ID_study_program' => 1,
                 'Publication_Date' => '2024-01-01',
                 'Event_Date' => '2024-01-01',  // Menambahkan event_date
+                'Event_Image' => public_path('images\studyprogram\Fakultas-Ekonomi-dan-Bisnis.png'),
             ],
             [
                 'Event_Title' => 'Legal Aspects of International Trade',
@@ -28,6 +33,7 @@ class EventSeeder extends Seeder
                 'ID_study_program' => 2,
                 'Publication_Date' => '2024-01-02',
                 'Event_Date' => '2024-01-02',  // Menambahkan event_date
+                'Event_Image' => public_path('images\studyprogram\FH-UNHAS-10.png'),
             ],
             [
                 'Event_Title' => 'Advancements in Medical Education',
@@ -36,6 +42,7 @@ class EventSeeder extends Seeder
                 'ID_study_program' => 3,
                 'Publication_Date' => '2024-01-03',
                 'Event_Date' => '2024-01-03',  // Menambahkan event_date
+                'Event_Image' => public_path('images\studyprogram\FK-unhas.png'),
             ],
             [
                 'Event_Title' => 'Artificial Intelligence and Future Trends',
@@ -44,6 +51,7 @@ class EventSeeder extends Seeder
                 'ID_study_program' => 4,
                 'Publication_Date' => '2024-01-04',
                 'Event_Date' => '2024-01-04',  // Menambahkan event_date
+                'Event_Image' => public_path('images\studyprogram\sipil.png'),
             ],
             [
                 'Event_Title' => 'Global Diplomacy and International Relations',
@@ -52,10 +60,13 @@ class EventSeeder extends Seeder
                 'ID_study_program' => 5,
                 'Publication_Date' => '2024-01-05',
                 'Event_Date' => '2024-01-05',  // Menambahkan event_date
+                'Event_Image' => public_path('images\studyprogram\hi.png'),
             ]
         ];
 
         foreach ($events as $event) {
+            $imagePath = Storage::disk('public')->putFile('images/events', new File($event['Event_Image']));
+
             DB::table('events')->insert([
                 'Event_Title' => $event['Event_Title'],
                 'Event_Content' => $event['Event_Content'],
@@ -63,6 +74,7 @@ class EventSeeder extends Seeder
                 'user_id' => $event['user_id'],
                 'ID_study_program' => $event['ID_study_program'],
                 'Publication_Date' => $event['Publication_Date'],
+                'Event_Image' => $imagePath,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

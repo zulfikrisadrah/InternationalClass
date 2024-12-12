@@ -290,7 +290,7 @@
 
         <!-- Header -->
         <div class="flex justify-center items-center border-b pb-4 relative">
-            <h2 class="text-3xl font-bold">Agenda Akademik</h2>
+            <h2 class="text-3xl font-bold">Academic Event</h2>
             <button id="close-modal" class="absolute right-0 text-gray-500 text-2xl">&times;</button>
         </div>
 

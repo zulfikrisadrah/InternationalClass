@@ -155,10 +155,12 @@ class LandingPageController extends Controller
             'title' => 'International Exposure',
             'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
         ];
+        $today = Carbon::today();
 
         $recommendedPrograms = Program::select('programs.*')
         ->leftJoin('program_enrollment', 'programs.ID_program', '=', 'program_enrollment.ID_program')
         ->where('program_enrollment.status', 'approved')
+        ->whereDate('programs.Execution_Date', '>', $today)
         ->groupBy(
             'programs.ID_program',
             'programs.program_Name',  
@@ -180,8 +182,7 @@ class LandingPageController extends Controller
 
         $newPrograms = Program::latest()->limit(5)->get();
 
-        $today = Carbon::today();
-        $allPrograms = Program::whereDate('Execution_Date', '>', $today)->paginate(5);
+        $allPrograms = Program::latest()->paginate(5);
         return view('InternationalExposure.index', compact('recommendedPrograms', 'data','newPrograms', 'allPrograms'));
     }
     public function InternationalExposureShow($ID_program)

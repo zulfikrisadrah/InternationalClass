@@ -43,9 +43,9 @@
                         </div>
 
                         <div class="hidden md:flex flex-col">
-                            <p class="text-slate-500 text-sm">Publication Date</p>
+                            <p class="text-slate-500 text-sm">Event Date</p>
                             <h3 class="text-blueSecondary text-xl font-bold">
-                                {{ \Carbon\Carbon::parse($event->Publication_Date)->format('d M Y') }}
+                                {{ \Carbon\Carbon::parse($event->Event_Date)->format('d M Y') }}
                             </h3>
                         </div>
 

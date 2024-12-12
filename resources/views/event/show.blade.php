@@ -26,8 +26,8 @@
                     {{ $eventItem->Event_Title }}
                 </h1>
 
-                <div class="mt-6 text-lg leading-relaxed text-gray-800">
-                    {!! html_entity_decode($eventItem->Event_Content) !!}
+                <div class="mt-6 text-lg leading-relaxed text-gray-800 break-words">
+                    {!! nl2br(html_entity_decode($eventItem->Event_Content)) !!}
                 </div>
 
                 <div class="mt-10 text-end">

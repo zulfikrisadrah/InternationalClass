@@ -105,7 +105,7 @@
                                                 <h4 class="mt-3 text-xs font-semibold max-md:mr-1">
                                                     {{ Str::limit($new->News_Title, 80) }}
                                                 </h4>
-                                                <p class="mt-2 flex-grow">
+                                                <p class="mt-2 flex-grow break-words">
                                                     {{ Str::limit(html_entity_decode(strip_tags($new->News_Content)), 100) }}
                                                 </p>
                                                 <a href="{{ route('news.show', $new->ID_News) }}"
@@ -131,7 +131,7 @@
                                             {{ Str::limit($event->Event_Title, 100) }}
                                         </h4>
 
-                                        <p class="self-stretch mt-1 max-md:max-w-full">
+                                        <p class="self-stretch mt-1 max-md:max-w-full break-words">
                                             {{ Str::limit(html_entity_decode(strip_tags($event->Event_Content)), 100, '...') }}
                                         </p>
                                         <div class="flex gap-1.5 mt-4 text-xs text-stone-900">

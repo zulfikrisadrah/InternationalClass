@@ -43,7 +43,7 @@
     <div class="py-1">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
-                @foreach ($programs as $program)
+                @forelse ($programs as $program)
                     <div class="item-card flex flex-row items-center justify-between gap-x-3">
                         <!-- Program Image and Name -->
                         <div class="flex flex-row items-center gap-x-3 flex-grow">
@@ -88,105 +88,59 @@
                         <!-- Button Section (Detail and Enroll) -->
                         <div class="flex items-center gap-x-3">
                             <!-- Detail Button -->
-                            <button onclick="openModal('modal-{{ $program->ID_program }}')" class="font-bold py-2 px-4 bg-blue-700 text-white rounded-full">
+                            <a href="{{ route('student.program.show', $program->ID_program) }}" class="font-bold py-2 px-4 bg-blue-700 text-white rounded-full">
                                 Detail
-                            </button>
+                            </a>
                             <!-- Enroll Button -->
-                            <form action="{{ route('student.program.enroll', $program->ID_program) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full">
-                                    Enroll
-                                </button>
-                            </form>
+                            <button type="button" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full" onclick="openModal({{ $program->ID_program }})">
+                                Enroll
+                            </button>
                         </div>
                     </div>
+                @empty
+                    <p class="text-center text-lg font-bold text-black">No Programs Available</p>
+                @endforelse
 
-                    <!-- Modal -->
-                    <div id="modal-{{ $program->ID_program }}" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center z-50">
-                        <div class="bg-white p-4 rounded-lg shadow-lg w-full max-w-md">
-                            <div class="flex items-center justify-between mb-4 border-b pb-2">
-                                <h2 class="text-xl font-bold text-gray-800">Program Details</h2>
-                                <button onclick="closeModal('modal-{{ $program->ID_program }}')" class="text-gray-500 hover:text-gray-800 focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- Modal Content -->
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-sm text-gray-500">Program Name:</p>
-                                    <h3 class="text-lg font-semibold text-gray-800">{{ $program->program_Name }}</h3>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Program Description:</p>
-                                    <p class="text-gray-800">{{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 150, '...') }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Country of Execution:</p>
-                                    <p class="text-gray-800">{{ $program->Country_of_Execution }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Execution Date:</p>
-                                    <p class="text-gray-800">{{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Participants Count:</p>
-                                    <p class="text-gray-800">{{ $program->Participants_Count }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">IE Program:</p>
-                                    <p class="text-gray-800">{{ $program->ieProgram->ie_program_name }}</p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">Study Program:</p>
-                                    <p class="text-gray-800">{{ $program->studyProgram->study_program_Name }}</p>
-                                </div>
-                            </div>
-
-                            <!-- Program Image -->
-                            <div class="mt-4 flex justify-center">
-                                @if ($program->program_Image)
-                                    <img src="{{ asset('storage/' . $program->program_Image) }}" alt="{{ $program->program_Name }}"
-                                        class="rounded-lg object-cover mx-auto shadow-md w-full h-40">
-                                @else
-                                    <div class="w-full h-40 bg-gray-300 rounded-lg flex items-center justify-center text-gray-500">
-                                        No Image Available
-                                    </div>
-                                @endif
-                            </div>
-
-                            <!-- Modal Footer -->
-                            <div class="flex justify-end mt-4">
-                                <button onclick="closeModal('modal-{{ $program->ID_program }}')" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-700 transition">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
+                <!-- Pagination -->
+                @if ($programs->count() > 0)
+                    <div class="mt-6">
+                        {{ $programs->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>
-                @endforeach
+                @endif
             </div>
         </div>
     </div>
+
+    <!-- Modal for Confirmation -->
+    <div id="enrollModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="bg-black opacity-50 absolute inset-0" onclick="closeModal()"></div>
+        <div class="bg-white rounded-lg shadow-lg p-6 relative z-10 w-96">
+            <h2 class="text-xl font-bold text-indigo-950 mb-4">Confirm Enrollment</h2>
+            <p class="text-gray-700 mb-6">Are you sure you want to enroll in this program?</p>
+            <form id="enrollForm" method="POST" action="" class="flex justify-between items-center">
+                @csrf
+                <input type="hidden" name="program_id" id="program_id">
+                <button type="button" class="py-2 px-4 bg-gray-300 text-gray-700 rounded-full" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="py-2 px-4 bg-indigo-700 text-white rounded-full">
+                    Confirm Enrollment
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // Open the modal
+        function openModal(programId) {
+            document.getElementById('program_id').value = programId;
+            const formAction = '{{ route('student.program.enroll', ':programId') }}';
+            document.getElementById('enrollForm').action = formAction.replace(':programId', programId);
+            document.getElementById('enrollModal').classList.remove('hidden');
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById('enrollModal').classList.add('hidden');
+        }
+    </script>
 </x-app-layout>
-
-<script>
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-</script>

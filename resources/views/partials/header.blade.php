@@ -28,7 +28,7 @@
                     <ul tabindex="0"
                         class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-black">
                         <li><a href="{{ route('studyProgram.index') }}">Study Program</a></li>
-                        <li><a href="{{ route('InternationalExposure.index') }}">International exposure program</a></li>
+                        <li><a href="{{ route('InternationalExposure.index') }}">International Exposure Program</a></li>
                     </ul>
                 </div>
                 <div class="dropdown dropdown-hover">

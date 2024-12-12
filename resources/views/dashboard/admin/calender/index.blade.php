@@ -17,12 +17,13 @@
 
                     <div class="text-lg font-bold text-[#202224] mb-4 border-b-2 border-blueThird">Upcoming Events</div>
 
-                    <div class="space-y-6 overflow-y-auto" style="max-height: 350px;">
+                    <div class="overflow-y-auto" style="max-height: 350px;">
                         @forelse($agendas as $agenda)
-                            <div class="flex items-center space-x-4 mb-6 border-b">
-                                <div class="flex-1 cursor-pointer" onclick="openModal('{{ $agenda->title }}', '{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }}', '{{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}', '{{ $agenda->description }}')">
-                                    <div class="font-bold text-sm">{{ $agenda->title }}</div>
-                                    <div class="text-gray-500 text-xs">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - <br> {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
+                            <div class="flex items-center cursor-pointer hover:bg-gray-200 hover:bg-opacity-75 py-2 px-3 rounded-lg transition duration-300 ease-in-out">
+                                <div class="flex-1 cursor-pointer" 
+                                    onclick="openModal('{{ $agenda->title }}', '{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }}', '{{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}', '{{ $agenda->description }}')">
+                                    <div class="font-bold text-sm text-blue-500">{{ $agenda->title }}</div>
+                                    <div class="text-xs text-blue-400">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
                                 </div>
 
                                 <!-- Action Buttons -->
@@ -317,7 +318,7 @@
 
             <!-- Header -->
             <div class="flex justify-center items-center border-b pb-4 relative">
-                <h2 class="text-3xl font-bold">Agenda Akademik</h2>
+                <h2 class="text-3xl font-bold">Academic Event</h2>
                 <button id="close-modal" class="absolute right-0 text-gray-500 text-2xl">&times;</button>
             </div>
 

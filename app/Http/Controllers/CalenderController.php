@@ -17,7 +17,7 @@ class CalenderController extends Controller
         ];
 
         $user = Auth::user();
-        $agendas = Agenda::where('end', '>=', Carbon::now())->get();
+        $agendas = Agenda::where('end', '>=', Carbon::now())->orderby('start')->get();
 
         if ($user->hasRole('student')) {
             return view('dashboard.student.academicCalender', compact('agendas', 'data'));
@@ -77,7 +77,7 @@ class CalenderController extends Controller
             'agenda_title' => 'required|string|max:255',
             'agenda_start' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
             'agenda_end' => 'required|date|after_or_equal:agenda_start',
-            'agenda_description' => 'nullable|string',
+            'agenda_description' => 'required|string',
         ]);
 
         // Simpan agenda ke database

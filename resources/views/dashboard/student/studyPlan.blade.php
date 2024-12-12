@@ -21,7 +21,7 @@
 
         <!-- Dropdown Semester -->
         <div class="mb-4">
-            <label for="semester" class="mr-2 font-semibold">Pilih Semester:</label>
+            <label for="semester" class="mr-2 font-semibold">Semester :</label>
             <select id="semester" class="border px-4 py-2 rounded" style="width: 100px;">
                 @foreach($semesters as $availableSemester)
                     <option value="{{ $availableSemester }}" {{ $availableSemester == request('semester') ? 'selected' : '' }}>
@@ -33,7 +33,7 @@
 
         <!-- Menampilkan daftar mata kuliah dan SKS berdasarkan semester yang dipilih -->
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold mb-2">Mata Kuliah yang Diambil</h2>
+            <h2 class="text-xl font-bold mb-2">Enrolled Subjects</h2>
             <div id="mataKuliahTable">
                 <!-- Data ini akan diganti melalui AJAX -->
                 @if(!empty($mataKuliahData))
@@ -41,7 +41,7 @@
                         <thead>
                             <tr>
                                 <td class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-4">No</td>
-                                <td class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-15">Nama Mata Kuliah</td>
+                                <td class="border px-4 py-2 font-bold text-left bg-blueThird text-white w-15">Subject</td>
                                 <td class="border px-4 py-2 font-bold text-center bg-blueThird text-white">SKS</td>
                             </tr>
                         </thead>
@@ -67,7 +67,7 @@
                         </tfoot>
                     </table>
                 @else
-                    <p class="text-red-500">Tidak ada mata kuliah yang ditemukan untuk semester tersebut.</p>
+                    <p class="text-red-500">Failed to retrieve Enrolled Subjects data. Please try again later.</p>
                 @endif
             </div>
         </div>

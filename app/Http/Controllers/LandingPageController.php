@@ -9,7 +9,8 @@ use App\Models\Program;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class LandingPageController extends Controller
 {
@@ -150,12 +151,39 @@ class LandingPageController extends Controller
     }
     public function InternationalExposure()
     {
-        $programs = Program::latest()->paginate(5);
         $data = [
             'title' => 'International Exposure',
-            'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
+            'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
         ];
-        return view('InternationalExposure.index', compact('data', 'programs'));
+        $today = Carbon::today();
+
+        $recommendedPrograms = Program::select('programs.*')
+        ->leftJoin('program_enrollment', 'programs.ID_program', '=', 'program_enrollment.ID_program')
+        ->where('program_enrollment.status', 'approved')
+        ->whereDate('programs.Execution_Date', '>', $today)
+        ->groupBy(
+            'programs.ID_program',
+            'programs.program_Name',  
+            'programs.program_description',
+            'programs.Country_of_Execution',
+            'programs.Execution_Date',
+            'programs.Participants_Count',
+            'programs.program_Image',
+            'programs.ID_Ie_program',
+            'programs.ID_study_program',
+            'programs.user_id',
+            'programs.created_at',   
+            'programs.updated_at'
+        )
+        ->havingRaw('COUNT(program_enrollment.ID_Student) < programs.Participants_Count')
+        ->orderByDesc(DB::raw('COUNT(program_enrollment.ID_Student)'))
+        ->limit(5)
+        ->get();
+
+        $newPrograms = Program::latest()->limit(5)->get();
+
+        $allPrograms = Program::latest()->paginate(5);
+        return view('InternationalExposure.index', compact('recommendedPrograms', 'data','newPrograms', 'allPrograms'));
     }
     public function InternationalExposureShow($ID_program)
     {

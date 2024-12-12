@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('Event_Content');
             $table->dateTime('Event_Date');
             $table->timestamp('Publication_Date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->string('Event_Image')->nullable();
+            $table->string('Event_Image');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('ID_study_program');
 

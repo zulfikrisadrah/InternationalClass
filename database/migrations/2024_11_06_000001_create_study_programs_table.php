@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id('ID_study_program');
             $table->string('study_program_Name');
             $table->string('degree');
-            $table->text('study_program_Description')->nullable();
-            $table->string('study_program_Image')->nullable();
-            $table->string('International_Accreditation')->nullable();
+            $table->text('study_program_Description');
+            $table->string('study_program_Image');
             $table->unsignedBigInteger('ID_Faculty');
 
             $table->foreign('ID_Faculty')->references('ID_Faculty')->on('faculties')->onDelete('cascade');

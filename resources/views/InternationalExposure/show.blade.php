@@ -39,11 +39,13 @@
                     {!! html_entity_decode($programItem->program_description) !!}
                 </div>
 
-                <div class="mt-6 text-center">
-                    <a href="" class="btn btn-primary">
-                        Register Now
-                    </a>
-                </div>
+                @if (strtotime($programItem->Execution_Date) > time())
+                    <div class="mt-6 text-center">
+                        <a href="/login" class="btn btn-primary">
+                            Register Now
+                        </a>
+                    </div>
+                @endif
 
                 <div class="mt-10 text-end">
                     <a href="{{ route('InternationalExposure.index') }}" class="btn btn-outline btn-primary">

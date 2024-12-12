@@ -24,7 +24,7 @@
 
                     <!-- program Name -->
                     <div>
-                        <x-input-label for="program_Name" :value="__('program Name')" />
+                        <x-input-label for="program_Name" :value="__('Program Name')" />
                         <x-text-input id="program_Name" class="block mt-1 w-full" type="text" name="program_Name" :value="old('program_Name', $program->program_Name)" required autofocus autocomplete="program_Name" />
                         <x-input-error :messages="$errors->get('program_Name')" class="mt-2" />
                     </div>
@@ -89,7 +89,7 @@
 
                     <!-- program Image -->
                     <div class="mt-4">
-                        <x-input-label for="program_Image" :value="__(' program Image')" />
+                        <x-input-label for="program_Image" :value="__(' Program Image')" />
                         <x-text-input id="program_Image" class="block mt-1 w-full" type="file" name="program_Image" accept="image/*" autocomplete="program_Image" />
                         <x-input-error :messages="$errors->get('program_Image')" class="mt-2" />
                         @if($program->program_Image)

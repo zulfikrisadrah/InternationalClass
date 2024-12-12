@@ -47,7 +47,7 @@
                     <!-- News Image -->
                     <div x-data="{ preview: null }" class="mt-4">
                         <x-input-label for="News_Image" :value="__('News Image')" />
-                        <input type="file" id="News_Image" name="News_Image" class="block mt-1 w-full" accept="image/*"
+                        <input type="file" id="News_Image" name="News_Image" required class="block mt-1 w-full" accept="image/*"
                             @change="preview = URL.createObjectURL($event.target.files[0])">
 
                         <!-- Image Preview -->

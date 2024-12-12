@@ -51,7 +51,7 @@
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">
                         <button type="submit" class="font-bold py-4 px-6 bg-blueThird text-white rounded-full">
-                            Add New Event
+                            Add Event
                         </button>
                     </div>
                 </form>

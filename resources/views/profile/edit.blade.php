@@ -1,4 +1,3 @@
-{{-- resources/views/profile/edit.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -12,6 +11,12 @@
             @if (session('success'))
                 <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
             @endif
 
@@ -83,23 +88,23 @@
                                         type="text"
                                         id="nik"
                                         name="nik"
-                                        value="{{ old('nik', $user->nik) }}"
-                                        required
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        value="{{ old('nik', $nik) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label for="nism" class="block text-sm font-medium text-gray-700">
-                                        {{ __('NISM') }}
+                                    <label for="nisn" class="block text-sm font-medium text-gray-700">
+                                        {{ __('NISN') }}
                                     </label>
                                     <input
                                         type="text"
-                                        id="nism"
-                                        name="nism"
-                                        value="{{ old('nism', $user->nism) }}"
-                                        required
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        id="nisn"
+                                        name="nisn"
+                                        value="{{ old('nisn', $nisn) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
                             </div>
@@ -114,8 +119,9 @@
                                         type="tel"
                                         id="handphone"
                                         name="handphone"
-                                        value="{{ old('handphone', $user->handphone) }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        value="{{ old('handphone', $handphone) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
 
@@ -127,8 +133,9 @@
                                         type="tel"
                                         id="telepon"
                                         name="telepon"
-                                        value="{{ old('telepon', $user->telepon) }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        value="{{ old('telepon', $telepon) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
                             </div>
@@ -143,8 +150,9 @@
                                         type="text"
                                         id="jalan"
                                         name="jalan"
-                                        value="{{ old('jalan', $user->jalan) }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        value="{{ old('jalan', $jalan) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
 
@@ -156,8 +164,9 @@
                                         type="text"
                                         id="kode_pos"
                                         name="kode_pos"
-                                        value="{{ old('kode_pos', $user->kode_pos) }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        value="{{ old('kode_pos', $kode_pos) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
                             </div>
@@ -172,8 +181,9 @@
                                         type="text"
                                         id="tempat_lahir"
                                         name="tempat_lahir"
-                                        value="{{ old('tempat_lahir', $user->tempat_lahir) }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        value="{{ old('tempat_lahir', $tempat_lahir) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
 
@@ -185,8 +195,9 @@
                                         type="date"
                                         id="tanggal_lahir"
                                         name="tanggal_lahir"
-                                        value="{{ old('tanggal_lahir', $user->tanggal_lahir) }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                        value="{{ old('tanggal_lahir', $tanggal_lahir) }}"
+                                        disabled
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
                                     />
                                 </div>
                             </div>

@@ -29,7 +29,7 @@
                                     <img loading="lazy"
                                         src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
                                         alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
-                                    <time datetime="{{ $event->event_date }}" class="text-xs text-gray-500">
+                                    <time datetime="{{ $event->Event_Date }}" class="text-xs text-gray-500">
                                         {{ \Carbon\Carbon::parse($event->Event_Date)->format('d M, Y') }}
                                     </time>
                                     <a href="{{ route('event.show', $event->ID_Event) }}"
@@ -40,9 +40,11 @@
                             </div>
                         </div>
                     @endforeach
-                    <div class="mt-6 ">
-                        {{ $events_page->appends(request()->query())->links('vendor.pagination.custom') }}
-                    </div>
+                    @if ($events_page->count() >= 4)
+                        <div class="mt-6">
+                            {{ $events_page->appends(request()->query())->links('vendor.pagination.custom') }}
+                        </div>
+                    @endif
                 </div>
                 <div class="flex flex-col w-[59%] max-md:ml-0 max-md:w-full">
                     <h2
@@ -68,8 +70,8 @@
                                                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
                                                 alt="Calendar Icon"
                                                 class="object-contain shrink-0 self-start w-5 aspect-square" />
-                                            <time datetime="{{ $upcoming_event->Publication_Date->format('Y-m-d') }}">
-                                                {{ $upcoming_event->Publication_Date->format('d M, Y') }}
+                                            <time datetime="{{ $upcoming_event->Event_Date->format('Y-m-d') }}">
+                                                {{ $upcoming_event->Event_Date->format('d M, Y') }}
                                             </time>
                                         </div>
                                     </a>

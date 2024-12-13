@@ -86,9 +86,11 @@
                             </div>
                         </div>
                     @endforeach
-                    <div class="mt-6">
-                        {{ $allPrograms->appends(request()->query())->links('vendor.pagination.custom') }}
-                    </div>
+                    @if ($allPrograms->count() >= 5)
+                        <div class="mt-6">
+                            {{ $allPrograms->appends(request()->query())->links('vendor.pagination.custom') }}
+                        </div>
+                    @endif
                 </div>
                 <div class="flex flex-col w-[40%] max-md:ml-0 max-md:w-full">
                     <h2

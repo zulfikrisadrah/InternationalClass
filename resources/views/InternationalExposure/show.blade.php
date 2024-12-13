@@ -35,8 +35,8 @@
                     </div>
                 @endif
 
-                <div class="mt-6 text-lg leading-relaxed text-gray-800">
-                    {!! html_entity_decode($programItem->program_description) !!}
+                <div class="mt-6 text-lg leading-relaxed text-gray-800 break-words">
+                    {!! nl2br(html_entity_decode($programItem->program_description)) !!}
                 </div>
 
                 @if (strtotime($programItem->Execution_Date) > time())

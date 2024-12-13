@@ -17,8 +17,8 @@
                 @endif
 
                 <div class="flex items-center text-zinc-500 font-light mb-4 space-x-4">
-                    <time datetime="{{ $eventItem->Publication_Date }}" class="badge badge-outline">
-                        {{ \Carbon\Carbon::parse($eventItem->Publication_Date)->format('F d, Y') }}
+                    <time datetime="{{ $eventItem->Event_Date }}" class="badge badge-outline">
+                        {{ \Carbon\Carbon::parse($eventItem->Event_Date)->format('F d, Y') }}
                     </time>
                 </div>
 

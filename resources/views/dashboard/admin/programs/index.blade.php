@@ -152,13 +152,15 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-center text-gray-500 py-6">No programs available.</p>
+                    <p class="text-center text-lg font-bold text-black">No Programs Available</p>
                 @endforelse
 
                 <!-- Pagination -->
-                <div class="mt-6">
-                    {{ $programs->appends(request()->query())->links('vendor.pagination.custom') }}
-                </div>
+                @if ($programs->count() > 0)
+                    <div class="mt-6">
+                        {{ $programs->appends(request()->query())->links('vendor.pagination.custom') }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

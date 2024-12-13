@@ -63,7 +63,7 @@
                                             </h4>
                                         </div>
                                     </div>
-                                    <p class="text-sm text-black mt-3">
+                                    <p class="text-sm text-black mt-3 break-words">
                                         {{ Str::limit(html_entity_decode(strip_tags($popular->News_Content)), 200) }}
                                     </p>
                                 </a>

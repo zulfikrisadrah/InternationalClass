@@ -54,7 +54,7 @@ class ProgramController extends Controller
                     return $query->where('ID_Ie_program', $ieProgramId);
                 })
                 ->where('ID_study_program', $studyProgramId)
-                ->paginate(5);
+                ->paginate(10);
 
             $iePrograms = IeProgram::all();
             return view('dashboard.student.programs.index', compact('programs', 'iePrograms'));
@@ -215,11 +215,21 @@ class ProgramController extends Controller
      */
     public function show(Program $program)
     {
-        $acceptedStudents = $program->students()
-        ->wherePivot('status', 'approved')
-        ->paginate(10);
+        $user = auth()->user();
 
-        return view('dashboard.admin.programs.show', compact('program', 'acceptedStudents'));
+        if ($user->hasRole('admin') || $user->hasRole('staff')) {
+
+            $acceptedStudents = $program->students()
+                ->wherePivot('status', 'approved')
+                ->paginate(10);
+
+            return view('dashboard.admin.programs.show', compact('program', 'acceptedStudents'));
+
+        } else {
+
+            return view('dashboard.student.programs.show', compact('program'));
+
+        }
     }
 
     /**

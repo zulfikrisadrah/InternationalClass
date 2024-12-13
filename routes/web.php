@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/calendar/events', [CalenderController::class, 'getEvents'])->name('calendar.events');
         Route::post('/calendar/events', [CalenderController::class, 'store'])->name('calendar.store');
         Route::middleware('can:choose program')->group(function () {
-            Route::get('program', [ProgramController::class, 'index'])->name('program.index');
+            Route::resource('program', ProgramController::class);
         });
         Route::post('student/program/{programId}/enroll', [ProgramController::class, 'enroll'])->name('program.enroll');
     });

@@ -255,7 +255,7 @@ class ProgramController extends Controller
                 'Country_of_Execution' => 'required|string|max:255',
                 'Execution_Date' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
                 'Participants_Count' => 'required|integer|min:1',
-                'program_Image' => 'required|image|max:2048',
+                'program_Image' => 'nullable|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
                 'ID_study_program' => 'required|exists:study_programs,ID_study_program',
             ]);
@@ -266,7 +266,7 @@ class ProgramController extends Controller
                 'Country_of_Execution' => 'required|string|max:255',
                 'Execution_Date' => 'required|date',
                 'Participants_Count' => 'required|integer|min:1',
-                'program_Image' => 'required|image|max:2048',
+                'program_Image' => 'nullable|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
             ]);
         }

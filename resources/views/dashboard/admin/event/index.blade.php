@@ -55,25 +55,39 @@
                                 Edit
                             </a>
 
-                            <form action="{{ route('admin.event.destroy', $event->ID_Event) }}" method="POST"
-                                onsubmit="return confirm('Are you sure you want to delete this event?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="font-bold py-4 px-6 bg-redPrimary text-white rounded-3xl">
-                                    Delete
-                                </button>
-                            </form>
+                            <label for="delete-modal-{{ $event->ID_Event }}"
+                                class="cursor-pointer font-bold py-4 px-6 bg-redPrimary text-white rounded-3xl">
+                                Delete
+                            </label>
+
+                            <input type="checkbox" id="delete-modal-{{ $event->ID_Event }}" class="modal-toggle" />
+                            <div class="modal">
+                                <div class="modal-box">
+                                    <h3 class="font-bold text-lg">Confirm Deletion</h3>
+                                    <p class="py-4">Are you sure you want to delete this event? This action cannot be
+                                        undone.</p>
+                                    <div class="modal-action">
+                                        <label for="delete-modal-{{ $event->ID_Event }}" class="btn">Cancel</label>
+                                        <form action="{{ route('admin.event.destroy', $event->ID_Event) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-error text-white">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @empty
                     <p class="text-center text-lg font-bold text-black">No Event Available</p>
                 @endforelse
-                    @if ($events->count() > 10)
-                        <div class="mt-6 ">
-                            {{ $events->appends(request()->query())->links('vendor.pagination.custom') }}
-                        </div>
-                    @endif
-                </div>
+                @if ($events->count() >= 10)
+                    <div class="mt-6 ">
+                        {{ $events->appends(request()->query())->links('vendor.pagination.custom') }}
+                    </div>
+                @endif
             </div>
         </div>
-    </x-app-layout>
+    </div>
+</x-app-layout>

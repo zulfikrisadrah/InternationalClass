@@ -235,7 +235,7 @@
                             </div>
                         @endforeach
                     </div>
-                    @if ($users->count() > 5)
+                    @if ($users->count() >= 5)
                     <div class="mt-6">
                         {{ $users->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>

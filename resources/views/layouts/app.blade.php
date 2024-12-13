@@ -18,7 +18,7 @@
         @include('layouts.navigation')
 
         <!-- Main Content Area -->
-        <div class="flex-1 ml-3/4 sm:ml-1/3 md:ml-1/4 lg:ml-[270px]">
+        <div class="flex-1 ml-3/4 sm:ml-1/3 md:ml-1/4 lg:ml-72">
             <!-- Page Heading -->
             @isset($header)
                 <header>

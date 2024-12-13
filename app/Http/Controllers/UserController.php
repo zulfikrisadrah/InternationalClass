@@ -29,31 +29,31 @@ class UserController extends Controller
             $validStudyPrograms = StudyProgram::pluck('study_program_Name')->toArray();
 
             $waitingCount = User::role('student')
-            ->whereDoesntHave('student') 
-            ->whereNotIn('username', Student::pluck('Student_ID_Number')) 
+            ->whereDoesntHave('student')
+            ->whereNotIn('username', Student::pluck('Student_ID_Number'))
             ->get()
             ->filter(function ($user) use ($validStudyPrograms) {
                 $tokenData = $this->loginAndGetToken();
                 if ($tokenData['status'] == 200) {
                     $accessToken = $tokenData['access_token'];
-    
+
                     $response = Http::withOptions(['verify' => false])
                         ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
                         ->withBody(json_encode(['nim' => $user->username]), 'application/json')
                         ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-    
+
                     if ($response->successful()) {
                         $data = $response->json();
                         if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
                             $studentStudyProgram = $data['mahasiswas'][0]['prodi']['nama_resmi'];
-    
+
                             return in_array($studentStudyProgram, $validStudyPrograms);
                         }
                     }
                 }
-                return false; 
+                return false;
             })
-            ->count(); 
+            ->count();
         } elseif (Auth::user()->hasRole('staff')) {
             $adminCount = $waitingCount = User::role('student')
                 ->whereDoesntHave('student')
@@ -98,8 +98,8 @@ class UserController extends Controller
         $programNames = [];
 
         if ($role == 'student') {
-            $search = $request->input('search'); 
-            
+            $search = $request->input('search');
+
             if (Auth::user()->hasRole('admin')) {
                 $users = User::role('student')
                     ->whereHas('student', function ($query) {
@@ -113,7 +113,7 @@ class UserController extends Controller
                     ->paginate(5);
             } else if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
-        
+
                 $users = User::role('student')
                     ->whereHas('student', function ($query) use ($staffStudyProgram) {
                         $query->where('isActive', 1)
@@ -128,8 +128,8 @@ class UserController extends Controller
             }
         }
          elseif ($role == 'staff') {
-            $search = $request->input('search');  
-        
+            $search = $request->input('search');
+
             $users = User::role('staff')
                 ->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -140,15 +140,15 @@ class UserController extends Controller
         }
         elseif ($status == 'waiting') {
             $search = request()->get('search');  // Ambil nilai pencarian dari input pengguna
-        
+
             if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->studyProgram->study_program_Name;
-        
+
                 // Query dasar untuk mencari mahasiswa yang belum terdaftar
                 $usersQuery = User::role('student')
                     ->whereDoesntHave('student')
                     ->whereNotIn('username', Student::pluck('Student_ID_Number'));
-        
+
                 // Jika ada pencarian, tambahkan kondisi pencarian
                 if ($search) {
                     $usersQuery->where(function ($query) use ($search) {
@@ -157,27 +157,27 @@ class UserController extends Controller
                               ->orWhere('username', 'like', '%' . $search . '%');
                     });
                 }
-        
+
                 $users = $usersQuery->paginate(5);
-        
+
                 $validUsers = [];
                 foreach ($users as $user) {
                     $tokenData = $this->loginAndGetToken();
                     if ($tokenData['status'] == 200) {
                         $accessToken = $tokenData['access_token'];
-        
+
                         // Mengambil data mahasiswa dari API
                         $response = Http::withOptions(['verify' => false])
                             ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
                             ->withBody(json_encode(['nim' => $user->username]), 'application/json')
                             ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-        
+
                         if ($response->successful()) {
                             $data = $response->json();
                             if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
                                 $studentStudyProgram = $data['mahasiswas'][0]['prodi']['nama_resmi'];
                                 $programNames[$user->id] = $studentStudyProgram;
-        
+
                                 // Memeriksa apakah program studi mahasiswa cocok dengan program studi staff
                                 if ($studentStudyProgram == $staffStudyProgram) {
                                     $validUsers[] = $user;
@@ -188,24 +188,24 @@ class UserController extends Controller
                 }
             $users = collect($validUsers);
             $users = new \Illuminate\Pagination\LengthAwarePaginator(
-                $users->forPage(1, 5),  
-                $users->count(),       
-                5,     
-                1, 
-                ['path' => url()->current()] 
+                $users->forPage(1, 5),
+                $users->count(),
+                5,
+                1,
+                ['path' => url()->current()]
             );
-    
+
             // Menambahkan query parameters ke pagination
             $users->appends(['role' => $role, 'status' => $status]);
-        
+
             } else if (Auth::user()->hasRole('admin')) {
                 $validStudyPrograms = StudyProgram::pluck('study_program_Name')->toArray();
-        
+
                 // Query dasar untuk mencari mahasiswa yang belum terdaftar
                 $usersQuery = User::role('student')
                     ->whereDoesntHave('student')
                     ->whereNotIn('username', Student::pluck('Student_ID_Number'));
-        
+
                 // Jika ada pencarian, tambahkan kondisi pencarian
                 if ($search) {
                     $usersQuery->where(function ($query) use ($search) {
@@ -214,31 +214,31 @@ class UserController extends Controller
                               ->orWhere('username', 'like', '%' . $search . '%');
                     });
                 }
-        
+
                 // Mengambil data mahasiswa dan memfilter berdasarkan program studi
                 $users = $usersQuery->get()->filter(function ($user) use ($validStudyPrograms) {
                     $tokenData = $this->loginAndGetToken();
                     if ($tokenData['status'] == 200) {
                         $accessToken = $tokenData['access_token'];
-        
+
                         // Mengambil data mahasiswa dari API
                         $response = Http::withOptions(['verify' => false])
                             ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
                             ->withBody(json_encode(['nim' => $user->username]), 'application/json')
                             ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-        
+
                         if ($response->successful()) {
                             $data = $response->json();
                             if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
                                 $studentStudyProgram = $data['mahasiswas'][0]['prodi']['nama_resmi'];
-        
+
                                 return in_array($studentStudyProgram, $validStudyPrograms);
                             }
                         }
                     }
                     return false;
                 });
-        
+
                 // Pagination untuk hasil pencarian
                 $users = new \Illuminate\Pagination\LengthAwarePaginator(
                     $users->forPage(1, 5),
@@ -247,23 +247,23 @@ class UserController extends Controller
                     1,
                     ['path' => url()->current()]
                 );
-        
+
                 // Menambahkan query parameters ke pagination
                 $users->appends(['role' => $role, 'status' => $status]);
             }
-        
+
             // Menambahkan program studi ke data user
             foreach ($users as $user) {
                 $tokenData = $this->loginAndGetToken();
                 if ($tokenData['status'] == 200) {
                     $accessToken = $tokenData['access_token'];
-        
+
                     // Mengambil data mahasiswa dari API
                     $response = Http::withOptions(['verify' => false])
                         ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
                         ->withBody(json_encode(['nim' => $user->username]), 'application/json')
                         ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-        
+
                     if ($response->successful()) {
                         $data = $response->json();
                         if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
@@ -273,10 +273,10 @@ class UserController extends Controller
                 }
             }
         }
-        
+
         else {
-            $search = $request->input('search');  
-        
+            $search = $request->input('search');
+
             if (Auth::user()->hasRole('admin')) {
                 $users = User::when($role, function ($query, $role) {
                     return $query->role($role);
@@ -284,7 +284,7 @@ class UserController extends Controller
                     ->where('username', '!=', 'admin')
                     ->where(function ($query) {
                         $query->whereHas('student', function ($subQuery) {
-                            $subQuery->where('isVerified', 1); 
+                            $subQuery->where('isVerified', 1);
                         });
                     })
                     ->where(function ($query) use ($search) {
@@ -297,7 +297,7 @@ class UserController extends Controller
                     ->paginate(5);
             } else {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
-        
+
                 $users = User::role('student')
                     ->whereHas('student', function ($query) use ($staffStudyProgram) {
                         $query->whereIn('isActive', [1, 0])
@@ -313,7 +313,7 @@ class UserController extends Controller
                     })
                     ->paginate(5);
             }
-        }        
+        }
 
         return view('dashboard.admin.users.index', compact('users', 'waitingCount', 'programNames', 'data'));
     }

@@ -175,7 +175,7 @@
                         class="grow shrink my-auto text-xl font-bold {{ request()->routeIs('dashboard') ? 'text-blueThird' : 'text-zinc-500' }} w-[213px]">Home</span>
                 </a>
             </li>
-            @if(auth()->check() && auth()->user()->student && auth()->user()->student->isVerified == 1 && auth()->user()->student->isActive == 1)
+            @if(auth()->check() && auth()->user()->student && auth()->user()->student->isActive == 1)
             <li class="mt-8 w-full">
                     <a href="{{ route('student.program.index') }}"
                     class="flex gap-2.5 py-3 px-4 text-xl font-bold {{ request()->routeIs('student.program.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">

@@ -36,13 +36,13 @@
                 <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800 border-b pb-3">Informasi Mahasiswa</h2>
                 <div class="grid grid-cols-3 gap-4">
                     <p class="text-lg font-semibold">Nama Mahasiswa</p>
-                    <p class="text-lg col-span-2">: {{ $namaMahasiswa }}</p>
+                    <p class="text-lg col-span-2">: {{ auth()->user()->name }}</p>
 
                     <p class="text-lg font-semibold">NIM</p>
                     <p class="text-lg col-span-2">: {{ $nim }}</p>
 
                     <p class="text-lg font-semibold">Email</p>
-                    <p class="text-lg col-span-2">: {{ $email }}</p>
+                    <p class="text-lg col-span-2">: {{ auth()->user()->email }}</p>
 
                     <p class="text-lg font-semibold">Program Studi</p>
                     <p class="text-lg col-span-2">: {{ $namaProdi }}</p>

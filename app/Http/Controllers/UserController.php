@@ -438,8 +438,6 @@ class UserController extends Controller
                 }
             }
 
-            $isVerified = $action === 'accept' ? 1 : 0;
-
             Student::updateOrCreate(
                 ['user_id' => $user->id],
                 [
@@ -447,7 +445,7 @@ class UserController extends Controller
                     'Student_ID_Number' => $user->username,
                     'Student_Email' => $user->email,
                     'isActive' => $action === 'accept' ? 1 : 0,
-                    'isVerified' => $isVerified,
+                    'isVerified' => 1,
                     'ID_study_program' => $studyProgramId,
                 ]
             );

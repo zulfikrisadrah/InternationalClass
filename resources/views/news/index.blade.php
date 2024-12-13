@@ -29,9 +29,11 @@
                                 more</a>
                         </div>
                     @endforeach
-                    <div class="mt-6 ">
-                        {{ $news_page->appends(request()->query())->links('vendor.pagination.custom') }}
-                    </div>
+                    @if ($news_page->count() >= 4)
+                        <div class="mt-6">
+                            {{ $news_page->appends(request()->query())->links('vendor.pagination.custom') }}
+                        </div>
+                    @endif
                 </article>
 
                 <!-- Side News -->

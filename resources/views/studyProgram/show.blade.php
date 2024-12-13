@@ -139,8 +139,8 @@
                                                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
                                                 alt="Calendar Icon"
                                                 class="object-contain shrink-0 self-start w-5 aspect-square" />
-                                            <time datetime="{{ $event->Publication_Date->format('Y-m-d') }}">
-                                                {{ $event->Publication_Date->format('d M, Y') }}
+                                            <time datetime="{{ $event->Event_Date->format('Y-m-d') }}">
+                                                {{ $event->Event_Date->format('d M, Y') }}
                                             </time>
                                         </div>
                                     </a>

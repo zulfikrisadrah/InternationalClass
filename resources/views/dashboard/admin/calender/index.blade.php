@@ -20,7 +20,7 @@
                     <div class="overflow-y-auto" style="max-height: 350px;">
                         @forelse($agendas as $agenda)
                             <div class="flex items-center cursor-pointer hover:bg-gray-200 hover:bg-opacity-75 py-2 px-3 rounded-lg transition duration-300 ease-in-out">
-                                <div class="flex-1 cursor-pointer" 
+                                <div class="flex-1 cursor-pointer"
                                     onclick="openModal('{{ $agenda->title }}', '{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }}', '{{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}', '{{ $agenda->description }}')">
                                     <div class="font-bold text-sm text-blue-500">{{ $agenda->title }}</div>
                                     <div class="text-xs text-blue-400">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>

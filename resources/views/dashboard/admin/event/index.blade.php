@@ -2,11 +2,11 @@
     <x-slot name="header">
         @include('dashboard.partials.header')
     </x-slot>
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    <div class="flex justify-between">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="flex justify-between">
             <form method="GET" action="{{ route('admin.event.index') }}" class="flex items-center gap-4 pt-2">
-                <input type="text" name="search" value="{{ request()->get('search') }}" placeholder="Search events by title"
-                    class="py-2 px-4 border rounded-lg">
+                <input type="text" name="search" value="{{ request()->get('search') }}"
+                    placeholder="Search events by title" class="py-2 px-4 border rounded-lg">
                 <button type="submit" class="bg-blueThird text-white py-2 px-6 rounded-lg">Search</button>
             </form>
 
@@ -14,15 +14,15 @@
                 class="ml-auto font-bold py-4 px-6 bg-blueThird text-white rounded-3xl">
                 Add New
             </a>
+        </div>
     </div>
-</div>
 
 
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
-                @foreach ($events as $event)
+                @forelse ($events as $event)
                     <div class="item-card flex flex-row justify-between items-center">
                         <div class="flex flex-row items-center gap-x-3">
                             <!-- Display event image if available -->
@@ -65,11 +65,15 @@
                             </form>
                         </div>
                     </div>
-                @endforeach
-                <div class="mt-6 ">
-                    {{ $events->appends(request()->query())->links('vendor.pagination.custom') }}
+                @empty
+                    <p class="text-center text-lg font-bold text-black">No Event Available</p>
+                @endforelse
+                    @if ($events->count() > 10)
+                        <div class="mt-6 ">
+                            {{ $events->appends(request()->query())->links('vendor.pagination.custom') }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
-    </div>
-</x-app-layout>
+    </x-app-layout>

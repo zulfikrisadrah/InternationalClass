@@ -6,7 +6,7 @@
     <div class="container mx-auto p-4">
         <!-- Welcome Section -->
         <div class="flex flex-col pt-3 rounded-none" role="region" aria-label="Welcome Section">
-            <div class="pl-10 bg-blueSecondary rounded-2xl max-md:pl-5 max-md:max-w-full">
+            <div class="pl-10 bg-blueThird rounded-2xl max-md:pl-5 max-md:max-w-full">
                 <div class="flex gap-5 max-md:flex-col">
                     <!-- Left Text Section -->
                     <div class="flex flex-col w-3/5 max-md:ml-0 max-md:w-full">

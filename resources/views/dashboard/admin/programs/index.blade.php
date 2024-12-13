@@ -75,16 +75,31 @@
                                     Edit
                                 </a>
 
-                                <form action="{{ route('admin.program.destroy', $program->ID_program) }}"
-                                    method="POST"
-                                    onsubmit="return confirm('Are you sure you want to delete this program?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="font-bold py-4 px-6 bg-red-700 text-white rounded-full">
-                                        Delete
-                                    </button>
-                                </form>
+                                <label for="delete-modal-{{ $program->ID_program }}"
+                                    class="cursor-pointer font-bold py-4 px-6 bg-redSecondary text-white rounded-full">
+                                    Delete
+                                </label>
+
+                                <input type="checkbox" id="delete-modal-{{ $program->ID_program }}"
+                                    class="modal-toggle" />
+                                <div class="modal">
+                                    <div class="modal-box">
+                                        <h3 class="font-bold text-lg">Confirm Deletion</h3>
+                                        <p class="py-4">Are you sure you want to delete this program? This action
+                                            cannot be undone.</p>
+                                        <div class="modal-action">
+                                            <label for="delete-modal-{{ $program->ID_program }}"
+                                                class="btn">Cancel</label>
+                                            <!-- Program deletion form -->
+                                            <form action="{{ route('admin.program.destroy', $program->ID_program) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-error text-white">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -156,7 +171,7 @@
                 @endforelse
 
                 <!-- Pagination -->
-                @if ($programs->count() > 0)
+                @if ($programs->count() > 5)
                     <div class="mt-6">
                         {{ $programs->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>

@@ -115,26 +115,83 @@
                                 <!-- Action Buttons -->
                                 <div class="hidden md:flex flex-row items-center gap-x-3">
                                     @if (request()->get('status') == 'waiting')
-                                        <button
-                                            onclick="openModal('{{ route('admin.user.update', $user->id) }}', 'accept')"
-                                            class="font-bold py-4 px-6 bg-green-500 text-white rounded-3xl">
+                                        <!-- Accept Button & Modal -->
+                                        <label for="accept-modal-{{ $user->id }}"
+                                            class="font-bold py-4 px-6 bg-green-500 text-white rounded-3xl cursor-pointer">
                                             Accept
-                                        </button>
-                                        <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <input type="hidden" name="action" value="reject">
-                                            <button type="submit"
-                                                class="font-bold py-4 px-6 bg-redPrimary text-white rounded-3xl">
-                                                Reject
-                                            </button>
-                                        </form>
+                                        </label>
+                                        <input type="checkbox" id="accept-modal-{{ $user->id }}"
+                                            class="modal-toggle" />
+                                        <div class="modal">
+                                            <div class="modal-box">
+                                                <h3 class="font-bold text-lg">Confirm Acceptance</h3>
+                                                <p class="py-4">Are you sure you want to accept this student?</p>
+                                                <div class="modal-action">
+                                                    <label for="accept-modal-{{ $user->id }}"
+                                                        class="btn">Cancel</label>
+                                                    <form action="{{ route('admin.user.update', $user->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="action" value="accept">
+                                                        <button type="submit"
+                                                            class="btn btn-success text-white">Yes</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Reject Button & Modal -->
+                                        <label for="reject-modal-{{ $user->id }}"
+                                            class="font-bold py-4 px-6 bg-redPrimary text-white rounded-3xl cursor-pointer">
+                                            Reject
+                                        </label>
+                                        <input type="checkbox" id="reject-modal-{{ $user->id }}"
+                                            class="modal-toggle" />
+                                        <div class="modal">
+                                            <div class="modal-box">
+                                                <h3 class="font-bold text-lg">Confirm Rejection</h3>
+                                                <p class="py-4">Are you sure you want to reject this student?</p>
+                                                <div class="modal-action">
+                                                    <label for="reject-modal-{{ $user->id }}"
+                                                        class="btn">Cancel</label>
+                                                    <form action="{{ route('admin.user.update', $user->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="action" value="reject">
+                                                        <button type="submit"
+                                                            class="btn btn-error text-white">Yes</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @elseif(request()->get('role') == 'staff')
-                                        <button type="button"
-                                            onclick="openDeleteModal('{{ route('admin.user.destroy', $user->id) }}')"
-                                            class="font-bold py-4 px-6 bg-redPrimary text-white rounded-full">
+                                        <!-- Delete Button & Modal -->
+                                        <label for="delete-modal-{{ $user->id }}"
+                                            class="cursor-pointer font-bold py-4 px-6 bg-redPrimary text-white rounded-full">
                                             Delete
-                                        </button>
+                                        </label>
+                                        <input type="checkbox" id="delete-modal-{{ $user->id }}"
+                                            class="modal-toggle" />
+                                        <div class="modal">
+                                            <div class="modal-box">
+                                                <h3 class="font-bold text-lg">Confirm Deletion</h3>
+                                                <p class="py-4">Are you sure you want to delete this user? This action
+                                                    cannot be undone.</p>
+                                                <div class="modal-action">
+                                                    <label for="delete-modal-{{ $user->id }}"
+                                                        class="btn">Cancel</label>
+                                                    <form action="{{ route('admin.user.destroy', $user->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-error text-white">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @else
                                         <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
                                             @csrf
@@ -148,82 +205,43 @@
                                         <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                class="font-bold py-4 px-6 bg-redPrimary text-white rounded-full"
-                                                onclick="openDeleteModal('{{ route('admin.user.destroy', $user->id) }}')">
+                                            <label for="delete-modal-{{ $user->id }}"
+                                                class="cursor-pointer font-bold py-4 px-6 bg-redPrimary text-white rounded-full">
                                                 Delete
-                                            </button>
+                                            </label>
+                                            <input type="checkbox" id="delete-modal-{{ $user->id }}"
+                                                class="modal-toggle" />
+                                            <div class="modal">
+                                                <div class="modal-box">
+                                                    <h3 class="font-bold text-lg">Confirm Deletion</h3>
+                                                    <p class="py-4">Are you sure you want to delete this
+                                                        user?
+                                                        This action cannot be undone.</p>
+                                                    <div class="modal-action">
+                                                        <label for="delete-modal-{{ $user->id }}"
+                                                            class="btn">Cancel</label>
+                                                        <form action="{{ route('admin.user.destroy', $user->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-error text-white">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                         </form>
                                     @endif
                                 </div>
                             </div>
                         @endforeach
                     </div>
-                    <div class="mt-6 ">
+                    @if ($users->count() > 5)
+                    <div class="mt-6">
                         {{ $users->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>
+                @endif
                 @endif
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <div id="confirmModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
-        <div class="">
-            <div class="bg-white p-6 rounded-lg max-w-sm w-full">
-                <p class="text-lg font-semibold mb-4">Are you sure you want to accept this student?</p>
-                <div class="flex justify-between">
-                    <button id="cancelButton" class="bg-gray-300 px-4 py-2 rounded-3xl">Cancel</button>
-                    <form id="acceptForm" method="POST" action="">
-                        @csrf
-                        @method('PATCH')
-                        <input type="hidden" name="action" value="accept">
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-3xl">Yes</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Delete Modal -->
-    <div id="deleteModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
-        <div class="bg-white p-6 rounded-lg max-w-sm w-full">
-            <p class="text-lg font-semibold mb-4">Are you sure you want to delete this user?</p>
-            <div class="flex justify-between">
-                <button id="cancelDeleteButton" class="bg-gray-300 px-4 py-2 rounded-3xl">Cancel</button>
-                <form id="deleteForm" method="POST" action="">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="bg-redPrimary text-white px-4 py-2 rounded-3xl">Yes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openModal(actionUrl, actionType) {
-            const modal = document.getElementById('confirmModal');
-            const form = document.getElementById('acceptForm');
-            const cancelButton = document.getElementById('cancelButton');
-
-            form.action = actionUrl;
-            modal.classList.remove('hidden');
-
-            cancelButton.onclick = function() {
-                modal.classList.add('hidden');
-            };
-        }
-
-        function openDeleteModal(actionUrl) {
-            const modal = document.getElementById('deleteModal');
-            const form = document.getElementById('deleteForm');
-            const cancelButton = document.getElementById('cancelDeleteButton');
-
-            form.action = actionUrl;
-            modal.classList.remove('hidden');
-
-            cancelButton.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-        }
-    </script>
 </x-app-layout>

@@ -18,9 +18,22 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $studyPrograms = StudyProgram::all();
+        $years = Student::all()
+            ->pluck('Student_ID_Number')
+            ->map(function ($idNumber) {
+                return '20' . substr($idNumber, 4, 2);
+            })
+            ->unique()
+            ->sortDesc()
+            ->values();
+
+        $search = $request->input(key: 'search');
+
         $user = Auth::user();
         $role = $request->input('role');
         $status = $request->input('status');
+
         $data = [
             'title' => 'Manage User',
         ];
@@ -98,8 +111,6 @@ class UserController extends Controller
         $programNames = [];
 
         if ($role == 'student') {
-            $search = $request->input('search');
-
             if (Auth::user()->hasRole('admin')) {
                 $users = User::role('student')
                     ->whereHas('student', function ($query) {
@@ -110,6 +121,19 @@ class UserController extends Controller
                             ->orWhere('email', 'like', '%' . $search . '%')
                             ->orWhere('username', 'like', '%' . $search . '%');
                     })
+                    ->when($request->filled('study_program'), function ($query) use ($request) {
+                        $query->whereHas('student', function ($subQuery) use ($request) {
+                            $subQuery->where('ID_study_program', $request->study_program);
+                        });
+                    })
+                    ->where(function ($query) use ($request) {
+                        if ($request->filled('year')) {
+                            $year = $request->year; 
+                            $query->whereHas('student', function ($subQuery) use ($year) {
+                                $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                            });
+                        }
+                    })     
                     ->paginate(5);
             } else if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
@@ -124,12 +148,23 @@ class UserController extends Controller
                             ->orWhere('email', 'like', '%' . $search . '%')
                             ->orWhere('username', 'like', '%' . $search . '%');
                     })
+                    ->when($request->filled('study_program'), function ($query) use ($request) {
+                        $query->whereHas('student', function ($subQuery) use ($request) {
+                            $subQuery->where('ID_study_program', $request->study_program);
+                        });
+                    })
+                    ->where(function ($query) use ($request) {
+                        if ($request->filled('year')) {
+                            $year = $request->year; 
+                            $query->whereHas('student', function ($subQuery) use ($year) {
+                                $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                            });
+                        }
+                    })   
                     ->paginate(5);
             }
         }
          elseif ($role == 'staff') {
-            $search = $request->input('search');
-
             $users = User::role('staff')
                 ->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -139,8 +174,6 @@ class UserController extends Controller
                 ->paginate(5);
         }
         elseif ($status == 'waiting') {
-            $search = request()->get('search');  // Ambil nilai pencarian dari input pengguna
-
             if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->studyProgram->study_program_Name;
 
@@ -273,14 +306,11 @@ class UserController extends Controller
                 }
             }
         }
-
         else {
-            $search = $request->input('search');
-
             if (Auth::user()->hasRole('admin')) {
                 $users = User::when($role, function ($query, $role) {
-                    return $query->role($role);
-                })
+                        return $query->role($role);
+                    })
                     ->where('username', '!=', 'admin')
                     ->where(function ($query) {
                         $query->whereHas('student', function ($subQuery) {
@@ -294,6 +324,21 @@ class UserController extends Controller
                                 ->orWhere('username', 'like', '%' . $search . '%');
                         }
                     })
+                    ->where(function ($query) use ($request) {
+                        if ($request->filled('study_program')) {
+                            $query->whereHas('student', function ($subQuery) use ($request) {
+                                $subQuery->where('ID_study_program', $request->study_program);
+                            });
+                        }
+                    })
+                     ->where(function ($query) use ($request) {
+                        if ($request->filled('year')) {
+                            $year = $request->year; 
+                            $query->whereHas('student', function ($subQuery) use ($year) {
+                                $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                            });
+                        }
+                    })     
                     ->paginate(5);
             } else {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
@@ -311,11 +356,24 @@ class UserController extends Controller
                                 ->orWhere('username', 'like', '%' . $search . '%');
                         }
                     })
+                    ->when($request->filled('study_program'), function ($query) use ($request) {
+                        $query->whereHas('student', function ($subQuery) use ($request) {
+                            $subQuery->where('ID_study_program', $request->study_program);
+                        });
+                    })
+                    ->where(function ($query) use ($request) {
+                        if ($request->filled('year')) {
+                            $year = $request->year; 
+                            $query->whereHas('student', function ($subQuery) use ($year) {
+                                $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                            });
+                        }
+                    })   
                     ->paginate(5);
             }
         }
 
-        return view('dashboard.admin.users.index', compact('users', 'waitingCount', 'programNames', 'data'));
+        return view('dashboard.admin.users.index', compact('users', 'waitingCount', 'programNames', 'data', 'studyPrograms', 'years'));
     }
 
     /**

@@ -33,7 +33,7 @@
                     @endrole
                 </div>
                 <div class="flex flex-row justify-between items-center">
-                    @if (request()->get('role') == 'student' || !request()->has('role'))
+                    @if (request()->get('role') == 'student' || request()->get('role') == '')
                         <a href="{{ route('admin.user.index', ['status' => 'waiting']) }}"
                             class="font-bold py-4 px-6
                                                 {{ request()->get('status') == 'waiting' ? 'bg-blueThird text-white' : 'bg-white text-gray-700' }}
@@ -64,14 +64,63 @@
                     <input type="hidden" name="status" value="{{ request()->get('status') }}">
                     <!-- Menambahkan status -->
                     <input type="hidden" name="role" value="{{ request()->get('role') }}">
-
+                    <input type="hidden" name="study_program" value="{{ request()->get('study_program') }}">
+                    <input type="hidden" name="year" value="{{ request()->get('year') }}">
                     <input type="text" name="search" value="{{ request()->get('search') }}"
                         placeholder="Search users by name or email" class="py-2 px-4 border rounded-lg">
 
                     <button type="submit" class="bg-blueThird text-white py-2 px-6 rounded-lg">Search</button>
                 </form>
+
+                @if (request()->get('role') == 'student' || request()->get('role') == '' && request()->get('status') != 'waiting')
+                    <form method="GET" action="{{ route('admin.user.index') }}" class="flex items-center gap-4">
+                        <input type="hidden" name="role" value="{{ request()->get('role', '') }}">
+                        <input type="hidden" name="search" value="{{ request()->get('search') }}">
+                        <input type="hidden" name="status" value="{{ request()->get('status') }}">
+
+                        @role('admin')
+                            <div class="flex flex-col">
+                                <select id="study_program" name="study_program" class="py-2 px-4 border rounded-lg" required>
+                                    <option value="">Study Program</option>
+                                    @foreach ($studyPrograms as $program)
+                                        <option value="{{ $program->ID_study_program }}" 
+                                            {{ request()->get('study_program') == $program->ID_study_program ? 'selected' : '' }}>
+                                            {{ $program->study_program_Name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div> 
+                        @endrole
+                        <div class="flex flex-col">
+                            <select id="year" name="year" class="py-2 px-4 border rounded-lg" required style="padding-right: 40px">
+                                <option value="">Year</option>
+                                @foreach($years as $year)
+                                    <option value="{{ $year }}" 
+                                        {{ request('year') == $year ? 'selected' : '' }}>
+                                        {{ $year }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                @endif
             </div>
 
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $('#study_program').on('change', function() {
+                        var studyProgramId = $(this).val();
+                        $(this).closest('form').submit();
+                    });
+            
+                    $('#year').on('change', function() {
+                        var year = $(this).val();
+                        $(this).closest('form').submit();
+                    });
+                });
+            </script>
+             
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
                 @if ($users->isEmpty())
                     <div class="text-center py-6">
@@ -229,6 +278,7 @@
                                                         </form>
                                                     </div>
                                                 </div>
+                                            </div>
                                         </form>
                                     @endif
                                 </div>

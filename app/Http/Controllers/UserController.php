@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class UserController extends Controller
 {
     /**
@@ -42,31 +42,31 @@ class UserController extends Controller
             $validStudyPrograms = StudyProgram::pluck('study_program_Name')->toArray();
 
             $waitingCount = User::role('student')
-            ->whereDoesntHave('student')
-            ->whereNotIn('username', Student::pluck('Student_ID_Number'))
-            ->get()
-            ->filter(function ($user) use ($validStudyPrograms) {
-                $tokenData = $this->loginAndGetToken();
-                if ($tokenData['status'] == 200) {
-                    $accessToken = $tokenData['access_token'];
+                ->whereDoesntHave('student')
+                ->whereNotIn('username', Student::pluck('Student_ID_Number'))
+                ->get()
+                ->filter(function ($user) use ($validStudyPrograms) {
+                    $tokenData = $this->loginAndGetToken();
+                    if ($tokenData['status'] == 200) {
+                        $accessToken = $tokenData['access_token'];
 
-                    $response = Http::withOptions(['verify' => false])
-                        ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
-                        ->withBody(json_encode(['nim' => $user->username]), 'application/json')
-                        ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+                        $response = Http::withOptions(['verify' => false])
+                            ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
+                            ->withBody(json_encode(['nim' => $user->username]), 'application/json')
+                            ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
 
-                    if ($response->successful()) {
-                        $data = $response->json();
-                        if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
-                            $studentStudyProgram = $data['mahasiswas'][0]['prodi']['nama_resmi'];
+                        if ($response->successful()) {
+                            $data = $response->json();
+                            if (isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
+                                $studentStudyProgram = $data['mahasiswas'][0]['prodi']['nama_resmi'];
 
-                            return in_array($studentStudyProgram, $validStudyPrograms);
+                                return in_array($studentStudyProgram, $validStudyPrograms);
+                            }
                         }
                     }
-                }
-                return false;
-            })
-            ->count();
+                    return false;
+                })
+                ->count();
         } elseif (Auth::user()->hasRole('staff')) {
             $adminCount = $waitingCount = User::role('student')
                 ->whereDoesntHave('student')
@@ -128,12 +128,12 @@ class UserController extends Controller
                     })
                     ->where(function ($query) use ($request) {
                         if ($request->filled('year')) {
-                            $year = $request->year; 
+                            $year = $request->year;
                             $query->whereHas('student', function ($subQuery) use ($year) {
                                 $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
                             });
                         }
-                    })     
+                    })
                     ->paginate(5);
             } else if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
@@ -141,7 +141,7 @@ class UserController extends Controller
                 $users = User::role('student')
                     ->whereHas('student', function ($query) use ($staffStudyProgram) {
                         $query->where('isActive', 1)
-                              ->where('ID_study_program', $staffStudyProgram);
+                            ->where('ID_study_program', $staffStudyProgram);
                     })
                     ->where(function ($query) use ($search) {
                         $query->where('name', 'like', '%' . $search . '%')
@@ -155,16 +155,15 @@ class UserController extends Controller
                     })
                     ->where(function ($query) use ($request) {
                         if ($request->filled('year')) {
-                            $year = $request->year; 
+                            $year = $request->year;
                             $query->whereHas('student', function ($subQuery) use ($year) {
                                 $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
                             });
                         }
-                    })   
+                    })
                     ->paginate(5);
             }
-        }
-         elseif ($role == 'staff') {
+        } elseif ($role == 'staff') {
             $users = User::role('staff')
                 ->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -172,8 +171,7 @@ class UserController extends Controller
                         ->orWhere('username', 'like', '%' . $search . '%');
                 })
                 ->paginate(5);
-        }
-        elseif ($status == 'waiting') {
+        } elseif ($status == 'waiting') {
             if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->studyProgram->study_program_Name;
 
@@ -186,8 +184,8 @@ class UserController extends Controller
                 if ($search) {
                     $usersQuery->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%$search%")
-                              ->orWhere('email', 'like', "%$search%")
-                              ->orWhere('username', 'like', '%' . $search . '%');
+                            ->orWhere('email', 'like', "%$search%")
+                            ->orWhere('username', 'like', '%' . $search . '%');
                     });
                 }
 
@@ -219,17 +217,17 @@ class UserController extends Controller
                         }
                     }
                 }
-            $users = collect($validUsers);
-            $users = new \Illuminate\Pagination\LengthAwarePaginator(
-                $users->forPage(1, 5),
-                $users->count(),
-                5,
-                1,
-                ['path' => url()->current()]
-            );
+                $users = collect($validUsers);
+                $users = new \Illuminate\Pagination\LengthAwarePaginator(
+                    $users->forPage(1, 5),
+                    $users->count(),
+                    5,
+                    1,
+                    ['path' => url()->current()]
+                );
 
-            // Menambahkan query parameters ke pagination
-            $users->appends(['role' => $role, 'status' => $status]);
+                // Menambahkan query parameters ke pagination
+                $users->appends(['role' => $role, 'status' => $status]);
 
             } else if (Auth::user()->hasRole('admin')) {
                 $validStudyPrograms = StudyProgram::pluck('study_program_Name')->toArray();
@@ -243,8 +241,8 @@ class UserController extends Controller
                 if ($search) {
                     $usersQuery->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%$search%")
-                              ->orWhere('email', 'like', "%$search%")
-                              ->orWhere('username', 'like', '%' . $search . '%');
+                            ->orWhere('email', 'like', "%$search%")
+                            ->orWhere('username', 'like', '%' . $search . '%');
                     });
                 }
 
@@ -305,12 +303,11 @@ class UserController extends Controller
                     }
                 }
             }
-        }
-        else {
+        } else {
             if (Auth::user()->hasRole('admin')) {
                 $users = User::when($role, function ($query, $role) {
-                        return $query->role($role);
-                    })
+                    return $query->role($role);
+                })
                     ->where('username', '!=', 'admin')
                     ->where(function ($query) {
                         $query->whereHas('student', function ($subQuery) {
@@ -331,14 +328,14 @@ class UserController extends Controller
                             });
                         }
                     })
-                     ->where(function ($query) use ($request) {
+                    ->where(function ($query) use ($request) {
                         if ($request->filled('year')) {
-                            $year = $request->year; 
+                            $year = $request->year;
                             $query->whereHas('student', function ($subQuery) use ($year) {
                                 $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
                             });
                         }
-                    })     
+                    })
                     ->paginate(5);
             } else {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
@@ -363,12 +360,12 @@ class UserController extends Controller
                     })
                     ->where(function ($query) use ($request) {
                         if ($request->filled('year')) {
-                            $year = $request->year; 
+                            $year = $request->year;
                             $query->whereHas('student', function ($subQuery) use ($year) {
                                 $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
                             });
                         }
-                    })   
+                    })
                     ->paginate(5);
             }
         }
@@ -429,6 +426,36 @@ class UserController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->route('admin.user.index')->with('success', 'User created successfully.');
     }
+    public function generatePdf(Request $request)
+    {
+        // Mendapatkan data pengguna berdasarkan filter
+        $users = User::role('student')
+            ->whereHas('student') // atau gunakan whereDoesntHave() jika ingin mahasiswa yang belum terdaftar
+            ->get();
+
+        // Menyiapkan nama program studi
+        $study_program_name = null;
+        if ($request->filled('study_program')) {
+            $studyProgram = StudyProgram::find($request->study_program);
+            $study_program_name = $studyProgram->study_program_Name ?? null;
+        }
+
+        // Menyiapkan data untuk view PDF
+        $data = [
+            'users' => $users,
+            'year' => $request->year, // Mengirimkan tahun angkatan
+            'study_program_name' => $study_program_name, // Nama program studi
+        ];
+
+        // Membuat nama file PDF dinamis
+    $fileName = ($study_program_name ?? 'semua_prodi') . '_' . ($request->year ?? 'semua_angkatan') . '.pdf';
+    $fileName = str_replace(' ', '_', strtolower($fileName)); // Mengganti spasi dengan underscore dan mengubah ke huruf kecil
+
+    // Generate PDF menggunakan view
+    $pdf = PDF::loadView('dashboard.admin.pdf', $data);
+    return $pdf->stream($fileName);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -570,4 +597,5 @@ class UserController extends Controller
             ];
         }
     }
+
 }

@@ -14,6 +14,9 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\TranscriptController;
 
+Route::get('/generate-pdf', [UserController::class, 'generatePdf']);
+
+
 Route::get('/', [LandingPageController::class, 'index'])->name('landing.page');
 
 Route::get('/event', [LandingPageController::class, 'event'])->name('event.index');
@@ -50,6 +53,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('event', EventController::class);
         });
         Route::middleware('can:manage user')->group(function () {
+            Route::get('user/generate-pdf', [UserController::class, 'generatePdf'])->name('user.generate-pdf');
             Route::resource('user', UserController::class);
         });
         Route::middleware('can:manage program')->group(function () {

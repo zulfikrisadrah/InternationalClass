@@ -292,6 +292,13 @@
                 @endif
                 @endif
             </div>
+            <div class="flex justify-end mb-4">
+    <a href="{{ route('admin.user.generate-pdf', request()->query()) }}" target="_blank"
+        class="flex items-center space-x-2 bg-blueThird text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+        <i class="fas fa-print"></i>
+        <span>Print PDF</span>
+    </a>
+</div>
         </div>
     </div>
 </x-app-layout>

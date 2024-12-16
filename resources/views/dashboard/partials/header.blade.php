@@ -4,17 +4,17 @@
 
 
     <div class="flex items-center gap-1.5 tracking-tight whitespace-nowrap text-black">
-        @role('admin')
-        <div class="btn m-1 bg-blue-50 border-none gap-2 px-3.5 py-1.5 rounded-xl flex items-center cursor-default">
-            <span class="my-auto text-black">{{ Auth::user()->name ?? 'user' }}</span>
-        </div>
-    @endrole
+        @hasanyrole('admin|staff')
+            <div class="btn m-1 bg-blue-50 border-none gap-2 px-3.5 py-1.5 rounded-xl flex items-center cursor-default">
+                <span class="my-auto text-black">{{ Auth::user()->name ?? 'user' }}</span>
+            </div>
+        @endhasanyrole
 
-    @role('student')
-        <a href="{{ route('profile.edit') }}" class="btn m-1 bg-blue-50 border-none gap-2 px-3.5 py-1.5 rounded-xl flex items-center">
-            <span class="my-auto text-black">{{ Auth::user()->name ?? 'user' }}</span>
-        </a>
-    @endrole
+        @role('student')
+            <a href="{{ route('profile.edit') }}"
+                class="btn m-1 bg-blue-50 border-none gap-2 px-3.5 py-1.5 rounded-xl flex items-center">
+                <span class="my-auto text-black">{{ Auth::user()->name ?? 'user' }}</span>
+            </a>
+        @endrole
     </div>
 </div>
-

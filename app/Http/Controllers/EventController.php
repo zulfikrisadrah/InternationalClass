@@ -136,7 +136,7 @@ class EventController extends Controller
                 'Event_Content' => 'required|string',
                 'Publication_Date' => today(),
                 'Event_Date' => 'required|date',
-                'Event_Image' => 'required|image|max:2048',
+                'Event_Image' => 'nullable|image|max:2048',
                 'ID_study_program' => 'required|exists:study_programs,ID_study_program',
             ]);
 

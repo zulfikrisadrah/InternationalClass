@@ -13,14 +13,12 @@
                     <div class="card bg-bluePrimary text-white w-64 h-96 shadow-lg justify-center" data-aos="flip-left"
                         data-aos-delay="{{ 200 * ($index + 1) }}">
                         <figure>
-                            <img src="{{ asset($program->study_program_Image) }}"
-                                alt="{{ $program['study_program_Name'] }}" class="w-full rounded-t-lg">
+                            <img src="{{ asset($program->study_program_Image) }}" alt="{{ $program['study_program_Name'] }}"
+                                class="w-full rounded-t-lg">
                         </figure>
                         <div class="card-body p-4 flex flex-col justify-between flex-grow">
                             <!-- Nama Program -->
-                            <h3 class="mt-2 text-lg font-semibold">{{
-                                $program['study_program_Name'] }}</h3>
-                            
+                            <h3 class="mt-2 text-lg font-semibold">{{ $program['study_program_Name'] }}</h3>
                             <!-- Nama Fakultas -->
                             <p class="absolute bottom-0 left-0 p-4 text-sm">{{ $program->faculty->Faculty_Name }}</p>
                         </div>

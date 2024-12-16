@@ -159,20 +159,20 @@ class LandingPageController extends Controller
 
         $recommendedPrograms = Program::select('programs.*')
         ->leftJoin('program_enrollment', 'programs.ID_program', '=', 'program_enrollment.ID_program')
+        ->join('program_study_program', 'programs.ID_program', '=', 'program_study_program.program_id')
         ->where('program_enrollment.status', 'approved')
         ->whereDate('programs.Execution_Date', '>', $today)
         ->groupBy(
             'programs.ID_program',
-            'programs.program_Name',  
+            'programs.program_Name',
             'programs.program_description',
             'programs.Country_of_Execution',
             'programs.Execution_Date',
             'programs.Participants_Count',
             'programs.program_Image',
             'programs.ID_Ie_program',
-            'programs.ID_study_program',
             'programs.user_id',
-            'programs.created_at',   
+            'programs.created_at',
             'programs.updated_at'
         )
         ->havingRaw('COUNT(program_enrollment.ID_Student) < programs.Participants_Count')

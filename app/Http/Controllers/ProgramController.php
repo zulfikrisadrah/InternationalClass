@@ -18,48 +18,66 @@ class ProgramController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $programs = Program::query();  // Ubah dari all() ke query() untuk menambahkan kondisi pencarian
         $data = [
             'title' => 'Manage Program',
         ];
 
+        // Inisialisasi query program
+        $programs = Program::query();
+
         // Menangani pencarian
         $search = $request->input('search');
         if ($search) {
-            // Jika ada input pencarian, filter berdasarkan nama atau deskripsi program
+            // Tambahkan filter pencarian berdasarkan nama atau deskripsi program
             $programs = $programs->where('program_Name', 'like', '%' . $search . '%');
         }
 
+        // Role admin dan staff
         if ($user->hasRole('admin') || $user->hasRole('staff')) {
             if ($user->hasRole('staff')) {
                 // Ambil ID study program dari staff yang sedang login
                 $studyProgramId = $user->staff->ID_study_program;
 
-                // Ambil program yang sesuai dengan study program staff
-                $programs = $programs->where('ID_study_program', $studyProgramId);
+                // Filter program yang sesuai dengan study program staff
+                $programs = $programs->whereHas('studyProgram', function ($query) use ($studyProgramId) {
+                    $query->where('ID_study_program', $studyProgramId);
+                });
             }
-            // Fetch enrollments for admin/staff
+
+            // Fetch enrollments untuk admin/staff
             $enrollments = Program::with('students')->get();
-            $programs = $programs->paginate(5);  // Ambil data program setelah difilter
+
+            // Paginate data program
+            $programs = $programs->paginate(5);
+
+            // Tampilkan view untuk admin/staff
             return view('dashboard.admin.programs.index', compact('programs', 'enrollments', 'data'));
-        } else {
-            if (!$user->student || !$user->student->ID_study_program) {
-                abort(403, 'This action is unauthorized.');
-            }
-
-            $studyProgramId = $user->student->ID_study_program;
-            $ieProgramId = $request->input('ie_program_id');
-            $programs = Program::with('ieProgram')
-                ->when($ieProgramId, function ($query) use ($ieProgramId) {
-                    return $query->where('ID_Ie_program', $ieProgramId);
-                })
-                ->where('ID_study_program', $studyProgramId)
-                ->paginate(10);
-
-            $iePrograms = IeProgram::all();
-            return view('dashboard.student.programs.index', compact('programs', 'iePrograms'));
         }
+
+        // Role student
+        if (!$user->student || !$user->student->ID_study_program) {
+            abort(403, 'This action is unauthorized.');
+        }
+
+        $studyProgramId = $user->student->ID_study_program;
+        $ieProgramId = $request->input('ie_program_id');
+
+        // Filter program untuk student
+        $programs = $programs->with('ieProgram')
+                            ->when($ieProgramId, function ($query) use ($ieProgramId) {
+                                return $query->where('ID_Ie_program', $ieProgramId);
+                            })
+                            ->whereHas('studyProgram', function ($query) use ($studyProgramId) {
+                                $query->where('ID_study_program', $studyProgramId);
+                            })
+                            ->paginate(10);
+
+        $iePrograms = IeProgram::all();
+
+        // Tampilkan view untuk student
+        return view('dashboard.student.programs.index', compact('programs', 'iePrograms'));
     }
+
 
 
 
@@ -161,6 +179,7 @@ class ProgramController extends Controller
 
         if (auth()->user()->hasRole('admin')) {
 
+            // Validasi input untuk admin, termasuk multiple study program
             $validated = $request->validate([
                 'program_Name' => 'required|string|max:255',
                 'program_description' => 'required|string',
@@ -169,16 +188,34 @@ class ProgramController extends Controller
                 'Participants_Count' => 'required|integer|min:1',
                 'program_Image' => 'required|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
-                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+                'ID_study_program' => 'required|array', // Expecting an array of study programs
+                'ID_study_program.*' => 'exists:study_programs,ID_study_program', // Each item should be a valid study program
             ]);
 
+            // Data dari validasi
             $data = $validated;
             $data['user_id'] = $user;
 
+            // Tangani upload gambar jika ada
+            if ($request->hasFile('program_Image')) {
+                if (!$request->file('program_Image')->isValid()) {
+                    return redirect()->back()->withErrors(['program_Image' => 'Uploaded file is invalid.']);
+                }
+                $data['program_Image'] = $request->file('program_Image')->store('images/program', 'public');
+            }
+
+            // Buat program baru
+            $program = Program::create($data);
+
+            // Menambahkan relasi many-to-many dengan StudyProgram
+            $program->studyProgram()->attach($validated['ID_study_program']);
+
         } else {
 
+            // Untuk staff, ambil ID_study_program dari staff (otomatis terhubung)
             $studyProgram = auth()->user()->staff->ID_study_program;
 
+            // Validasi input untuk staff
             $validated = $request->validate([
                 'program_Name' => 'required|string|max:255',
                 'program_description' => 'required|string',
@@ -192,23 +229,26 @@ class ProgramController extends Controller
             // Tambahkan data tambahan di luar validasi
             $data = $validated;
             $data['user_id'] = $user;
-            $data['ID_study_program'] = $studyProgram;
-        }
 
-        // Handle file upload jika ada
-        if ($request->hasFile('program_Image')) {
-            // Validasi file upload
-            if (!$request->file('program_Image')->isValid()) {
-                return redirect()->back()->withErrors(['program_Image' => 'Uploaded file is invalid.']);
+            // Tangani upload gambar jika ada
+            if ($request->hasFile('program_Image')) {
+                if (!$request->file('program_Image')->isValid()) {
+                    return redirect()->back()->withErrors(['program_Image' => 'Uploaded file is invalid.']);
+                }
+                $data['program_Image'] = $request->file('program_Image')->store('images/program', 'public');
             }
-            $data['program_Image'] = $request->file('program_Image')->store('images/program', 'public');
+
+            // Buat program baru
+            $program = Program::create($data);
+
+            $program->studyProgram()->attach($studyProgram);
+
         }
 
-        // Buat program baru
-        Program::create($data);
-
+        // Redirect dengan pesan sukses
         return redirect()->route('admin.program.index')->with('success', 'Program added successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -237,6 +277,7 @@ class ProgramController extends Controller
      */
     public function edit(Program $program)
     {
+        $program->load('studyProgram');
         $iePrograms = IeProgram::all();
         $studyPrograms = StudyProgram::all();
         return view('dashboard.admin.programs.edit', compact('program', 'iePrograms', 'studyPrograms'));
@@ -247,7 +288,7 @@ class ProgramController extends Controller
      */
     public function update(Request $request, Program $program)
     {
-        // Validasi data dari request
+        // Validasi data berdasarkan role
         if (auth()->user()->hasRole('admin')) {
             $validated = $request->validate([
                 'program_Name' => 'required|string|max:255',
@@ -257,7 +298,8 @@ class ProgramController extends Controller
                 'Participants_Count' => 'required|integer|min:1',
                 'program_Image' => 'nullable|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
-                'ID_study_program' => 'required|exists:study_programs,ID_study_program',
+                'ID_study_program' => 'required|array', // Pastikan berupa array
+                'ID_study_program.*' => 'exists:study_programs,ID_study_program', // Validasi setiap ID
             ]);
         } else {
             $validated = $request->validate([
@@ -271,22 +313,32 @@ class ProgramController extends Controller
             ]);
         }
 
-        // Update data
+        // Persiapkan data untuk update
         $data = $validated;
 
+        // Kelola upload gambar jika ada
         if ($request->hasFile('program_Image')) {
             // Hapus gambar lama jika ada
             if ($program->program_Image) {
                 Storage::disk('public')->delete($program->program_Image);
             }
 
+            // Simpan gambar baru
             $data['program_Image'] = $request->file('program_Image')->store('images/program', 'public');
         }
 
+        // Update data program utama
         $program->update($data);
 
-        return redirect()->route('admin.program.index')->with('success', 'program updated successfully.');
+        // Jika admin, sinkronisasi relasi studyProgram
+        if (auth()->user()->hasRole('admin')) {
+            $program->studyProgram()->sync($validated['ID_study_program']); // Sinkronisasi ID program studi
+        }
+
+        // Redirect ke halaman indeks dengan pesan sukses
+        return redirect()->route('admin.program.index')->with('success', 'Program updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -48,7 +48,16 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-500">Study Program:</p>
-                        <p class="text-gray-800">{{ $program->studyProgram->study_program_Name }}</p>
+                        <p class="text-gray-800">
+                            @if ($program->studyProgram->isNotEmpty())
+                                @foreach ($program->studyProgram as $studyProgram)
+                                    <span>{{ $studyProgram->study_program_Name }}</span>
+                                    @if (!$loop->last), @endif
+                                @endforeach
+                            @else
+                                No study program associated.
+                            @endif
+                        </p>
                     </div>
                 </div>
 

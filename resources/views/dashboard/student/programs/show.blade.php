@@ -42,7 +42,14 @@
                 <!-- Study Program Details -->
                 <div class="mb-6">
                     <h2 class="text-xl font-bold text-indigo-950">Study Program</h2>
-                    <p class="text-gray-700 mt-2">{{ $program->studyProgram->study_program_Name }}</p>
+                    @if ($program->studyProgram->isNotEmpty())
+                        @foreach ($program->studyProgram as $studyProgram)
+                            <span>{{ $studyProgram->study_program_Name }}</span>
+                            @if (!$loop->last), @endif
+                        @endforeach
+                    @else
+                        No study program associated.
+                    @endif
                 </div>
 
                 <!-- Participants Details -->

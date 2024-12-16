@@ -22,18 +22,18 @@
                     @csrf
                     @method('PUT') <!-- This specifies that this is an update operation -->
 
-                    <!-- program Name -->
+                    <!-- Program Name -->
                     <div>
                         <x-input-label for="program_Name" :value="__('Program Name')" />
                         <x-text-input id="program_Name" class="block mt-1 w-full" type="text" name="program_Name" :value="old('program_Name', $program->program_Name)" required autofocus autocomplete="program_Name" />
                         <x-input-error :messages="$errors->get('program_Name')" class="mt-2" />
                     </div>
 
+                    <!-- Program Description -->
                     <div class="mt-4">
                         <x-tinymce-config />
                         <x-input-label for="program_description" :value="__('Program Description')" />
-                        <textarea id="program_description" name="program_description" class="block mt-1 w-full" rows="4"
-                            required>{{ old('program_description', $program->program_description) }}</textarea>
+                        <textarea id="program_description" name="program_description" class="block mt-1 w-full" rows="4" required>{{ old('program_description', $program->program_description) }}</textarea>
                         <x-input-error :messages="$errors->get('program_description')" class="mt-2" />
                     </div>
 
@@ -75,21 +75,55 @@
                     @role('admin')
                         <div class="mt-4">
                             <x-input-label for="ID_study_program" :value="__('Study Program')" />
-                            <select id="ID_study_program" class="block mt-1 w-full" name="ID_study_program" required>
-                                <option value="">Select study Program</option>
-                                @foreach($studyPrograms as $studyProgram)
-                                    <option value="{{ $studyProgram->ID_study_program }}" {{ old('ID_study_program', $studyProgram->ID_study_program) == $studyProgram->ID_study_program ? 'selected' : '' }}>
-                                        {{ $studyProgram->study_program_Name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <div class="block mt-1 w-full">
+                                <!-- Select All Checkbox -->
+                                <label class="flex items-center space-x-2 mb-2">
+                                    <input type="checkbox" id="select-all">
+                                    <span>Select All</span>
+                                </label>
+
+                                <div class="max-h-40 overflow-y-scroll border border-gray-300 rounded-lg p-2">
+                                    <!-- Loop through the study programs -->
+                                    @foreach($studyPrograms as $studyProgram)
+                                        <label class="flex items-center space-x-2 mb-2">
+                                            <input type="checkbox" name="ID_study_program[]" value="{{ $studyProgram->ID_study_program }}"
+                                                @if($program->studyProgram->contains($studyProgram))
+                                                    checked
+                                                @endif
+                                                class="study-program-checkbox">
+                                            <span>{{ $studyProgram->study_program_Name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
                             <x-input-error :messages="$errors->get('ID_study_program')" class="mt-2" />
                         </div>
+
+                        <!-- Add JavaScript to handle the Select All functionality -->
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const selectAllCheckbox = document.getElementById('select-all');
+                                const checkboxes = document.querySelectorAll('.study-program-checkbox');
+
+                                selectAllCheckbox.addEventListener('change', function () {
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = selectAllCheckbox.checked;
+                                    });
+                                });
+
+                                checkboxes.forEach(checkbox => {
+                                    checkbox.addEventListener('change', function () {
+                                        selectAllCheckbox.checked = Array.from(checkboxes).every(cb => cb.checked);
+                                    });
+                                });
+                            });
+                        </script>
                     @endrole
 
-                    <!-- program Image -->
+
+                    <!-- Program Image -->
                     <div class="mt-4">
-                        <x-input-label for="program_Image" :value="__(' Program Image')" />
+                        <x-input-label for="program_Image" :value="__('Program Image')" />
                         <x-text-input id="program_Image" class="block mt-1 w-full" type="file" name="program_Image" accept="image/*" autocomplete="program_Image" />
                         <x-input-error :messages="$errors->get('program_Image')" class="mt-2" />
                         @if($program->program_Image)

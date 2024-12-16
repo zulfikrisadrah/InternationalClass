@@ -126,26 +126,30 @@ class DashboardController extends Controller
 
                 // Query program counts yang hanya terkait dengan study program staff
                 $programCounts = Program::selectRaw('count(*) as count, ID_Ie_program')
-                    ->where('ID_study_program', $studyProgramId) // Filter by study program
-                    ->groupBy('ID_Ie_program')
-                    ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
-                    ->get();
+                ->whereHas('studyProgram', function ($query) use ($studyProgramId) {
+                    $query->where('ID_study_program', $studyProgramId);
+                })
+                ->groupBy('ID_Ie_program')
+                ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
+                ->get();
 
-                // Query student counts by year yang hanya terkait dengan study program staff
-                $studentCountsByYear = Program::selectRaw('YEAR(execution_date) as year, count(*) as student_count')
-                    ->join('program_enrollment', 'program_enrollment.ID_program', '=', 'programs.ID_program')
-                    ->where('program_enrollment.status', 'approved')
-                    ->where('programs.ID_study_program', $studyProgramId) // Filter by study program
-                    ->groupByRaw('YEAR(execution_date)')
-                    ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
-                    ->get();
+            // Query student counts by year yang hanya terkait dengan study program staff
+            $studentCountsByYear = Program::selectRaw('YEAR(execution_date) as year, count(*) as student_count')
+                ->join('program_enrollment', 'program_enrollment.ID_program', '=', 'programs.ID_program')
+                ->where('program_enrollment.status', 'approved')
+                ->whereHas('studyProgram', function ($query) use ($studyProgramId) {
+                    $query->where('ID_study_program', $studyProgramId);
+                })
+                ->groupByRaw('YEAR(execution_date)')
+                ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
+                ->get();
 
-                // Ambil data mahasiswa aktif berdasarkan program studi yang sesuai dengan staff
-                $activeStudents = Student::where('students.isActive', 1)  // Menambahkan alias tabel 'students'
-                    ->join('study_programs', 'students.ID_study_program', '=', 'study_programs.ID_study_program')
-                    ->select('students.Student_ID_Number', 'study_programs.study_program_Name as program_name')
-                    ->where('study_programs.ID_study_program', $studyProgramId)  // Menambahkan alias tabel 'study_programs'
-                    ->get();
+            // Ambil data mahasiswa aktif berdasarkan program studi yang sesuai dengan staff
+            $activeStudents = Student::where('students.isActive', 1) // Alias tabel 'students'
+                ->join('study_programs', 'students.ID_study_program', '=', 'study_programs.ID_study_program') // Join eksplisit ke tabel study_programs
+                ->select('students.Student_ID_Number', 'study_programs.study_program_Name as program_name') // Select kolom dari tabel study_programs
+                ->where('study_programs.ID_study_program', $studyProgramId) // Filter berdasarkan study program
+                ->get();
 
                 $tokenData = $this->loginAndGetToken();
                 $studentBatches = [];

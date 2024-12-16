@@ -26,7 +26,7 @@ class StudyProgram extends Model
     }
     public function programs()
     {
-        return $this->hasMany(Program::class, 'ID_study_program');
+        return $this->belongsToMany(Program::class, 'program_study_program', 'study_program_id', 'program_id');
     }
     public function staff()
     {

@@ -17,7 +17,6 @@ class Program extends Model
         'Participants_Count',
         'program_Image',
         'ID_Ie_program',
-        'ID_study_program',
         'ID_Staff',
         'user_id'
     ];
@@ -28,7 +27,7 @@ class Program extends Model
     }
     public function studyProgram()
     {
-        return $this->belongsTo(StudyProgram::class, 'ID_study_program');
+        return $this->belongsToMany(StudyProgram::class, 'program_study_program', 'program_id', 'study_program_id');
     }
     public function user()
     {

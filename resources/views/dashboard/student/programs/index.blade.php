@@ -55,7 +55,7 @@
                                 </div>
                             @endif
                             <div class="flex flex-col">
-                                <h3 class="text-indigo-950 text-xl font-bold truncate">{{ $program->program_Name }}</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $program->program_Name }}</h3>
                                 <p class="text-slate-500">{{ $program->Country_of_Execution }} - {{ $program->ieProgram->ie_program_name ?? 'No IE Program Assigned' }}</p>
                             </div>
                         </div>

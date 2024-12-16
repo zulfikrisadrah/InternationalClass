@@ -49,6 +49,18 @@
                 </a>
             </li>
             <li class="mt-8 w-full">
+                <a href="{{ route('admin.studyProgram.index') }}"
+                    class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.studyProgram.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
+                    <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                            <path
+                                d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z" />
+                        </svg>
+                    </i>
+                    <span class="grow shrink w-full">Study Programs</span>
+                </a>
+            </li>
+            <li class="mt-8 w-full">
                 <a href="{{ route('admin.event.index') }}"
                     class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.event.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
@@ -187,7 +199,7 @@
                         </i>
                         <span class="grow shrink w-full">Programs</span>
                     </a>
-                </li>            
+                </li>
             @endif
             <li class="mt-8 w-full">
                 <a href="{{ route('student.studyPlan.index') }}"

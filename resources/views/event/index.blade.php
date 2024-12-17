@@ -26,9 +26,13 @@
                                     {{ Str::limit(html_entity_decode(strip_tags($event->Event_Content)), 150, '...') }}
                                 </p>
                                 <div class="flex gap-3.5 mt-4 text-xs text-stone-900 items-center">
-                                    <img loading="lazy"
-                                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                        alt="" class="object-contain shrink-0 self-start w-6 aspect-[1.2]" />
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="object-contain shrink-0 self-start w-6 aspect-[1.2]" viewBox="0 0 24 24"
+                                        fill="currentColor">
+                                        <path
+                                            d="M17 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9V3H15V1H17V3ZM4 9V19H20V9H4ZM6 13H11V17H6V13Z">
+                                        </path>
+                                    </svg>
                                     <time datetime="{{ $event->Event_Date }}" class="text-xs text-gray-500">
                                         {{ \Carbon\Carbon::parse($event->Event_Date)->format('d M, Y') }}
                                     </time>
@@ -54,28 +58,31 @@
                     </h2>
                     <div class="flex flex-col items-center w-full max-w-[650px] mx-auto px-4">
                         @foreach ($upcoming_events_page as $upcoming_event)
-                                    <a a href="{{ route('event.show', $upcoming_event->ID_Event) }}"
-                                        class="flex flex-col mb-5 items-start py-8 pr-3.5 pl-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full"
-                                        data-aos="fade-left" data-aos-delay="200">
+                            <a a href="{{ route('event.show', $upcoming_event->ID_Event) }}"
+                                class="flex flex-col mb-5 items-start py-8 pr-3.5 pl-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full"
+                                data-aos="fade-left" data-aos-delay="200">
 
-                                        <h4 class="font-semibold">
-                                            {{ Str::limit($upcoming_event->Event_Title, 100) }}
-                                        </h4>
+                                <h4 class="font-semibold">
+                                    {{ Str::limit($upcoming_event->Event_Title, 100) }}
+                                </h4>
 
-                                        <p class="self-stretch mt-1 max-md:max-w-full break-words">
-                                            {{ Str::limit(html_entity_decode(strip_tags($upcoming_event->Event_Content)), 100, '...') }}
-                                        </p>
-                                        <div class="flex gap-1.5 mt-4 text-xs text-stone-900">
-                                            <img loading="lazy"
-                                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                                alt="Calendar Icon"
-                                                class="object-contain shrink-0 self-start w-5 aspect-square" />
-                                            <time datetime="{{ $upcoming_event->Event_Date->format('Y-m-d') }}">
-                                                {{ $upcoming_event->Event_Date->format('d M, Y') }}
-                                            </time>
-                                        </div>
-                                    </a>
-                                @endforeach
+                                <p class="self-stretch mt-1 max-md:max-w-full break-words">
+                                    {{ Str::limit(html_entity_decode(strip_tags($upcoming_event->Event_Content)), 100, '...') }}
+                                </p>
+                                <div class="flex gap-1.5 mt-4 text-xs text-stone-900">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="object-contain shrink-0 self-start w-6 aspect-[1.2]" viewBox="0 0 24 24"
+                                        fill="currentColor">
+                                        <path
+                                            d="M17 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9V3H15V1H17V3ZM4 9V19H20V9H4ZM6 13H11V17H6V13Z">
+                                        </path>
+                                    </svg>
+                                    <time datetime="{{ $upcoming_event->Event_Date->format('Y-m-d') }}">
+                                        {{ $upcoming_event->Event_Date->format('d M, Y') }}
+                                    </time>
+                                </div>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
             </div>

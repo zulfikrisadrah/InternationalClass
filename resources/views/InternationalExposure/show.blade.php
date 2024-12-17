@@ -41,7 +41,7 @@
 
                 @if (strtotime($programItem->Execution_Date) > time())
                     <div class="mt-6 text-center">
-                        <a href="/login" class="btn btn-primary">
+                        <a href="/login" class="btn btn-info">
                             Register Now
                         </a>
                     </div>

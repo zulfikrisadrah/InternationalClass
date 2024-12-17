@@ -46,7 +46,7 @@
                         <div class="flex flex-col gap-5 mt-3 w-full max-md:mt-10 max-md:mr-1.5 max-md:max-w-full">
                             @foreach ($popular_news_page as $popular)
                                 <a href="{{ route('news.show', $popular->ID_News) }}"
-                                    class="p-5 bg-white rounded-2xl border-indigo-900 border-t-[6px]
+                                    class="p-5 bg-white rounded-2xl border-blueThird border-t-[6px]
                             shadow-[0px_2px_20px_rgba(0,0,0,0.25)]">
                                     <div class="flex items-start gap-5">
                                         @if ($popular->News_Image)

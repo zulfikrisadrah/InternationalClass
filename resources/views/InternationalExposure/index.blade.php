@@ -109,14 +109,16 @@
                                         {{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 150, '...') }}
                                     </p>
                                     <div class="flex flex-wrap gap-4 mt-4 text-xs text-stone-900 items-center">
-                                        <img loading="lazy"
-                                            src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                            alt="" class="object-contain shrink-0 w-6 h-6" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="object-contain shrink-0 w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                                                <path
+                                                    d="M17 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9V3H15V1H17V3ZM4 9V19H20V9H4ZM6 13H11V17H6V13Z">
+                                                </path>
+                                            </svg>
                                         <time datetime="{{ $program->Execution_Date }}" class="text-xs text-gray-500">
                                             {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M, Y') }}
                                         </time>
                                         <div class="flex items-center text-xs text-gray-500">
-                                            <span class="text-xs font-medium text-indigo-900">Location:</span>
+                                            <span class="text-xs font-medium text-blueThird">Location:</span>
                                             <span class="ml-1 text-sm">{{ $program->Country_of_Execution }}</span>
                                         </div>
                                     </div>

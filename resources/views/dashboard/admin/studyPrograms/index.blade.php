@@ -35,7 +35,7 @@
                                 </div>
                             @endif
                             <div class="flex flex-col">
-                                <h3 class="text-blueSecondary text-xl font-bold truncate max-w-[400px]">
+                                <h3 class="text-blueSecondary text-xl font-bold truncate max-w-[200px]">
                                     {{ $program->study_program_Name }}
                                 </h3>
                             </div>

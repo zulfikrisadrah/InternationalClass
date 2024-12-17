@@ -1,6 +1,16 @@
 <div class="flex justify-between items-center w-full">
-    <!-- Left Side: Academic Calendar Title -->
-    <div class="text-xl font-bold text-black mt-4">{{ $data['title'] ?? '' }}</div>
+    <div class="flex items-center justify-between">
+        <label for="my-drawer-2" class="lg:hidden hamburger-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </label>
+
+        <div class="text-xl font-bold text-black ml-4 lg:mt-4">
+            {{ $data['title'] ?? '' }}
+        </div>
+    </div>
+
 
 
     <div class="flex items-center gap-1.5 tracking-tight whitespace-nowrap text-black">

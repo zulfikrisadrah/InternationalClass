@@ -16,6 +16,7 @@ class Program extends Model
         'Execution_Date',
         'End_Date',
         'Participants_Count',
+        'Course_Credits',
         'program_Image',
         'ID_Ie_program',
         'ID_Staff',

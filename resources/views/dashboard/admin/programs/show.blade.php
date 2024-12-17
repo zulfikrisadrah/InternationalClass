@@ -39,8 +39,8 @@
                         <p class="text-gray-800">{{ \Carbon\Carbon::parse($program->End_Date)->format('d M Y') }}</p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-500">Program Description:</p>
-                        <p class="text-gray-800">{{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 150, '...') }}</p>
+                        <p class="text-sm text-gray-500">Course Credits:</p>
+                        <p class="text-gray-800">{{ $program->Course_Credits }} SKS</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-500">Participants Count:</p>
@@ -61,7 +61,11 @@
                             @else
                                 No study program associated.
                             @endif
-                        </p>                    
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Program Description:</p>
+                        <p class="text-gray-800">{{ Str::limit(html_entity_decode(strip_tags($program->program_description)), 150, '...') }}</p>
                     </div>
                 </div>
 
@@ -89,23 +93,23 @@
                                         @php
                                             $isFinished = $student->programs->pluck('pivot.isFinished')->contains(1);
                                         @endphp
-                                    
+
                                         <td class="px-6 py-4 text-sm text-gray-900">{{ $student->Student_Name }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-500">{{ $student->Student_ID_Number }}</td>
                                         <td class="px-6 py-4 text-sm">
-                                            <span class=" 
+                                            <span class="
                                                 {{ $isFinished ? 'text-green-500' : 'text-red-500' }}">
                                                 {{ $isFinished ? 'Completed' : 'In Progress' }}
                                             </span>
                                         </td>
-                                    
+
                                         <td class="px-6 py-4 text-sm">
                                             <form action="{{ route('admin.program.updateStatus', ['programId' => $program->ID_program, 'studentId' => $student->ID_Student]) }}" method="POST" class="inline-block">
                                                 @csrf
                                                 <input type="hidden" name="action" value="{{ $isFinished ? 'unfinish' : 'finish' }}">
                                                 <button type="submit" class="{{ $isFinished ? 'text-red-500' : 'text-green-500'  }}">
                                                     {{ $isFinished ? 'Cancel' : 'Finish' }}
-                                                </button>                                                                                               
+                                                </button>
                                             </form>
                                             <label for="delete-modal-{{ $student->ID_Student }}" class="text-red-500 cursor-pointer ml-3">Delete</label>
                                             <input type="checkbox" id="delete-modal-{{ $student->ID_Student }}" class="modal-toggle" />

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('Execution_Date');
             $table->date('End_Date');
             $table->integer('Participants_Count');
+            $table->integer('Course_Credits');
             $table->string('program_Image');
             $table->unsignedBigInteger('ID_Ie_program');
             $table->unsignedBigInteger('user_id');

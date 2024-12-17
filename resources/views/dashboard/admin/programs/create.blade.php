@@ -63,6 +63,12 @@
                         <x-input-error :messages="$errors->get('Participants_Count')" class="mt-2" />
                     </div>
 
+                    <div class="mt-4">
+                        <x-input-label for="Course_Credits" :value="__('Course Credits (SKS)')" />
+                        <x-text-input id="Course_Credits" class="block mt-1 w-full" type="number" name="Course_Credits" :value="old('Course_Credits')" min="1" required autocomplete="Course_Credits" />
+                        <x-input-error :messages="$errors->get('Course_Credits')" class="mt-2" />
+                    </div>
+
                     <!-- IE Program Dropdown -->
                     <div class="mt-4">
                         <x-input-label for="ID_Ie_program" :value="__('IE Program')" />

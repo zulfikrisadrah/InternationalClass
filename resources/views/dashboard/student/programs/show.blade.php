@@ -10,8 +10,11 @@
                 <div class="mb-6">
                     <h1 class="text-3xl font-bold text-indigo-950">{{ $program->program_Name }}</h1>
                     <p class="text-slate-500 text-sm mt-1">Country of Execution: {{ $program->Country_of_Execution }}</p>
-                    <p class="text-slate-500 text-sm">Execution Date: {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }}</p>
-                    <p class="text-slate-500 text-sm">End Date: {{ \Carbon\Carbon::parse($program->End_Date)->format('d M Y') }}</p>
+                    <p class="text-slate-500 text-sm">Program Duration:
+                        {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }} -
+                        {{ \Carbon\Carbon::parse($program->End_Date)->format('d M Y') }}
+                    </p>
+                    <p class="text-slate-500 text-sm">Course Credits: <span class="font-bold">{{ $program->Course_Credits }} SKS</span></p>
                 </div>
 
                 <!-- Program Image -->

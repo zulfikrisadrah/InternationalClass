@@ -169,6 +169,7 @@ class LandingPageController extends Controller
             'programs.program_description',
             'programs.Country_of_Execution',
             'programs.Execution_Date',
+            'programs.End_Date',
             'programs.Participants_Count',
             'programs.program_Image',
             'programs.ID_Ie_program',

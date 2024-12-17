@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('program_description');
             $table->string('Country_of_Execution', 50);
             $table->date('Execution_Date');
+            $table->date('End_Date');
             $table->integer('Participants_Count');
             $table->string('program_Image');
             $table->unsignedBigInteger('ID_Ie_program');

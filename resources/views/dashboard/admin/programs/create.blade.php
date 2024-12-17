@@ -49,6 +49,13 @@
                         <x-input-error :messages="$errors->get('Execution_Date')" class="mt-2" />
                     </div>
 
+                    <!-- End Date -->
+                    <div class="mt-4">
+                        <x-input-label for="End_Date" :value="__('End Date')" />
+                        <x-text-input id="End_Date" class="block mt-1 w-full" type="date" name="End_Date" :value="old('End_Date')" required autocomplete="End_Date" />
+                        <x-input-error :messages="$errors->get('End_Date')" class="mt-2" />
+                    </div>
+
                     <!-- Participants Count -->
                     <div class="mt-4">
                         <x-input-label for="Participants_Count" :value="__('Participants Count')" />

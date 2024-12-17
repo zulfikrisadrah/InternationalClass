@@ -33,7 +33,7 @@ class Student extends Model
     public function programs()
     {
         return $this->belongsToMany(Program::class, 'program_enrollment', 'ID_Student', 'ID_program')
-                    ->withPivot('status')
+                    ->withPivot('status', 'isFinished')
                     ->withTimestamps();
     }
 }

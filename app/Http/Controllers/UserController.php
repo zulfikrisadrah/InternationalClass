@@ -428,35 +428,61 @@ class UserController extends Controller
     }
     public function generatePdf(Request $request)
     {
-        // Mendapatkan data pengguna berdasarkan filter
+        // Query untuk mendapatkan data pengguna, hanya mengambil yang aktif
         $users = User::role('student')
-            ->whereHas('student') // atau gunakan whereDoesntHave() jika ingin mahasiswa yang belum terdaftar
+            ->whereHas('student', function ($query) use ($request) {
+                // Hanya ambil yang aktif
+                $query->where('isactive', 1);
+
+                // Filter berdasarkan nama jika ada
+                if ($request->filled('search')) {
+                    $query->where('Student_Name', 'like', '%' . $request->search . '%');
+                }
+
+                // Filter berdasarkan program studi
+                if ($request->filled('study_program')) {
+                    $query->where('id_study_program', $request->study_program);
+                }
+
+                // Filter berdasarkan tahun angkatan
+                if ($request->filled('year')) {
+                    $query->whereRaw("CONCAT('20', SUBSTRING(Student_ID_Number, 5, 2)) = ?", [$request->year]);
+                }
+            })
+            ->with([
+                'student.programs' => function ($query) {
+                    // Menambahkan hubungan untuk status selesai
+                    $query->withPivot('isFinished');
+                }
+            ])
             ->get();
 
-        // Menyiapkan nama program studi
+        // Tentukan nama program studi sesuai login user
         $study_program_name = null;
-        if ($request->filled('study_program')) {
+        if (auth()->user()->hasRole('staff')) {
+            // Jika staff, ambil program studi yang terkait dengan staff
+            $study_program_name = auth()->user()->staff->studyProgram->study_program_Name ?? null;
+        } elseif ($request->filled('study_program')) {
+            // Jika admin dan ada parameter 'study_program' di request
             $studyProgram = StudyProgram::find($request->study_program);
             $study_program_name = $studyProgram->study_program_Name ?? null;
         }
 
-        // Menyiapkan data untuk view PDF
+        // Data untuk view PDF
         $data = [
             'users' => $users,
-            'year' => $request->year, // Mengirimkan tahun angkatan
-            'study_program_name' => $study_program_name, // Nama program studi
+            'year' => $request->year,
+            'study_program_name' => $study_program_name,
         ];
 
-        // Membuat nama file PDF dinamis
-    $fileName = ($study_program_name ?? 'semua_prodi') . '_' . ($request->year ?? 'semua_angkatan') . '.pdf';
-    $fileName = str_replace(' ', '_', strtolower($fileName)); // Mengganti spasi dengan underscore dan mengubah ke huruf kecil
+        // Nama file PDF
+        $fileName = ($study_program_name ?? 'semua_prodi') . '_' . ($request->year ?? 'semua_angkatan') . '.pdf';
+        $fileName = str_replace(' ', '_', strtolower($fileName)); // Format nama file
 
-    // Generate PDF menggunakan view
-    $pdf = PDF::loadView('dashboard.admin.pdf', $data);
-    return $pdf->stream($fileName);
+        // Generate PDF menggunakan view
+        $pdf = PDF::loadView('dashboard.admin.pdf', $data);
+        return $pdf->stream($fileName);
     }
-
-
     /**
      * Show the form for editing the specified resource.
      */

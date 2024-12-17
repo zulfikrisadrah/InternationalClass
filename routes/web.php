@@ -13,7 +13,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudyPlanController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\StudyProgramController;
+use App\Http\Controllers\OutboundLecturerController;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing.page');
 
@@ -57,6 +59,8 @@ Route::middleware('auth')->group(function () {
         Route::middleware('can:manage program')->group(function () {
             Route::resource('program', ProgramController::class);
             Route::resource('studyProgram', StudyProgramController::class);
+            Route::post('/admin/study-programs/{studyProgram}/partnerships', [PartnershipController::class, 'store'])->name('partnerships.store');
+            Route::post('/admin/study-programs/{studyProgram}/outbound-lecturers', [OutboundLecturerController::class, 'store'])->name('outboundLecturers.store');
         });
         Route::post('program/{programId}/enrollments/{studentId}/update-status', [ProgramController::class, 'updateStatus'])
         ->name('program.updateStatus');

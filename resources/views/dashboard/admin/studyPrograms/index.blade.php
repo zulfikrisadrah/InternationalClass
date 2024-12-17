@@ -42,6 +42,10 @@
                         </div>
 
                         <div class="hidden md:flex flex-row items-center gap-x-3">
+                            <a href="{{ route('admin.studyProgram.show', $program->ID_study_program) }}"
+                                class="font-bold py-4 px-6 bg-blueThird text-white rounded-3xl">
+                                Detail
+                            </a>
                             <a href="{{ route('admin.studyProgram.edit', $program->ID_study_program) }}"
                                 class="font-bold py-4 px-6 bg-blueThird text-white rounded-3xl">
                                 Edit

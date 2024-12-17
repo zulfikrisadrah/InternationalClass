@@ -68,6 +68,11 @@ class StudyProgramController extends Controller
 
         return redirect()->route('admin.studyProgram.index')->with('success', 'Study Program created successfully');
     }
+    
+    public function show(StudyProgram $studyProgram)
+    {
+        return view('dashboard.admin.studyPrograms.show', compact('studyProgram'));
+    }
 
     public function edit(StudyProgram $studyProgram)
     {

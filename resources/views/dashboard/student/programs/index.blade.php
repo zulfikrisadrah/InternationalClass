@@ -61,15 +61,22 @@
                         </div>
 
                         <!-- Execution Date -->
-                        <div class="flex flex-col items-center text-center w-[150px]">
+                        <div class="flex flex-col items-center text-center w-[170px]">
                             <p class="text-slate-500 font-semibold">Execution Date</p>
                             <p class="text-indigo-900 font-bold">
                                 {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }}
                             </p>
                         </div>
 
+                        <div class="flex flex-col items-center text-center w-[170px]">
+                            <p class="text-slate-500 font-semibold">Course Credits</p>
+                            <p class="text-indigo-900 font-bold">
+                                {{ $program->Course_Credits }} SKS
+                            </p>
+                        </div>
+
                         <!-- Participants Count and Limit -->
-                        <div class="flex flex-col items-center text-center w-[300px]">
+                        <div class="flex flex-col items-center text-center w-[170px]">
                             @php
                                 $approvedCount = $program->students()->wherePivot('status', 'approved')->count();
                                 $participantLimit = $program->Participants_Count;

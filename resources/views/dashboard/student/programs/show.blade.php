@@ -11,6 +11,7 @@
                     <h1 class="text-3xl font-bold text-indigo-950">{{ $program->program_Name }}</h1>
                     <p class="text-slate-500 text-sm mt-1">Country of Execution: {{ $program->Country_of_Execution }}</p>
                     <p class="text-slate-500 text-sm">Execution Date: {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }}</p>
+                    <p class="text-slate-500 text-sm">End Date: {{ \Carbon\Carbon::parse($program->End_Date)->format('d M Y') }}</p>
                 </div>
 
                 <!-- Program Image -->

@@ -137,29 +137,189 @@
                     <div class="flex flex-col gap-y-5">
                         @foreach ($users as $user)
                             <div class="item-card flex flex-row justify-between items-center">
-                                <div class="flex flex-row items-center gap-x-3">
+                                <div class="flex flex-row items-center gap-x-3 cursor-pointer" onclick="openModal('{{ $user->id }}')">
                                     <!-- User Info -->
                                     <div class="flex flex-col">
                                         <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[500px]">
-                                            {{ $user->name }}</h3>
+                                            {{ $user->name }}
+                                        </h3>
                                         <p class="text-black text-sm">{{ $user->email }}</p>
-
-                                        @if (
-                                            ($user->hasRole('student') && $user->student && $user->student->studyProgram) ||
-                                                ($user->hasRole('staff') && $user->staff && $user->staff->studyProgram))
-                                            <p class="text-gray-800 text-sm font-bold" style="padding-top: 10px">
+                                
+                                        @if (($user->hasRole('student') && $user->student && $user->student->studyProgram) ||
+                                            ($user->hasRole('staff') && $user->staff && $user->staff->studyProgram))
+                                            <p class="text-gray-800 text-sm font-bold pt-2">
                                                 {{ $user->hasRole('student') ? $user->student->studyProgram->study_program_Name : $user->staff->studyProgram->study_program_Name }}
                                             </p>
+                                        
+                                            @if (request()->get('role') == 'student' || request()->get('role') == '')
+                                                @php
+                                                    $isFinished = $user->student?->programs->pluck('pivot.isFinished')->contains(true);
+                                                @endphp
+                                            
+                                                <div class="text-white text-sm font-bold px-4 py-2 rounded-lg mt-2 inline-block 
+                                                    {{ $isFinished ? 'bg-green-500' : 'bg-red-500' }}" style="width: 110px; display: flex; align-items: center; justify-content: center;">
+                                                    <p class="text-center">
+                                                        {{ $isFinished ? 'Completed' : 'In Progress' }}
+                                                    </p>
+                                                </div>
+                                            @endif
+
+                                        
                                         @elseif(isset($programNames[$user->id]))
                                             <p class="text-gray-800 text-sm font-bold" style="padding-top: 10px">
                                                 {{ $programNames[$user->id] }}
                                             </p>
                                         @else
-                                            <p class="text-black text-sm font-bold" style="padding-top: 10px">Undefined
-                                            </p>
+                                            <p class="text-black text-sm font-bold" style="padding-top: 10px">Undefined</p>
                                         @endif
                                     </div>
                                 </div>
+                                
+                                <!-- Modal -->
+                                @if (request()->get('role') == 'student' || request()->get('role') == '')
+                                <div class="modal" id="user-modal-{{ $user->id }}">
+                                    <div class="modal-box max-w-3xl p-6 rounded-lg shadow-lg bg-white relative">
+                                       <!-- Modal Header -->
+                                        <div class="flex justify-between items-center bg-indigo-600 rounded-t-lg px-6 py-4">
+                                            <h3 class="text-2xl font-bold text-white flex items-center">
+                                                <!-- Icon Profile -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 2a7 7 0 017 7 7 7 0 01-14 0 7 7 0 017-7zm0 12c3.866 0 7 3.134 7 7v1H5v-1c0-3.866 3.134-7 7-7z"/>
+                                                </svg>
+                                                User Details
+                                            </h3>
+                                        </div>
+                                        <!-- User Table -->
+                                        <div class="overflow-x-auto">
+                                            <table class="table-auto w-full border-collapse border border-gray-200 mt-4">
+                                                <thead>
+                                                    <tr class="bg-gray-300">
+                                                        <th class="py-3 px-4 text-left text-gray-700 font-semibold border-b">Attribute</th>
+                                                        <th class="py-3 px-4 text-left text-gray-700 font-semibold border-b">Details</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">Name</td>
+                                                        <td class="py-3 px-4">{{ $user->name }}</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">NIM</td>
+                                                        <td class="py-3 px-4">{{ $user->username }}</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">Email</td>
+                                                        <td class="py-3 px-4">{{ $user->email }}</td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">Study Program</td>
+                                                        <td class="py-3 px-4">
+                                                            @if ($user->hasRole('student') && $user->student && $user->student->studyProgram)
+                                                                {{ $user->student->studyProgram->study_program_Name }}
+                                                            @elseif ($user->hasRole('staff') && $user->staff && $user->staff->studyProgram)
+                                                                {{ $user->staff->studyProgram->study_program_Name }}
+                                                            @else
+                                                                Undefined
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">Program Name</td>
+                                                        <td class="py-3 px-4">
+                                                            @if (isset($user->student) && $user->student->programs->isNotEmpty())
+                                                                <a href="{{ route('admin.program.show', $user->student->programs->first()->ID_program) }}"
+                                                                    class="text-white text-sm px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition duration-200">
+                                                                    {{ $user->student->programs->first()->program_Name }}
+                                                                </a>
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">IE Program</td>
+                                                        <td class="py-3 px-4">
+                                                            @if (isset($user->student) && $user->student->programs->isNotEmpty())
+                                                                {{ $user->student->programs->first()->ieProgram->ie_program_name ?? 'Nama program tidak ditemukan' }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">Date Program</td>
+                                                        <td class="py-3 px-4">
+                                                            @if (isset($user->student) && $user->student->programs->isNotEmpty())
+                                                                {{ \Carbon\Carbon::parse($user->student->programs->first()->Execution_Date)->format('d F Y') }} - 
+                                                                {{ \Carbon\Carbon::parse($user->student->programs->first()->End_Date)->format('d F Y') }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hover:bg-gray-50 border-b">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">Status</td>
+                                                        <td class="py-3 px-4">
+                                                            @if (isset($user->student) && $user->student->programs->isNotEmpty())
+                                                                @php
+                                                                    $status = $user->student->programs->first()->pivot->status ?? null;
+                                                                @endphp
+                                                                @if ($status === 'pending')
+                                                                    <span class="inline-block px-3 py-1 text-sm font-bold rounded-lg text-white bg-orange-500">
+                                                                        Waiting for Approval
+                                                                    </span>
+                                                                @else
+                                                                    @php
+                                                                        $isFinished = $user->student->programs->pluck('pivot.isFinished')->contains(true);
+                                                                    @endphp
+                                                                    <span class="inline-block px-3 py-1 text-sm font-bold rounded-lg text-white
+                                                                        {{ $isFinished ? 'bg-green-500' : 'bg-red-500' }}">
+                                                                        {{ $isFinished ? 'Completed' : 'In Progress' }}
+                                                                    </span>
+                                                                @endif
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                                                                        
+                                                    <tr class="hover:bg-gray-50">
+                                                        <td class="py-3 px-4 text-gray-600 font-medium">Logbook</td>
+                                                        <td class="py-3 px-4">
+                                                            @if (isset($user->student) && $user->student->programs->isNotEmpty())
+                                                                <a href="{{ route('admin.program.show', $user->student->programs->first()->ID_program) }}"
+                                                                    class="text-white text-sm px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition duration-200">
+                                                                    Read Logbook
+                                                                </a>
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Modal Footer -->
+                                        <div class="flex justify-end mt-4">
+                                            <button onclick="closeModal('{{ $user->id }}')"
+                                                class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-200">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+                                <script>
+                                    function openModal(userId) {
+                                        document.getElementById('user-modal-' + userId).classList.add('modal-open');
+                                    }
+                                
+                                    function closeModal(userId) {
+                                        document.getElementById('user-modal-' + userId).classList.remove('modal-open');
+                                    }
+                                </script>
+                                
 
                                 <!-- Action Buttons -->
                                 <div class="hidden md:flex flex-row items-center gap-x-3">
@@ -285,11 +445,19 @@
                             </div>
                         @endforeach
                     </div>
-                    @if ($users->count() >= 5)
+                    @if ($users->count() > 5)
                     <div class="mt-6">
                         {{ $users->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>
                 @endif
+                @endif
+            </div>
+            <div class="flex justify-end mb-4">
+                @if (!request()->filled('status') && request()->query('role') != 'staff')
+                <a href="{{ route('admin.user.generate-pdf', request()->query()) }}" target="_blank"
+                    class="flex items-center space-x-2 mt-5 bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600">
+                    <span>Print PDF</span>
+                </a>
                 @endif
             </div>
         </div>

@@ -119,7 +119,7 @@
                 </a>
             </li>
             <li class="mt-8 w-full">
-                <a href="{{ route('admin.user.index') }}"
+                <a href="{{ route('staff.user.index') }}"
                     class="flex gap-2.5 py-2 px-3 text-xl font-bold {{ request()->routeIs('admin.user.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">
                     <i class="object-contain shrink-0 my-auto aspect-[0.96] w-[25px]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor">

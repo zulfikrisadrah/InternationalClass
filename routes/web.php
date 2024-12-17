@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('event', EventController::class);
         });
         Route::middleware('can:manage user')->group(function () {
+            Route::get('user/generate-pdf', [UserController::class, 'generatePdf'])->name('user.generate-pdf');
             Route::resource('user', UserController::class);
         });
         Route::middleware('can:manage program')->group(function () {

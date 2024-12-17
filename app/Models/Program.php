@@ -14,6 +14,7 @@ class Program extends Model
         'program_description',
         'Country_of_Execution',
         'Execution_Date',
+        'End_Date',
         'Participants_Count',
         'program_Image',
         'ID_Ie_program',
@@ -36,7 +37,7 @@ class Program extends Model
     public function students()
     {
         return $this->belongsToMany(Student::class, 'program_enrollment', 'ID_program', 'ID_Student')
-                    ->withPivot('status')
+                    ->withPivot('status', 'isFinished')
                     ->withTimestamps();
     }
 }

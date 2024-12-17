@@ -114,11 +114,18 @@
                             name="international_exposure" :value="old('international_exposure')" />
                     </div>
 
-                    <div class="mt-4">
+                    <div x-data="{ preview: null }" class="mt-4">
                         <x-input-label for="study_program_Image" :value="__('Image')" />
-                        <input type="file" id="study_program_Image" name="study_program_Image"
-                            class="block mt-1 w-full" accept="image/*">
+                        <input type="file" id="study_program_Image" name="study_program_Image" required class="block mt-1 w-full"
+                            accept="image/*" @change="preview = URL.createObjectURL($event.target.files[0])">
+
+                        <div x-show="preview" class="mt-4">
+                            <p class="text-gray-600">Preview Image:</p>
+                            <img :src="preview" alt="Image Preview" class="object-contain rounded-lg border"
+                                style="max-width: 100%; height: auto; max-height: 200px;">
+                        </div>
                     </div>
+
                     <h3 class="text-xl font-bold mt-8 mb-4">Curriculum Details</h3>
 
                     <div class="mt-4">

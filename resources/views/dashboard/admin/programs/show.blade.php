@@ -108,8 +108,10 @@
                                                 @csrf
                                                 <input type="hidden" name="action" value="{{ $isFinished ? 'unfinish' : 'finish' }}">
                                                 <button type="submit" class="{{ $isFinished ? 'text-red-500' : 'text-green-500'  }}">
-                                                    {{ $isFinished ? 'Cancel' : 'Finish' }}
-                                                </button>
+
+                                                    {{ $isFinished ? 'Cancel' : 'Complete' }}
+                                                </button>                                                                                               
+
                                             </form>
                                             <label for="delete-modal-{{ $student->ID_Student }}" class="text-red-500 cursor-pointer ml-3">Delete</label>
                                             <input type="checkbox" id="delete-modal-{{ $student->ID_Student }}" class="modal-toggle" />

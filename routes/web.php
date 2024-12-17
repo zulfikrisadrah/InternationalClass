@@ -15,9 +15,6 @@ use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\StudyProgramController;
 
-Route::get('/generate-pdf', [UserController::class, 'generatePdf']);
-
-
 Route::get('/', [LandingPageController::class, 'index'])->name('landing.page');
 
 Route::get('/event', [LandingPageController::class, 'event'])->name('event.index');

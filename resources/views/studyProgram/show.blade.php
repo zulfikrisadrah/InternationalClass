@@ -4,8 +4,8 @@
 
 @section('content')
     <div class="flex flex-col leading-none whitespace-nowrap">
-        <div
-            class="flex flex-col justify-center items-start px-16 py-8 w-full bg-blueSecondary max-md:px-5 max-md:max-w-full">
+        <div class="flex flex-col justify-center items-start px-16 py-8 w-full bg-blueSecondary max-md:px-5 max-md:max-w-full"
+            data-aos="fade-down">
             <div class="breadcrumbs text-white">
                 <ul>
                     <li><a href="{{ route('studyProgram.index') }}">Study Programs</a></li>
@@ -17,7 +17,7 @@
 
     <section class="container mx-auto px-4 py-12 max-w-7xl">
         <div class="space-y-6">
-            <div class="text-center md:text-left">
+            <div class="text-center md:text-left" data-aos="fade-right">
                 <h2 class="text-3xl md:text-4xl font-bold text-blueThird mb-2">
                     {{ $programs->study_program_Name }}
                 </h2>
@@ -26,7 +26,7 @@
                 </p>
             </div>
 
-            <div class="card bg-base-100 shadow-xl p-6 md:p-8">
+            <div class="card bg-base-100 shadow-xl p-6 md:p-8" data-aos="fade-up">
                 <div class="card-body">
                     <h3 class="card-title text-xl md:text-2xl text-blueThird">
                         Program Description
@@ -37,14 +37,14 @@
                 </div>
             </div>
 
-            <div class="card bg-base-100 shadow-xl p-6 md:p-8">
+            <div class="card bg-base-100 shadow-xl p-6 md:p-8" data-aos="fade-up">
                 <div class="card-body">
                     <h3 class="card-title text-xl md:text-2xl text-blueThird">
                         Program Highlights
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                         <div class="space-y-4">
-                            <div class="flex items-center bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center bg-blue-50 p-4 rounded-lg shadow-sm" data-aos="fade-right">
                                 <div class="bg-blueThird text-white rounded-full p-3 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -60,7 +60,8 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-green-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center bg-green-50 p-4 rounded-lg shadow-sm" data-aos="fade-right"
+                                data-aos-delay="100">
                                 <div class="bg-green-500 text-white rounded-full p-3 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -76,7 +77,8 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-teal-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center bg-teal-50 p-4 rounded-lg shadow-sm" data-aos="fade-right"
+                                data-aos-delay="200">
                                 <div class="bg-teal-500 text-white rounded-full p-3 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -94,7 +96,7 @@
                             </div>
                         </div>
                         <div class="space-y-4">
-                            <div class="flex items-center bg-purple-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center bg-purple-50 p-4 rounded-lg shadow-sm" data-aos="fade-left">
                                 <div class="bg-purple-500 text-white rounded-full p-3 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -109,7 +111,8 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-orange-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center bg-orange-50 p-4 rounded-lg shadow-sm" data-aos="fade-left"
+                                data-aos-delay="100">
                                 <div class="bg-orange-500 text-white rounded-full p-3 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -125,7 +128,8 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex items-center bg-yellow-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center bg-yellow-50 p-4 rounded-lg shadow-sm" data-aos="fade-left"
+                                data-aos-delay="200">
                                 <div class="bg-yellow-500 text-white rounded-full p-3 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
@@ -145,8 +149,8 @@
                 </div>
             </div>
 
-            <div
-                class="card bg-gradient-to-br from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 transition-all duration-300 transform hover:-translate-y-2 shadow-lg">
+            <div class="card bg-gradient-to-br from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 transition-all duration-300 transform hover:-translate-y-2 shadow-lg"
+                data-aos="fade-up">
                 <div class="card-body">
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="text-xl font-bold text-blueThird">
@@ -154,10 +158,10 @@
                         </h4>
                     </div>
                     <div class="space-y-3">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center" data-aos="fade-right">
                             <div class="flex items-center space-x-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blueThird" viewBox="0 0 20 20"
-                                    fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blueThird"
+                                    viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                                     <path fill-rule="evenodd"
                                         d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
@@ -169,7 +173,7 @@
                                 {{ $programs->total_courses }}
                             </span>
                         </div>
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center" data-aos="fade-right" data-aos-delay="100">
                             <div class="flex items-center space-x-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blueThird"
                                     viewBox="0 0 20 20" fill="currentColor">
@@ -182,7 +186,7 @@
                                 {{ $programs->rps_courses_in_english }}
                             </span>
                         </div>
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center" data-aos="fade-right" data-aos-delay="100">
                             <div class="flex items-center space-x-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blueThird"
                                     viewBox="0 0 20 20" fill="currentColor">
@@ -196,7 +200,7 @@
                                 {{ $programs->teaching_materials_in_english }}
                             </span>
                         </div>
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center" data-aos="fade-right" data-aos-delay="100">
                             <div class="flex items-center space-x-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blueThird"
                                     viewBox="0 0 20 20" fill="currentColor">
@@ -211,7 +215,7 @@
                                 {{ $programs->courses_delivered_in_english }}
                             </span>
                         </div>
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center" data-aos="fade-right" data-aos-delay="100">
                             <div class="flex items-center space-x-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blueThird"
                                     viewBox="0 0 20 20" fill="currentColor">
@@ -229,14 +233,14 @@
                 </div>
             </div>
 
-            <div class="card bg-base-100 shadow-xl p-6 md:p-8">
+            <div class="card bg-base-100 shadow-xl p-6 md:p-8 data-aos="fade-up"">
                 <div class="card-body">
                     <h3 class="card-title text-xl md:text-2xl text-blueThird">
                         Partnership
                     </h3>
                     <div class="grid grid-cols-1 gap-6 mt-4">
                         @foreach ($programs->partnerships as $partnership)
-                            <div class="flex items-center bg-blue-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center bg-blue-50 p-4 rounded-lg shadow-sm" data-aos="fade-up">
                                 <div class="bg-blueThird text-white rounded-full p-3 mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">

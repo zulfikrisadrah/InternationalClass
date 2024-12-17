@@ -92,14 +92,14 @@
                         <x-text-input id="international_exposure" class="block mt-1 w-full" type="text" name="international_exposure" :value="old('international_exposure', $studyProgram->international_exposure)" />
                     </div>
 
-                    <div class="mt-4">
+                    <div x-data="{ preview: '{{ asset('storage/' . $studyProgram->study_program_Image) }}' }" class="mt-4">
                         <x-input-label for="study_program_Image" :value="__('Image')" />
-                        <input type="file" id="study_program_Image" name="study_program_Image" class="block mt-1 w-full" accept="image/*">
-                        @if ($studyProgram->study_program_Image)
-                            <div class="mt-2">
-                                <img src="{{ asset('storage/' . $studyProgram->study_program_Image) }}" alt="Program Image" class="w-32 h-32 object-cover rounded-lg">
-                            </div>
-                        @endif
+                        <input type="file" id="study_program_Image" name="study_program_Image" required class="block mt-1 w-full"
+                            accept="image/*" @change="preview = URL.createObjectURL($event.target.files[0])">
+
+                        <div x-show="preview" class="mt-4">
+                            <img :src="preview" alt="Image Preview" class="w-32 h-32 object-cover rounded-lg">
+                        </div>
                     </div>
 
                     <h3 class="text-xl font-bold mt-8 mb-4">Curriculum Details</h3>

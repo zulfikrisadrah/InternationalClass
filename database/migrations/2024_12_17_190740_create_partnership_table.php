@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('partnership', function (Blueprint $table) {
             $table->id('ID_partnership');
-            $table->string('mou_moa_ia_number')->nullable(); // Nomor MoU/MoA/IA (Nullable)
-            $table->string('title_of_cooperation')->nullable(); // Judul Kerjasama (Nullable)
-            $table->year('validity_period')->nullable(); // Masa Berlaku (Nullable)
-            $table->unsignedBigInteger('study_program_id')->nullable(); // Kolom relasi ke tabel study_programs (Nullable)
-            $table->timestamps(); // created_at dan updated_at
+            $table->string('mou_moa_ia_number')->nullable(); 
+            $table->string('title_of_cooperation')->nullable(); 
+            $table->year('validity_period')->nullable(); 
+            $table->unsignedBigInteger('ID_study_program')->nullable();
+            $table->timestamps();
 
-            // Menambahkan foreign key yang merujuk ke study_programs
-            $table->foreign('study_program_id')->references('ID_study_program')->on('study_programs')->onDelete('cascade');
+
+            $table->foreign('ID_study_program')->references('ID_study_program')->on('study_programs')->onDelete('cascade');
         });
     }
 

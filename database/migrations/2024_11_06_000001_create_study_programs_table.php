@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('international_accreditation');
             $table->string('approval_sk')->nullable();
             $table->year('opening_year')->nullable();
-            $table->string('manager_name')->nullable();
-            $table->string('manager_contact')->nullable();
+            $table->string('director_name')->nullable();
+            $table->string('director_contact')->nullable();
             $table->double('ukt_fee')->nullable();
             $table->double('ipi_fee')->nullable();
             $table->string('international_exposure')->nullable();

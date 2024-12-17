@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             FacultySeeder::class,
             StudyProgramSeeder::class,
             IeProgramSeeder::class,
+            PartnershipSeeder::class,
+            OutboundLecturerSeeder::class,
         ]);
     }
 }

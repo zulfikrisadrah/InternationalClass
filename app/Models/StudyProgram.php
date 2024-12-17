@@ -19,8 +19,8 @@ class StudyProgram extends Model
         'international_accreditation',
         'approval_sk',
         'opening_year',
-        'manager_name',
-        'manager_contact',
+        'director_name',
+        'director_contact',
         'ukt_fee',
         'ipi_fee',
         'international_exposure',
@@ -43,6 +43,14 @@ class StudyProgram extends Model
     public function programs()
     {
         return $this->belongsToMany(Program::class, 'program_study_program', 'study_program_id', 'program_id');
+    }
+    public function partnerships()
+    {
+    return $this->hasMany(Partnership::class, 'ID_study_program', 'ID_study_program');
+    }
+    public function outboundLecturers()
+    {
+        return $this->hasMany(OutboundLecturer::class, 'ID_study_program', 'ID_study_program');
     }
     public function staff()
     {

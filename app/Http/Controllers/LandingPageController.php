@@ -48,23 +48,11 @@ class LandingPageController extends Controller
     }
     public function studyProgramShow($ID_study_program)
     {
-        $programs = StudyProgram::with('faculty', 'curriculums')->findOrFail($ID_study_program);
-        $curriculums = $programs->curriculums;
+        $programs = StudyProgram::with('faculty', 'partnerships')->findOrFail($ID_study_program);
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
             'title' => $programs->study_program_Name,
-            'description' => $programs->study_program_Description,
         ];
-        // Mengambil data program studi dari konfigurasi
-        $data_config = config("studyprogram.$ID_study_program", [
-            'description' => 'Deskripsi tidak tersedia',
-            'whychoose' => 'Alasan tidak tersedia',
-            'prospects' => [],
-        ]);
-
-        // Menyiapkan data untuk dikirim ke view
-        $program = $data_config;  // Program studi yang ditemukan
-        $prospects = $data_config['prospects']; // Prospek yang relevan
 
         // Mengambil berita yang relevan dengan program studi
         $news = News::where('ID_study_program', $ID_study_program)
@@ -77,7 +65,7 @@ class LandingPageController extends Controller
             ->take(2)
             ->get();
 
-        return view('studyProgram.show', compact('programs', 'data', 'curriculums', 'data_config', 'prospects', 'news', 'events'));
+        return view('studyProgram.show', compact('programs', 'data', 'news', 'events'));
     }
 
     // Untuk di halaman /news

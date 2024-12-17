@@ -48,7 +48,7 @@
                                     {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }}</h3>
                             </div>
 
-                            <div class="flex flex-col items-center text-center w-[50px]">
+                            <div class="flex flex-col items-center text-center w-[70px]">
                                 @php
                                     $approvedCount = $program->students()->wherePivot('status', 'approved')->count();
                                     $participantLimit = $program->Participants_Count;
@@ -124,6 +124,9 @@
                                                     Student Name</th>
                                                 <th
                                                     class="px-6 py-3 text-left text-sm font-medium text-gray-500 border-b border-gray-300">
+                                                    Study Program</th>
+                                                <th
+                                                    class="px-6 py-3 text-left text-sm font-medium text-gray-500 border-b border-gray-300">
                                                     Status</th>
                                                 <th
                                                     class="px-6 py-3 text-left text-sm font-medium text-gray-500 border-b border-gray-300">
@@ -135,6 +138,8 @@
                                                 <tr class="border-b border-gray-300">
                                                     <td class="px-6 py-4 text-sm text-gray-900">
                                                         {{ $student->Student_Name }}</td>
+                                                    <td class="px-6 py-4 text-sm text-gray-900">
+                                                        {{ $student->studyProgram->study_program_Name }}</td>
                                                     <td class="px-6 py-4 text-sm text-gray-500">
                                                         {{ $student->pivot->status ?? 'Pending' }}
                                                     </td>

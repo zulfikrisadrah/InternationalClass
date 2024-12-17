@@ -20,7 +20,7 @@
 
     <div class="mt-6 text-black">
         <h3 class="text-2xl font-semibold mb-2">Deskripsi Program</h3>
-        <p>{{ $data_config['description'] }}</p>
+        <p>{{ $programs->study_program_Description }}</p>
     </div>
 
     <div class="mt-6 text-black">
@@ -28,23 +28,37 @@
             Why Should You Choose <span class="capitalize">{{ $programs->study_program_Name }}</span>
         </h3>
 
-        <p>{{ $data_config['whychoose'] }}</p>
+        <ul class="list-disc pl-5">
+            <li>Degree: {{ $programs->degree }}</li>
+            <li>Classrooms: {{ $programs->classrooms }}</li>
+            <li>Lecturers: {{ $programs->lecturers }}</li>
+            <li>National Accreditation: {{ $programs->national_accreditation }}</li>
+            <li>International Accreditation: {{ $programs->international_accreditation }}</li>
+            <li>Opening Year: {{ $programs->opening_year }}</li>
+            <li>Manager: {{ $programs->manager_name }} ({{ $programs->manager_contact }})</li>
+            <li>UKT Fee: Rp {{ number_format($programs->ukt_fee, 2, ',', '.') }}</li>
+            <li>IPI Fee: Rp {{ number_format($programs->ipi_fee, 2, ',', '.') }}</li>
+            <li>International Exposure: {{ $programs->international_exposure }}</li>
+        </ul>
     </div>
 
     <div class="mt-8">
-        <h3 class="text-2xl font-semibold mb-4">Job Prospects</h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($prospects as $prospect)
-                <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl">
-                    <div class="flex flex-col space-y-4">
-                        <h4 class="text-xl font-semibold text-blueThird">{{ $prospect['name'] }}</h4>
-                        <p class="text-neutral-600">{{ $prospect['description'] }}</p>
+        <h3 class="text-2xl font-semibold mb-4">Curriculum</h3>
+        @if ($curriculums->isEmpty())
+            <p class="text-black">No curriculum available for this program.</p>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach($curriculums as $curriculum)
+                    <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl">
+                        <h4 class="text-xl font-semibold text-blueThird">{{ $curriculum->curriculum_name }}</h4>
+                        <p class="text-neutral-600 mt-2">Total Courses: {{ $curriculum->total_courses }}</p>
+                        <p class="text-neutral-600 mt-1">Courses in English: {{ $curriculum->courses_in_english }}</p>
                     </div>
-                </div>
-            @endforeach
-        </div>
+                @endforeach
+            </div>
+        @endif
     </div>
+
 </section>
 
 <section class="flex overflow-hidden flex-col py-12 bg-gray-200" data-aos="fade-up">
@@ -55,34 +69,9 @@
                 data-aos="fade-down" data-aos-duration="1000">
                 News and <span class="text-stone-900">Events</span>
             </h2>
-            <!-- Buttons and Event Categories -->
-            <div
-                class="flex flex-wrap gap-5 justify-between mt-24 w-full text-center max-md:mt-10 max-md:max-w-full">
-                <h2 class="text-black text-3xl font-semibold ps-4" data-aos="fade-right" data-aos-duration="1000">
-                    Latest News</h2>
-                <div class="flex gap-10">
-                    <a href="{{ route('news.index') }}">
-                        <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5"
-                            data-aos="zoom-in" data-aos-delay="400">
-                            View all
-                        </button>
-                    </a>
-
-                    <h2 class="text-black text-3xl font-semibold ps-4" data-aos="fade-left"
-                        data-aos-duration="1000">Upcoming Events</h2>
-                </div>
-                <a href="{{ route('event.index') }}">
-                    <button class="btn btn-info px-6 py-2.5 text-white rounded-[100px] max-md:px-5"
-                        data-aos="zoom-in" data-aos-delay="400">
-                        View all
-                    </button>
-                </a>
-
-            </div>
-            <!-- Articles Section -->
             <div class="mt-7 w-full max-w-[1246px] max-md:max-w-full">
                 <div class="flex gap-5 max-md:flex-col">
-                    <!-- Articles List -->
+                    <!-- News Articles -->
                     <div class="flex flex-col w-[56%] max-md:ml-0 max-md:w-full">
                         <div class="flex flex-col w-full max-md:mt-10 max-md:max-w-full">
                             <div class="flex flex-wrap gap-6 justify-center items-center text-xs text-black">
@@ -120,31 +109,25 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Sidebar Articles -->
+                    <!-- Sidebar Events -->
                     <aside class="flex flex-col ml-5 w-[44%] max-md:ml-0 max-md:w-full">
                         @foreach ($events as $event)
-                                    <a a href="{{ route('event.show', $event->ID_Event) }}"
-                                        class="flex flex-col mb-5 items-start py-8 pr-3.5 pl-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full"
-                                        data-aos="fade-left" data-aos-delay="200">
-
-                                        <h4 class="font-semibold">
-                                            {{ Str::limit($event->Event_Title, 100) }}
-                                        </h4>
-
-                                        <p class="self-stretch mt-1 max-md:max-w-full break-words">
-                                            {{ Str::limit(html_entity_decode(strip_tags($event->Event_Content)), 100, '...') }}
-                                        </p>
-                                        <div class="flex gap-1.5 mt-4 text-xs text-stone-900">
-                                            <img loading="lazy"
-                                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/54dd47234fe65d04e71c811fa488ce1f689e2dcd29f8ab5867c046e648130cf9?placeholderIfAbsent=true&apiKey=7c9559411ddd4cc5a44b09e523cbfed7"
-                                                alt="Calendar Icon"
-                                                class="object-contain shrink-0 self-start w-5 aspect-square" />
-                                            <time datetime="{{ $event->Event_Date->format('Y-m-d') }}">
-                                                {{ $event->Event_Date->format('d M, Y') }}
-                                            </time>
-                                        </div>
-                                    </a>
-                                @endforeach
+                            <a href="{{ route('event.show', $event->ID_Event) }}"
+                                class="flex flex-col mb-5 items-start py-8 pr-3.5 pl-7 w-full bg-white rounded-3xl border-indigo-900 border-t-[6px] shadow-[0px_2px_10px_rgba(0,0,0,0.25)] max-md:pl-5 max-md:max-w-full"
+                                data-aos="fade-left" data-aos-delay="200">
+                                <h4 class="font-semibold">
+                                    {{ Str::limit($event->Event_Title, 100) }}
+                                </h4>
+                                <p class="self-stretch mt-1 max-md:max-w-full break-words">
+                                    {{ Str::limit(html_entity_decode(strip_tags($event->Event_Content)), 100, '...') }}
+                                </p>
+                                <div class="flex gap-1.5 mt-4 text-xs text-stone-900">
+                                    <time datetime="{{ $event->Event_Date->format('Y-m-d') }}">
+                                        {{ $event->Event_Date->format('d M, Y') }}
+                                    </time>
+                                </div>
+                            </a>
+                        @endforeach
                     </aside>
                 </div>
             </div>

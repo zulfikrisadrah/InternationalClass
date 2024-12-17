@@ -17,6 +17,22 @@ return new class extends Migration
             $table->string('degree');
             $table->text('study_program_Description');
             $table->string('study_program_Image');
+            $table->integer('classrooms')->default(0);
+            $table->integer('lecturers')->default(0);
+            $table->string('national_accreditation');
+            $table->string('international_accreditation');
+            $table->string('approval_sk')->nullable();
+            $table->year('opening_year')->nullable();
+            $table->string('manager_name')->nullable();
+            $table->string('manager_contact')->nullable();
+            $table->double('ukt_fee')->nullable();
+            $table->double('ipi_fee')->nullable();
+            $table->string('international_exposure')->nullable();
+            $table->integer('total_courses')->default(0);
+            $table->integer('rps_courses_in_english')->default(0);
+            $table->integer('teaching_materials_in_english')->default(0);
+            $table->integer('courses_delivered_in_english')->default(0);
+            $table->integer('courses_fully_filled_in_sikola')->default(0);
             $table->unsignedBigInteger('ID_Faculty');
 
             $table->foreign('ID_Faculty')->references('ID_Faculty')->on('faculties')->onDelete('cascade');

@@ -13,16 +13,16 @@
                     <div class="overflow-y-auto" style="max-height: 350px;">
                         @forelse($agendas as $agenda)
                             <div class="flex items-center cursor-pointer hover:bg-gray-200 hover:bg-opacity-75 py-2 px-3 rounded-lg transition duration-300 ease-in-out">
-                                <div class="flex-1 cursor-pointer" 
+                                <div class="flex-1 cursor-pointer"
                                     onclick="openModal('{{ $agenda->title }}', '{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }}', '{{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}', '{{ $agenda->description }}')">
-                                    <div class="font-bold text-sm text-blue-500">{{ $agenda->title }}</div>
-                                    <div class="text-xs text-blue-400">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
+                                    <div class="font-bold text-sm text-blueThird">{{ $agenda->title }}</div>
+                                    <div class="text-xs text-black">{{ \Carbon\Carbon::parse($agenda->start)->format('d F Y') }} - {{ \Carbon\Carbon::parse($agenda->end)->format('d F Y') }}</div>
                                 </div>
                             </div>
                         @empty
                             <div class="text-center text-gray-500">No events found.</div>
                         @endforelse
-                    </div>    
+                    </div>
                 </div>
 
                 <div class="flex-1 flex-col bg-white rounded-lg shadow-lg p-6 max-w-full h-full lg:w-2/3">

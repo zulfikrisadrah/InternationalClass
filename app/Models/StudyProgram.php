@@ -13,7 +13,23 @@ class StudyProgram extends Model
         'study_program_Description',
         'International_Accreditation',
         'study_program_Image',
-        'ID_Faculty'
+        'classrooms',
+        'lecturers',
+        'national_accreditation',
+        'international_accreditation',
+        'approval_sk',
+        'opening_year',
+        'manager_name',
+        'manager_contact',
+        'ukt_fee',
+        'ipi_fee',
+        'international_exposure',
+        'ID_Faculty',
+        'total_courses',
+        'rps_courses_in_english',
+        'teaching_materials_in_english',
+        'courses_delivered_in_english',      
+        'courses_fully_filled_in_sikola',
     ];
 
     public function faculty()
@@ -26,7 +42,7 @@ class StudyProgram extends Model
     }
     public function programs()
     {
-        return $this->hasMany(Program::class, 'ID_study_program');
+        return $this->belongsToMany(Program::class, 'program_study_program', 'study_program_id', 'program_id');
     }
     public function staff()
     {

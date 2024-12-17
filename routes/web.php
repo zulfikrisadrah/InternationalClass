@@ -7,12 +7,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\CalenderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudyPlanController;
-use App\Http\Controllers\LandingPageController;
-use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\TranscriptController;
+use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\StudyProgramController;
 
 Route::get('/generate-pdf', [UserController::class, 'generatePdf']);
 
@@ -58,6 +59,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::middleware('can:manage program')->group(function () {
             Route::resource('program', ProgramController::class);
+            Route::resource('studyProgram', StudyProgramController::class);
         });
         Route::post('program/{programId}/enrollments/{studentId}/update-status', [ProgramController::class, 'updateStatus'])
         ->name('program.updateStatus');

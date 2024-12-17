@@ -126,22 +126,22 @@ class ProgramController extends Controller
     {
         $action = $request->input('action');
         $status = $request->input('status');
-        
+
         $program = Program::findOrFail($programId);
-        
+
         // Pastikan student yang diubah ada dalam daftar
         $student = $program->students()->where('program_enrollment.ID_Student', $studentId)->first();
-        
+
         if ($student) {
             if (in_array($action, ['finish', 'unfinish'])) {
                 if ($action === 'finish') {
                     $program->students()->updateExistingPivot($student->ID_Student, ['isFinished' => 1]);
                     return back()->with('success', 'Student marked as finished.')
-                                 ->withInput();  
+                                 ->withInput();
                 } elseif ($action === 'unfinish') {
                     $program->students()->updateExistingPivot($student->ID_Student, ['isFinished' => 0]);
                     return back()->with('success', 'Student marked as unfinished.')
-                                 ->withInput(); 
+                                 ->withInput();
                 }
             }
 
@@ -150,7 +150,7 @@ class ProgramController extends Controller
                 return back()->with('success', 'Student enrollment deleted.')
                              ->withInput();
             }
-    
+
             // Jika status approved atau rejected
             if (in_array($status, ['approved', 'rejected'])) {
                 if ($status === 'approved') {
@@ -158,19 +158,19 @@ class ProgramController extends Controller
                 } elseif ($status === 'rejected') {
                     $program->students()->detach($student->ID_Student);
                 }
-    
+
                 $approvedCount = $program->students()->wherePivot('status', 'approved')->count();
-    
+
                 if ($approvedCount >= $program->Participants_Count) {
                     $program->students()->wherePivot('status', 'pending')->detach();
                 }
-    
+
                 return redirect()->route('admin.program.index')->with('success', 'Enrollment status updated.');
             }
-    
+
             return redirect()->route('admin.program.index')->with('error', 'Invalid action or status.');
         }
-    
+
         return redirect()->route('admin.program.index')->with('error', 'Enrollment not found.');
     }
 
@@ -204,6 +204,7 @@ class ProgramController extends Controller
                 'Execution_Date' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
                 'End_Date' => 'required|date|after_or_equal:Execution_Date',
                 'Participants_Count' => 'required|integer|min:1',
+                'Course_Credits' => 'required|integer|min:1',
                 'program_Image' => 'required|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
                 'ID_study_program' => 'required|array', // Expecting an array of study programs
@@ -241,6 +242,7 @@ class ProgramController extends Controller
                 'Execution_Date' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
                 'End_Date' => 'required|date|after_or_equal:Execution_Date',
                 'Participants_Count' => 'required|integer|min:1',
+                'Course_Credits' => 'required|integer|min:1',
                 'program_Image' => 'required|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
             ]);
@@ -316,6 +318,7 @@ class ProgramController extends Controller
                 'Execution_Date' => 'required|date',
                 'End_Date' => 'required|date|after_or_equal:Execution_Date',
                 'Participants_Count' => 'required|integer|min:1',
+                'Course_Credits' => 'required|integer|min:1',
                 'program_Image' => 'nullable|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
                 'ID_study_program' => 'required|array', // Pastikan berupa array
@@ -329,6 +332,7 @@ class ProgramController extends Controller
                 'Execution_Date' => 'required|date',
                 'End_Date' => 'required|date|after_or_equal:Execution_Date',
                 'Participants_Count' => 'required|integer|min:1',
+                'Course_Credits' => 'required|integer|min:1',
                 'program_Image' => 'nullable|image|max:2048',
                 'ID_Ie_program' => 'required|exists:ie_programs,ID_Ie_program',
             ]);

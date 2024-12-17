@@ -144,27 +144,42 @@
                                             {{ $user->name }}
                                         </h3>
                                         <p class="text-black text-sm">{{ $user->email }}</p>
-                                
+                                    
                                         @if (($user->hasRole('student') && $user->student && $user->student->studyProgram) ||
                                             ($user->hasRole('staff') && $user->staff && $user->staff->studyProgram))
                                             <p class="text-gray-800 text-sm font-bold pt-2">
                                                 {{ $user->hasRole('student') ? $user->student->studyProgram->study_program_Name : $user->staff->studyProgram->study_program_Name }}
                                             </p>
-                                        
+                                    
                                             @if (request()->get('role') == 'student' || request()->get('role') == '')
                                                 @php
-                                                    $isFinished = $user->student?->programs->pluck('pivot.isFinished')->contains(true);
+                                                    $pivot = $user->student?->programs->first()->pivot ?? null;
                                                 @endphp
-                                            
-                                                <div class="text-white text-sm font-bold px-4 py-2 rounded-lg mt-2 inline-block 
-                                                    {{ $isFinished ? 'bg-green-500' : 'bg-red-500' }}" style="width: 110px; display: flex; align-items: center; justify-content: center;">
-                                                    <p class="text-center">
-                                                        {{ $isFinished ? 'Completed' : 'In Progress' }}
-                                                    </p>
-                                                </div>
+                                    
+                                                @if ($pivot)
+                                                    @if ($pivot->isFinished === 1 && $pivot->status === 'approved')
+                                                        <div class="text-white text-sm font-bold px-4 py-2 rounded-lg mt-2 inline-block bg-green-500" style="width: 140px; display: flex; align-items: center; justify-content: center;">
+                                                            <p class="text-center">COMPLETED</p>
+                                                        </div>
+                                                    @elseif ($pivot->isFinished === 0 && $pivot->status === 'approved')
+                                                        <div class="text-white text-sm font-bold px-4 py-2 rounded-lg mt-2 inline-block bg-orange-500" style="width: 140px; display: flex; align-items: center; justify-content: center;">
+                                                            <p class="text-center">IN PROGRESS</p>
+                                                        </div>
+                                                    @elseif ($pivot->status === 'pending')
+                                                        <div class="text-white text-sm font-bold px-4 py-2 rounded-lg mt-2 inline-block bg-red-500" style="width: 140px; display: flex; align-items: center; justify-content: center;">
+                                                            <p class="text-center">NOT STARTED</p>
+                                                        </div>
+                                                    @else
+                                                        <div class="text-white text-sm font-bold px-4 py-2 rounded-lg mt-2 inline-block bg-red-500" style="width: 140px; display: flex; align-items: center; justify-content: center;">
+                                                            <p class="text-center">NOT STARTED</p>
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    <div class="text-white text-sm font-bold px-4 py-2 rounded-lg mt-2 inline-block bg-red-500" style="width: 140px; display: flex; align-items: center; justify-content: center;">
+                                                        <p class="text-center">NOT STARTED</p>
+                                                    </div>
+                                                @endif
                                             @endif
-
-                                        
                                         @elseif(isset($programNames[$user->id]))
                                             <p class="text-gray-800 text-sm font-bold" style="padding-top: 10px">
                                                 {{ $programNames[$user->id] }}
@@ -172,7 +187,7 @@
                                         @else
                                             <p class="text-black text-sm font-bold" style="padding-top: 10px">Undefined</p>
                                         @endif
-                                    </div>
+                                    </div>                                    
                                 </div>
                                 
                                 <!-- Modal -->

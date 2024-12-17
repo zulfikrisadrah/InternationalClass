@@ -60,7 +60,7 @@ class StudyProgramController extends Controller
 
         if ($request->hasFile('study_program_Image')) {
 
-            $imagePath = $request->file('study_program_Image')->store('study_program_images', 'public');
+            $imagePath = $request->file('study_program_Image')->store('images/studyprogram', 'public');
             $validatedStudyProgram['study_program_Image'] = $imagePath;
         }
         StudyProgram::create($validatedStudyProgram);
@@ -109,11 +109,11 @@ class StudyProgramController extends Controller
             if ($studyProgram->study_program_Image) {
                 Storage::disk('public')->delete($studyProgram->study_program_Image);
             }
-            $validatedData['study_program_Image'] = $request->file('study_program_Image')->store('study_program_images', 'public');
+            $validatedData['study_program_Image'] = $request->file('study_program_Image')->store('images/studyprogram', 'public');
         }
 
         $studyProgram->update($validatedData);
 
-        return redirect()->route('admin.admin.studyProgram.index')->with('success', 'Study Program updated successfully');
+        return redirect()->route('admin.studyProgram.index')->with('success', 'Study Program updated successfully');
     }
 }

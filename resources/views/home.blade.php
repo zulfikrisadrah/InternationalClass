@@ -91,8 +91,8 @@
                         <div class="card bg-bluePrimary text-white w-64 h-96 shadow-lg justify-center" data-aos="flip-left"
                             data-aos-delay="{{ 200 * ($index + 1) }}">
                             <figure>
-                                <img src="{{ asset($program->study_program_Image) }}"
-                                    alt="{{ $program['study_program_Name'] }}" class="w-full rounded-t-lg">
+                                <img src="{{ asset('storage/' . $program->study_program_Image) }}"
+                                    alt="{{ $program['study_program_Name'] }}" class="w-full rounded-t-lg" style="height: 242px; width: 256px">
                             </figure>
                             <div class="card-body p-4 flex flex-col justify-between flex-grow">
                                 <!-- Nama Program -->

@@ -112,7 +112,7 @@
                             <x-input-error :messages="$errors->get('ID_study_program')" class="mt-2" />
                         </div>
 
-                        <!-- Add JavaScript to handle the Select All functionality -->
+                        @push('scripts')
                         <script>
                             document.addEventListener('DOMContentLoaded', function () {
                                 const selectAllCheckbox = document.getElementById('select-all');
@@ -131,6 +131,7 @@
                                 });
                             });
                         </script>
+                        @endpush
                     @endrole
 
 
@@ -153,8 +154,8 @@
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
+    @stack('scripts')
 </x-app-layout>

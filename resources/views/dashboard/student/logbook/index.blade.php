@@ -7,16 +7,39 @@
         <div class="max-w-7xl mx-6">
             <div class="flex justify-end py-4 gap-4">
                 <!-- Upload Certificate Button -->
-                <label for="upload-certificate-modal" class="btn btn-primary">
+                <label for="upload-certificate-modal" class="btn btn-info text-white">
                     Upload Certificate
                 </label>
                 <!-- Add New Button -->
                 <a href="{{ route('student.logbook.create', $program->ID_program) }}"
-                    class="font-bold py-3 px-6 bg-blueThird text-white rounded-full">
+                    class="btn btn-info text-white">
                     Add New
                 </a>
             </div>
         </div>
+        <!-- Modal for Upload Certificate -->
+        <input type="checkbox" id="upload-certificate-modal" class="modal-toggle" />
+        <div class="modal">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg">Upload Certificate</h3>
+                <form action="{{ route('student.certificate.store', $program->ID_program) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Certificate File (PDF, Max 5MB)</span>
+                        </label>
+                        <input type="file" name="certificate" accept=".pdf"
+                            class="file-input file-input-bordered w-full" required>
+                    </div>
+                    <div class="modal-action">
+                        <label for="upload-certificate-modal" class="btn">Cancel</label>
+                        <button type="submit" class="btn btn-success text-white">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
 
         <div class="card bg-white shadow-md mx-6">
             <div class="card-body">
@@ -26,14 +49,14 @@
                         <table class="table w-full">
                             <thead>
                                 <tr>
-                                    <th class="bg-primary text-white">No</th>
-                                    <th class="bg-primary text-white">Image</th>
-                                    <th class="bg-primary text-white">Activity</th>
-                                    <th class="bg-primary text-white">Description</th>
-                                    <th class="bg-primary text-white">Start Time</th>
-                                    <th class="bg-primary text-white">End Time</th>
-                                    <th class="bg-primary text-white">Duration (Minutes)</th>
-                                    <th class="bg-primary text-white">Action</th>
+                                    <th class="bg-blueThird text-white">No</th>
+                                    <th class="bg-blueThird text-white">Image</th>
+                                    <th class="bg-blueThird text-white">Activity</th>
+                                    <th class="bg-blueThird text-white">Description</th>
+                                    <th class="bg-blueThird text-white">Start Time</th>
+                                    <th class="bg-blueThird text-white">End Time</th>
+                                    <th class="bg-blueThird text-white">Duration (Minutes)</th>
+                                    <th class="bg-blueThird text-white">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,65 +91,32 @@
                                                     class="btn btn-sm btn-outline btn-info">
                                                     Edit
                                                 </a>
-                                                <!-- Modal for Upload Certificate -->
-                                                <input type="checkbox" id="upload-certificate-modal"
-                                                    class="modal-toggle" />
-                                                <div class="modal">
-                                                    <div class="modal-box">
-                                                        <h3 class="font-bold text-lg">Upload Certificate</h3>
+                                                <label for="delete-modal-{{ $logbook->ID_Logbook }}"
+                                                    class="btn btn-sm btn-outline btn-error">
+                                                    Delete
+                                                </label>
+                                            </div>
+
+                                            <input type="checkbox" id="delete-modal-{{ $logbook->ID_Logbook }}"
+                                                class="modal-toggle" />
+                                            <div class="modal">
+                                                <div class="modal-box">
+                                                    <h3 class="font-bold text-lg">Confirm Deletion</h3>
+                                                    <p class="py-4">Are you sure you want to delete this logbook
+                                                        entry?</p>
+                                                    <div class="modal-action">
+                                                        <label for="delete-modal-{{ $logbook->ID_Logbook }}"
+                                                            class="btn btn-outline">Cancel</label>
                                                         <form
-                                                            action="{{ route('student.certificate.store', $program->ID_program) }}"
-                                                            method="POST" enctype="multipart/form-data">
+                                                            action="{{ route('student.logbook.destroy', [$program->ID_program, $logbook->ID_Logbook]) }}"
+                                                            method="POST">
                                                             @csrf
-                                                            <div class="form-control">
-                                                                <label class="label">
-                                                                    <span class="label-text">Certificate File (PDF, Max
-                                                                        5MB)</span>
-                                                                </label>
-                                                                <input type="file" name="certificate" accept=".pdf"
-                                                                    class="file-input file-input-bordered w-full"
-                                                                    required>
-                                                            </div>
-                                                            <div class="modal-action">
-                                                                <label for="upload-certificate-modal"
-                                                                    class="btn">Cancel</label>
-                                                                <button type="submit"
-                                                                    class="btn btn-success text-white">Upload</button>
-                                                            </div>
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-error">Delete</button>
                                                         </form>
                                                     </div>
                                                 </div>
-
-
-                                                <div class="bg-white mx-6 p-6 rounded-lg shadow-md">
-
-                                                    <label for="delete-modal-{{ $logbook->ID_Logbook }}"
-                                                        class="btn btn-sm btn-outline btn-error">
-                                                        Delete
-                                                    </label>
-                                                </div>
-
-                                                <input type="checkbox" id="delete-modal-{{ $logbook->ID_Logbook }}"
-                                                    class="modal-toggle" />
-                                                <div class="modal">
-                                                    <div class="modal-box">
-                                                        <h3 class="font-bold text-lg">Confirm Deletion</h3>
-                                                        <p class="py-4">Are you sure you want to delete this logbook
-                                                            entry?</p>
-                                                        <div class="modal-action">
-                                                            <label for="delete-modal-{{ $logbook->ID_Logbook }}"
-                                                                class="btn btn-outline">Cancel</label>
-                                                            <form
-                                                                action="{{ route('student.logbook.destroy', [$program->ID_program, $logbook->ID_Logbook]) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-error">Delete</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

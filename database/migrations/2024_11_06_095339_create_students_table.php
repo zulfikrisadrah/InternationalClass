@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('Birth_Place', 100)->nullable();
             $table->date('Birth_Date')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('ID_study_program');
+            $table->unsignedBigInteger('ID_study_program')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('ID_study_program')->references('ID_study_program')->on('study_programs')->onDelete('cascade');

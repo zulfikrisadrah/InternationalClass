@@ -55,7 +55,7 @@ class ProgramController extends Controller
         }
 
         // Role student
-        if (!$user->student || !$user->student->ID_study_program) {
+        if (!$user->student) {
             abort(403, 'This action is unauthorized.');
         }
 

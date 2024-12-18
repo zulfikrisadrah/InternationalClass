@@ -32,6 +32,7 @@ Route::get('/InternationalExposure/{id}', [LandingPageController::class, 'Intern
 
 Route::get('/studyProgram', [LandingPageController::class, 'studyProgram'])->name('studyProgram.index');
 Route::get('/studyProgram/{id}', [LandingPageController::class, 'studyProgramShow'])->name('studyProgram.show');
+Route::post('/update-english-score/{userId}', [UserController::class, 'updateEnglishScore']);
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -55,6 +56,8 @@ Route::middleware('auth')->group(function () {
         Route::middleware('can:manage user')->group(function () {
             Route::get('user/generate-pdf', [UserController::class, 'generatePdf'])->name('user.generate-pdf');
             Route::resource('user', UserController::class);
+            Route::post('user/storeStudent', [UserController::class, 'storeStudent'])->name('user.storeStudent');
+            Route::post('user/{userId}/update-english-score', [UserController::class, 'updateEnglishScore'])->name('user.updateEnglishScore');
         });
         Route::middleware('can:manage program')->group(function () {
             Route::resource('program', ProgramController::class);
@@ -90,9 +93,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('transcript', TranscriptController::class);
         Route::get('/calendar/events', [CalenderController::class, 'getEvents'])->name('calendar.events');
         Route::post('/calendar/events', [CalenderController::class, 'store'])->name('calendar.store');
-        Route::middleware('can:choose program')->group(function () {
-            Route::resource('program', ProgramController::class);
-        });
+        Route::resource('program', ProgramController::class);
+        Route::post('program/update-status/{student}', [UserController::class, 'updateStatus'])->name('user.updateStatus');
         Route::post('student/program/{programId}/enroll', [ProgramController::class, 'enroll'])->name('program.enroll');
     });
 });

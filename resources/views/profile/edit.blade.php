@@ -78,6 +78,45 @@
                                 </div>
                             </div>
 
+                            <!-- Password Change Section -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="space-y-2">
+                                    <label for="current_password" class="block text-sm font-medium text-gray-700">
+                                        {{ __('Current Password') }}
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="current_password"
+                                        name="current_password"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    />
+                                </div>
+                        
+                                <div class="space-y-2">
+                                    <label for="new_password" class="block text-sm font-medium text-gray-700">
+                                        {{ __('New Password') }}
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="new_password"
+                                        name="new_password"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    />
+                                </div>
+                        
+                                <div class="space-y-2">
+                                    <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700">
+                                        {{ __('Confirm New Password') }}
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="new_password_confirmation"
+                                        name="new_password_confirmation"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    />
+                                </div>
+                            </div>
+
                             <!-- Identity Information -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
@@ -120,8 +159,8 @@
                                         id="handphone"
                                         name="handphone"
                                         value="{{ old('handphone', $handphone) }}"
-                                        disabled
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
+                                        required
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     />
                                 </div>
 
@@ -134,8 +173,7 @@
                                         id="telepon"
                                         name="telepon"
                                         value="{{ old('telepon', $telepon) }}"
-                                        disabled
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     />
                                 </div>
                             </div>
@@ -151,8 +189,8 @@
                                         id="jalan"
                                         name="jalan"
                                         value="{{ old('jalan', $jalan) }}"
-                                        disabled
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
+                                        required
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     />
                                 </div>
 
@@ -165,8 +203,7 @@
                                         id="kode_pos"
                                         name="kode_pos"
                                         value="{{ old('kode_pos', $kode_pos) }}"
-                                        disabled
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     />
                                 </div>
                             </div>
@@ -182,8 +219,8 @@
                                         id="tempat_lahir"
                                         name="tempat_lahir"
                                         value="{{ old('tempat_lahir', $tempat_lahir) }}"
-                                        disabled
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
+                                        required
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     />
                                 </div>
 
@@ -196,8 +233,8 @@
                                         id="tanggal_lahir"
                                         name="tanggal_lahir"
                                         value="{{ old('tanggal_lahir', $tanggal_lahir) }}"
-                                        disabled
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
+                                        required
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                     />
                                 </div>
                             </div>

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\Faculty;
+use App\Models\Student;
 use App\Models\StudyProgram;
 
 class LoginRequest extends FormRequest
@@ -166,6 +167,7 @@ class LoginRequest extends FormRequest
             // Cek apakah respon API untuk data mahasiswa berhasil
             if ($mahasiswaResponse->successful()) {
                 $mahasiswaData = $mahasiswaResponse->json();
+                $mahasiswa = $mahasiswaData['mahasiswas'][0];
 
                 // Ambil nama_mahasiswa dan email dari data mahasiswa
                 $namaMahasiswa = $mahasiswaData['mahasiswas'][0]['nama_mahasiswa'] ?? 'No Name';
@@ -182,10 +184,32 @@ class LoginRequest extends FormRequest
 
                 // Buat akun mahasiswa di database lokal jika status_login = 1
                 $user = \App\Models\User::create([
-                    'username' => $usernameOrEmail,
-                    'password' => bcrypt($password), // Set password yang di-hash
-                    'name' => ucfirst($namaMahasiswa), // Gunakan nama mahasiswa
-                    'email' => $emailMahasiswa, // Gunakan email yang didapat dari API
+                    'username' => strtoupper($nim),
+                    'password' => bcrypt($password), 
+                    'name' => ucfirst($namaMahasiswa), 
+                    'email' => $emailMahasiswa,
+                ]);
+
+                $programName = $mahasiswaData['mahasiswas'][0]['prodi']['nama_resmi'];
+
+                $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
+                $studyProgramId = $studyProgram->ID_study_program;
+
+                Student::create([
+                    'Student_Name' => ucfirst($mahasiswa['nama'] ?? $user->name),
+                    'Student_ID_Number' => strtoupper($nim),
+                    'Student_Email' => $mahasiswa['email'] ?? $user->email,
+                    'Gender' => $mahasiswa['jenis_kelamin'] ?? null,
+                    'NIK' => $mahasiswa['nik'] ?? null,
+                    'NISN' => $mahasiswa['nisn'] ?? null,
+                    'Phone_Number' => $mahasiswa['handphone'] ?? null,
+                    'Home_Phone' => $mahasiswa['telepon'] ?? null,
+                    'Address' => $mahasiswa['jalan'] ?? null,
+                    'Postal_Code' => $mahasiswa['kode_pos'] ?? null,
+                    'Birth_Place' => $mahasiswa['tempat_lahir'] ?? null,
+                    'Birth_Date' => $mahasiswa['tanggal_lahir'] ?? null,
+                    'user_id' => $user->id,
+                    'ID_study_program' => $studyProgramId,
                 ]);
 
                 // Tetapkan role mahasiswa jika belum ada

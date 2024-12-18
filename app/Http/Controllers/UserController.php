@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Validation\ValidationException;
+
 class UserController extends Controller
 {
     /**
@@ -42,8 +44,9 @@ class UserController extends Controller
             $validStudyPrograms = StudyProgram::pluck('study_program_Name')->toArray();
 
             $waitingCount = User::role('student')
-                ->whereDoesntHave('student')
-                ->whereNotIn('username', Student::pluck('Student_ID_Number'))
+                ->whereHas('student', function ($query) {
+                    $query->where('status', 'waiting');
+                })
                 ->get()
                 ->filter(function ($user) use ($validStudyPrograms) {
                     $tokenData = $this->loginAndGetToken();
@@ -68,17 +71,11 @@ class UserController extends Controller
                 })
                 ->count();
         } elseif (Auth::user()->hasRole('staff')) {
-            $adminCount = $waitingCount = User::role('student')
-                ->whereDoesntHave('student')
-                ->whereNotIn('username', Student::pluck('Student_ID_Number'))
-                ->count();
-
-            if ($adminCount > 0) {
-            }
             $adminStudyProgram = Auth::user()->staff->studyProgram->study_program_Name;
             $users = User::role('student')
-                ->whereDoesntHave('student')
-                ->whereNotIn('username', Student::pluck('Student_ID_Number'))
+                ->whereHas('student', function ($query) {
+                    $query->where('status', 'waiting');
+                })
                 ->get();
 
             $waitingCount = 0;
@@ -175,10 +172,10 @@ class UserController extends Controller
             if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->studyProgram->study_program_Name;
 
-                // Query dasar untuk mencari mahasiswa yang belum terdaftar
                 $usersQuery = User::role('student')
-                    ->whereDoesntHave('student')
-                    ->whereNotIn('username', Student::pluck('Student_ID_Number'));
+                ->whereHas('student', function ($query) {
+                    $query->where('status', 'waiting');
+                });
 
                 // Jika ada pencarian, tambahkan kondisi pencarian
                 if ($search) {
@@ -234,9 +231,10 @@ class UserController extends Controller
 
                 // Query dasar untuk mencari mahasiswa yang belum terdaftar
                 $usersQuery = User::role('student')
-                    ->whereDoesntHave('student')
-                    ->whereNotIn('username', Student::pluck('Student_ID_Number'));
-
+                ->whereHas('student', function ($query) {
+                    $query->where('status', 'waiting');
+                });
+                
                 // Jika ada pencarian, tambahkan kondisi pencarian
                 if ($search) {
                     $usersQuery->where(function ($query) use ($search) {
@@ -426,6 +424,187 @@ class UserController extends Controller
         // Redirect dengan pesan sukses
         return redirect()->route('admin.user.index')->with('success', 'User created successfully.');
     }
+
+    public function storeStudent(Request $request)
+    {
+        $request->validate([
+            'nim' => 'required',
+        ]);
+        
+        $nim = $request->nim;
+        $tokenResponse = $this->loginAndGetToken();
+        
+        if ($tokenResponse['status'] != 200) {
+            throw ValidationException::withMessages([
+                'email' => 'Login failed: ' . $tokenResponse['message'],
+            ]);
+        }
+        
+        $accessToken = $tokenResponse['access_token'];
+        
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken
+            ])
+            ->withBody(json_encode([
+                'nim' => $nim,
+            ]), 'application/json')
+            ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+        
+        if ($response->successful()) {
+            $mahasiswaData = $response->json();
+        
+            if (empty($mahasiswaData['mahasiswas'])) {
+                return redirect()->back()->with('error', 'NIM not valid or not found.');
+            }
+        
+            $mahasiswa = $mahasiswaData['mahasiswas'][0];
+        
+            $namaMahasiswa = $mahasiswa['nama_mahasiswa'] ?? 'No Name';
+            $emailMahasiswa = $mahasiswa['email'] ?? "{$nim}@unhas.ac.id";
+            $nik = $mahasiswa['nik'] ?? null;
+            $gender = $mahasiswa['jenis_kelamin'] ?? null;
+            $nisn = $mahasiswa['nisn'] ?? null;
+            $phoneNumber = $mahasiswa['handphone'] ?? null;
+            $homePhone = $mahasiswa['telepon'] ?? null;
+            $address = $mahasiswa['jalan'] ?? null;
+            $birthPlace = $mahasiswa['tempat_lahir'] ?? null;
+            $birthDate = $mahasiswa['tanggal_lahir'] ?? null;
+            $programName = $mahasiswa['prodi']['nama_resmi'];
+        
+            $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
+        
+            if (!$studyProgram) {
+                // dd('Program Name: ', $programName);
+                return redirect()->back()->with('error', 'The study program is not available for the international class.');
+            }
+    
+            $studyProgramId = $studyProgram->ID_study_program;
+        
+            $user = auth()->user();
+        
+            // Pengecekan apakah user adalah admin
+            if ($user->hasRole('admin')) {
+                $nim = strtoupper($nim);
+        
+                $student = Student::where('Student_ID_Number', $nim)->first();
+        
+                if ($student) {
+                    $student->update([
+                        'status' => 'accepted',
+                        'isActive' => 1,
+                        'isVerified' => 1,
+                    ]);
+        
+                    return redirect()->route('admin.user.index')->with('success', 'Student updated successfully.');
+                } else {
+                    $user = User::create([
+                        'name' => ucfirst($namaMahasiswa),
+                        'username' => $nim,
+                        'email' => $emailMahasiswa,
+                        'password' => bcrypt("{$nim}@internasional"),
+                    ]);
+        
+                    $user->assignRole('student');
+        
+                    Student::create([
+                        'Student_Name' => ucfirst($namaMahasiswa),
+                        'Student_ID_Number' => strtoupper($nim),
+                        'Student_Email' => $emailMahasiswa,
+                        'Gender' => $gender,
+                        'NIK' => $nik,
+                        'NISN' => $nisn,
+                        'Phone_Number' => $phoneNumber,
+                        'Home_Phone' => $homePhone,
+                        'Address' => $address,
+                        'Birth_Place' => $birthPlace,
+                        'Birth_Date' => $birthDate,
+                        'user_id' => $user->id,
+                        'status' => 'accepted',
+                        'isActive' => 1,
+                        'isVerified' => 1,
+                        'ID_study_program' => $studyProgramId,
+                    ]);
+        
+                    return redirect()->route('admin.user.index')->with('success', 'Student added successfully.');
+                }
+            } elseif ($user->hasRole('staff')) {
+                $staffStudyProgramId = $user->staff->ID_study_program; 
+    
+                if ($studyProgramId !== $staffStudyProgramId) {
+                    return redirect()->back()->with('error', 'The student is not under your authority.');
+                }
+            
+            }
+    
+            $nim = strtoupper($nim);
+    
+            $student = Student::where('Student_ID_Number', $nim)->first();
+        
+            if ($student) {
+                $student->update([
+                    'status' => 'accepted',
+                    'isActive' => 1,
+                    'isVerified' => 1,
+                ]);
+        
+                return redirect()->route('admin.user.index')->with('success', 'Student updated successfully.');
+            } else {
+                $user = User::create([
+                    'name' => ucfirst($namaMahasiswa),
+                    'username' => $nim,
+                    'email' => $emailMahasiswa,
+                    'password' => bcrypt("{$nim}@internasional"),
+                ]);
+        
+                $user->assignRole('student');
+        
+                Student::create([
+                    'Student_Name' => ucfirst($namaMahasiswa),
+                    'Student_ID_Number' => strtoupper($nim),
+                    'Student_Email' => $emailMahasiswa,
+                    'Gender' => $gender,
+                    'NIK' => $nik,
+                    'NISN' => $nisn,
+                    'Phone_Number' => $phoneNumber,
+                    'Home_Phone' => $homePhone,
+                    'Address' => $address,
+                    'Birth_Place' => $birthPlace,
+                    'Birth_Date' => $birthDate,
+                    'user_id' => $user->id,
+                    'status' => 'accepted',
+                    'isActive' => 1,
+                    'isVerified' => 1,
+                    'ID_study_program' => $studyProgramId,
+                ]);
+        
+                return redirect()->route('admin.user.index')->with('success', 'Student added successfully.');
+            }
+        } else {
+            throw ValidationException::withMessages([
+                'email' => 'Failed to retrieve student data!',
+            ]);
+        }
+    }
+    
+    public function updateEnglishScore(Request $request, $userId)
+    {
+        $request->validate([
+            'English_Score' => 'required|numeric', 
+        ]);
+
+        $user = User::find($userId);
+
+        if ($user) {
+            $user->student->English_Score = $request->English_Score;
+            $user->student->save();
+
+            return redirect()->back()->with('success', 'English score updated successfully!');
+        }
+
+        return redirect()->back()->with('error', 'User not found');
+    }
+
     public function generatePdf(Request $request)
     {
         // Query untuk mendapatkan data pengguna, hanya mengambil yang aktif
@@ -498,14 +677,14 @@ class UserController extends Controller
     {
         if ($user->student && isset($user->student->isActive)) {
             $isActive = $request->input('isActive') ? 1 : 0;
+            $status = ($isActive == 1) ? 'accepted' : null;
 
             $user->student->isActive = $isActive;
+            $user->student->status = $status;
             $user->student->save();
 
             if ($isActive == 1) {
                 $user->givePermissionTo('choose program');
-            } else {
-                $user->revokePermissionTo('choose program');
             }
         }
 
@@ -549,6 +728,8 @@ class UserController extends Controller
                 }
             }
 
+            $isVerified = $action === 'accept' ? 1 : 0;
+
             Student::updateOrCreate(
                 ['user_id' => $user->id],
                 [
@@ -556,7 +737,8 @@ class UserController extends Controller
                     'Student_ID_Number' => $user->username,
                     'Student_Email' => $user->email,
                     'isActive' => $action === 'accept' ? 1 : 0,
-                    'isVerified' => 1,
+                    'isVerified' => $isVerified,
+                    'status' => $action === 'accept' ? 'accepted' : 'rejected',
                     'ID_study_program' => $studyProgramId,
                 ]
             );
@@ -586,6 +768,17 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User deleted successfully.');
     }
 
+    public function updateStatus(Student $student)
+    {
+        if ($student->status !== 'waiting') {
+            $student->status = 'waiting';
+            $student->save();
+
+            return redirect()->back()->with('success', 'Request has been submitted successfully.');
+        }
+
+        return redirect()->back()->with('info', 'Status sudah dalam status "waiting".');
+    }
     private function loginAndGetToken()
     {
         try {

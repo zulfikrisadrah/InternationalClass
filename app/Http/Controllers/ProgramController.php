@@ -75,7 +75,7 @@ class ProgramController extends Controller
         $iePrograms = IeProgram::all();
 
         // Tampilkan view untuk student
-        return view('dashboard.student.programs.index', compact('programs', 'iePrograms'));
+        return view('dashboard.student.programs.index', compact('programs', 'iePrograms', 'user'));
     }
 
 
@@ -88,36 +88,40 @@ class ProgramController extends Controller
         // Ambil program yang diinginkan
         $program = Program::findOrFail($programId);
         $student = auth()->user()->student; // Mendapatkan data student yang sedang login
-
-        // Cek jika student sudah mendaftar ke program
-        $existingEnrollment = $student->programs()->where('program_enrollment.ID_program', $programId)->first();
+    
+        $existingEnrollment = $student->programs()->wherePivot('status', 'approved')->wherePivot('isFinished', 0)->first();
+    
         if ($existingEnrollment) {
-            // Cek status pendaftaran saat ini
-            $currentStatus = $existingEnrollment->pivot->status;
-
+            return redirect()->route('student.program.index')->with('error', 'You cannot enroll in a new program while your current program is still in progress.');
+        }
+    
+        $existingEnrollmentForProgram = $student->programs()->where('program_enrollment.ID_program', $programId)->first();
+        if ($existingEnrollmentForProgram) {
+            $currentStatus = $existingEnrollmentForProgram->pivot->status;
+    
             if ($currentStatus === 'pending') {
                 return redirect()->route('student.program.index')->with('pending', 'Your enrollment is still pending approval. Please wait for confirmation.');
             }
-
+    
             if ($currentStatus === 'approved') {
-                return redirect()->route('student.program.index')->with('error', 'You are already enrolled.');
+                return redirect()->route('student.program.index')->with('error', 'You are already enrolled in this program.');
             }
         }
-
+    
         // Cek jumlah peserta yang sudah terdaftar di program
         $currentParticipants = $program->students()->wherePivot('status', 'approved')->count();
-
+    
         // Cek jika sudah mencapai batas peserta
         if ($currentParticipants >= $program->Participants_Count) {
             return redirect()->route('student.program.index')->with('error', 'This program has reached its participant limit.');
         }
-
+    
         // Daftarkan student ke program dengan status pending
         $student->programs()->attach($programId, ['status' => 'pending']);
-
+    
         return redirect()->route('student.program.index')->with('success', 'Your enrollment is pending approval.');
     }
-
+    
 
 
 
@@ -126,53 +130,47 @@ class ProgramController extends Controller
     {
         $action = $request->input('action');
         $status = $request->input('status');
-
-        $program = Program::findOrFail($programId);
-
-        // Pastikan student yang diubah ada dalam daftar
-        $student = $program->students()->where('program_enrollment.ID_Student', $studentId)->first();
-
-        if ($student) {
+        
+        $student = Student::findOrFail($studentId);
+        
+        $program = $student->programs()->wherePivot('ID_program', $programId)->first();
+        
+        if ($program) {
             if (in_array($action, ['finish', 'unfinish'])) {
                 if ($action === 'finish') {
-                    $program->students()->updateExistingPivot($student->ID_Student, ['isFinished' => 1]);
-                    return back()->with('success', 'Student marked as finished.')
-                                 ->withInput();
+                    $student->programs()->updateExistingPivot($programId, ['isFinished' => 1]);
                 } elseif ($action === 'unfinish') {
-                    $program->students()->updateExistingPivot($student->ID_Student, ['isFinished' => 0]);
-                    return back()->with('success', 'Student marked as unfinished.')
-                                 ->withInput();
+                    $student->programs()->updateExistingPivot($programId, ['isFinished' => 0]);
                 }
             }
-
+        
             if ($action === 'delete') {
-                $program->students()->detach($student->ID_Student);
-                return back()->with('success', 'Student enrollment deleted.')
-                             ->withInput();
+                $student->programs()->detach($programId);
             }
-
-            // Jika status approved atau rejected
+        
             if (in_array($status, ['approved', 'rejected'])) {
                 if ($status === 'approved') {
-                    $program->students()->updateExistingPivot($student->ID_Student, ['status' => 'approved']);
+                    $student->programs()->updateExistingPivot($programId, ['status' => 'approved']);
+                                
+                    $student->programs()->wherePivot('ID_program', '!=', $programId)->wherePivot('status', '!=', 'approved')->detach();
                 } elseif ($status === 'rejected') {
-                    $program->students()->detach($student->ID_Student);
-                }
-
-                $approvedCount = $program->students()->wherePivot('status', 'approved')->count();
-
+                    $student->programs()->detach($programId);
+                 }
+            
+                $approvedCount = $student->programs()->wherePivot('status', 'approved')->count();
                 if ($approvedCount >= $program->Participants_Count) {
-                    $program->students()->wherePivot('status', 'pending')->detach();
+                    $student->programs()->wherePivot('status', 'pending')->detach();
                 }
-
-                return redirect()->route('admin.program.index')->with('success', 'Enrollment status updated.');
             }
-
-            return redirect()->route('admin.program.index')->with('error', 'Invalid action or status.');
+            
+        
+            return back()->with('success', 'Status updated successfully.');
         }
-
-        return redirect()->route('admin.program.index')->with('error', 'Enrollment not found.');
+        
+        return back()->with('error', 'Program not found.');
     }
+
+    
 
 
 

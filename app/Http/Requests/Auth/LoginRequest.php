@@ -103,9 +103,12 @@ class LoginRequest extends FormRequest
         $user = \App\Models\User::where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
 
         if ($user) {
-            // Jika user ditemukan, verifikasi password dan role
             if (Hash::check($password, $user->password)) {
-                $this->processUserRole($user); // Proses autentikasi berdasarkan role
+                if ($user->hasRole('student')) {
+                    $this->updateStudentStudyProgram($user, $usernameOrEmail);
+                }
+                
+                $this->processUserRole($user); 
             } else {
                 throw ValidationException::withMessages([
                     'email' => 'Invalid Username or Password!',
@@ -193,7 +196,7 @@ class LoginRequest extends FormRequest
                 $programName = $mahasiswaData['mahasiswas'][0]['prodi']['nama_resmi'];
 
                 $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
-                $studyProgramId = $studyProgram->ID_study_program;
+                $studyProgramId = $studyProgram->ID_study_program ?? null;
 
                 Student::create([
                     'Student_Name' => ucfirst($mahasiswa['nama'] ?? $user->name),
@@ -234,6 +237,37 @@ class LoginRequest extends FormRequest
         }
     }
 
+    private function updateStudentStudyProgram($user, string $nim): void
+    {
+        $tokenResponse = $this->loginAndGetToken();
+
+        if ($tokenResponse['status'] == 200) {
+            $accessToken = $tokenResponse['access_token'];
+
+            $mahasiswaResponse = Http::withOptions(['verify' => false])
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $accessToken,
+                ])
+                ->withBody(json_encode(['nim' => $nim]), 'application/json')
+                ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
+
+            if ($mahasiswaResponse->successful()) {
+                $mahasiswaData = $mahasiswaResponse->json();
+                $mahasiswa = $mahasiswaData['mahasiswas'][0] ?? null;
+
+                if ($mahasiswa) {
+                    $programName = $mahasiswa['prodi']['nama_resmi'] ?? null;
+                    $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
+
+                    if ($studyProgram) {
+                        Student::where('user_id', $user->id)
+                            ->whereNull('ID_study_program')
+                            ->update(['ID_study_program' => $studyProgram->ID_study_program]);
+                    }
+                }
+            }
+        }
+    }
     private function loginAndGetToken()
     {
         // Melakukan POST request untuk login

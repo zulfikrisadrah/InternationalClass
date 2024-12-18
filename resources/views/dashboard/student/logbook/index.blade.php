@@ -5,13 +5,40 @@
 
     <div class="container mx-auto p-4">
         <div class="max-w-7xl mx-6">
-            <div class="flex justify-end py-4">
+            <div class="flex justify-end py-4 gap-4">
+                <!-- Upload Certificate Button -->
+                <label for="upload-certificate-modal" class="font-bold py-3 px-6 bg-blueThird text-white rounded-full cursor-pointer">
+                    Upload Certificate
+                </label>
+                <!-- Add New Button -->
                 <a href="{{ route('student.logbook.create', $program->ID_program) }}"
                    class="font-bold py-3 px-6 bg-blueThird text-white rounded-full">
                     Add New
                 </a>
             </div>
         </div>
+
+        <!-- Modal for Upload Certificate -->
+        <input type="checkbox" id="upload-certificate-modal" class="modal-toggle" />
+        <div class="modal">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg">Upload Certificate</h3>
+                <form action="{{ route('student.certificate.store', $program->ID_program) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Certificate File (PDF, Max 5MB)</span>
+                        </label>
+                        <input type="file" name="certificate" accept=".pdf" class="file-input file-input-bordered w-full" required>
+                    </div>
+                    <div class="modal-action">
+                        <label for="upload-certificate-modal" class="btn">Cancel</label>
+                        <button type="submit" class="btn btn-success text-white">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
 
         <div class="bg-white mx-6 p-6 rounded-lg shadow-md">
 

@@ -6,6 +6,8 @@ use App\Models\Logbook;
 use App\Models\Program;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class LogbookController extends Controller
@@ -100,6 +102,54 @@ class LogbookController extends Controller
         return redirect()->route('student.logbook.index', $program->ID_program)
                         ->with('success', 'Logbook entry added successfully.');
     }
+
+    public function storeCertificate(Request $request, Program $program)
+    {
+        $request->validate([
+            'certificate' => 'required|mimes:pdf|max:5120',
+        ]);
+
+        $student = auth()->user()->student;
+
+        if ($request->hasFile('certificate')) {
+            $certificate = $request->file('certificate');
+            $certificatePath = $certificate->store('certificates', 'certificate');
+
+            // Simpan path ke kolom certificate_path
+            $student->programs()->updateExistingPivot($program->ID_program, [
+                'certificate_path' => $certificatePath,
+            ]);
+        }
+
+        return redirect()->route('student.logbook.index', $program->ID_program)->with('success', 'Certificate uploaded successfully.');
+    }
+
+    public function readCertificate(Program $program, User $user)
+    {
+        // Temukan program enrollment berdasarkan program ID dan user ID
+        $enrollment = DB::table('program_enrollment')
+            ->where('ID_program', $program->ID_program)
+            ->where('ID_Student', $user->student->ID_Student ?? null)
+            ->first();
+
+        // Cek apakah data enrollment ditemukan dan memiliki path sertifikat
+        if (!$enrollment || !$enrollment->certificate_path) {
+            abort(404, 'Certificate not found.');
+        }
+
+        $certificatePath = $enrollment->certificate_path;
+
+        if (!Storage::disk('certificate')->exists($certificatePath)) {
+            abort(404, 'Certificate file not found in storage.');
+        }
+
+        // Baca konten file dan kembalikan sebagai respons PDF
+        $fileContents = Storage::disk('certificate')->get($certificatePath);
+        return response($fileContents, 200)
+            ->header('Content-Type', 'application/pdf');
+    }
+
+
 
 
 

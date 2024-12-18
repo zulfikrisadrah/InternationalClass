@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
             Route::post('user/storeStudent', [UserController::class, 'storeStudent'])->name('user.storeStudent');
             Route::post('user/{userId}/update-english-score', [UserController::class, 'updateEnglishScore'])->name('user.updateEnglishScore');
             Route::get('program/{program}/user/{user}/logbook', [LogbookController::class, 'indexForAdmin'])->name('admin.logbook.index');
+            Route::get('program/{program}/certificate/{user}', [LogbookController::class, 'readCertificate'])->name('certificate.read');
         });
         Route::middleware('can:manage program')->group(function () {
             Route::resource('program', ProgramController::class);
@@ -103,6 +104,7 @@ Route::middleware('auth')->group(function () {
         Route::get('program/{program}/logbook/{logbook}/edit', [LogbookController::class, 'edit'])->name('logbook.edit');
         Route::put('program/{program}/logbook/{logbook}', [LogbookController::class, 'update'])->name('logbook.update');
         Route::delete('program/{program}/logbook/{logbook}', [LogbookController::class, 'destroy'])->name('logbook.destroy');
+        Route::post('program/{program}/certificate', [LogbookController::class, 'storeCertificate'])->name('certificate.store');
         Route::post('program/update-status/{student}', [UserController::class, 'updateStatus'])->name('user.updateStatus');
         Route::post('student/program/{programId}/enroll', [ProgramController::class, 'enroll'])->name('program.enroll');
     });

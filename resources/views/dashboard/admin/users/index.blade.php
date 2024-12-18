@@ -371,7 +371,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr class="hover:bg-gray-50">
+                                                        <tr class="hover:bg-gray-50 border-b">
                                                             <td class="py-3 px-4 text-gray-600 font-medium">Logbook</td>
                                                             <td class="py-3 px-4">
                                                                 @if (isset($user->student) && $user->student->programs->isNotEmpty())
@@ -380,6 +380,24 @@
                                                                             <a href="{{ route('admin.admin.logbook.index', ['program' => $program->ID_program, 'user' => $user->id]) }}"
                                                                                 class="text-white text-sm px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition duration-200">
                                                                                 Read Logbook ({{ $program->program_Name }})
+                                                                            </a>
+                                                                        </div>
+                                                                    @endforeach
+                                                                @else
+                                                                    -
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr class="hover:bg-gray-50">
+                                                            <td class="py-3 px-4 text-gray-600 font-medium">Certificate</td>
+                                                            <td class="py-3 px-4">
+                                                                @if (isset($user->student) && $user->student->programs->isNotEmpty())
+                                                                    @foreach ($user->student->programs as $program)
+                                                                        <div class="py-2">
+                                                                            <a href="{{ route('admin.certificate.read',  ['program' => $program->ID_program, 'user' => $user->id]) }}"
+                                                                                class="text-white text-sm px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition duration-200">
+                                                                                Read Certificate
                                                                             </a>
                                                                         </div>
                                                                     @endforeach
@@ -603,7 +621,7 @@
                             </svg>
                             Preview PDF
                         </a>
-    
+
                         <a href="{{ route('admin.user.generate-pdf', request()->query()) }}" target="_blank"
                             class="flex items-center space-x-2 mt-5 bg-redThird text-white py-2 px-4 rounded-lg ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"

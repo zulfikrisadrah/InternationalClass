@@ -592,18 +592,30 @@
                 @endif
             </div>
             <div class="flex justify-end mb-4">
-                @if (!request()->filled('status') && request()->query('role') != 'staff')
-                    <a href="{{ route('admin.user.generate-pdf', request()->query()) }}" target="_blank"
-                        class="flex items-center space-x-2 mt-5 bg-redThird text-white py-2 px-4 rounded-lg ">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
-                            fill="none" stroke="currentColor" class="w-5 h-5">
-                            <path
-                                d="M14 4V2H6v2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2zm-1 0H7V3h6v1zM4 6h12v8H4V6z"
-                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                        </svg>
-                        <span>Print PDF</span>
-                    </a>
-                @endif
+                <div class="flex justify-end mb-4">
+                    @if (!request()->filled('status') && request()->query('role') != 'staff')
+                        <a href="{{ route('admin.user.preview-pdf', request()->query()) }}" target="_blank"
+                            class="mt-5 bg-blue-500 text-white py-2 px-4 mr-2 rounded-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5 mr-2">
+                                <path d="M16 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H16C17.1 22 18 21.1 18 20V4C18 2.9 17.1 2 16 2ZM16 20H6V4H16V20Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                <path d="M9 6H15M9 10H15M9 14H15M9 18H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                <circle cx="18" cy="6" r="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle>
+                            </svg>
+                            Preview PDF
+                        </a>
+    
+                        <a href="{{ route('admin.user.generate-pdf', request()->query()) }}" target="_blank"
+                            class="flex items-center space-x-2 mt-5 bg-redThird text-white py-2 px-4 rounded-lg ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                                fill="none" stroke="currentColor" class="w-5 h-5">
+                                <path
+                                    d="M14 4V2H6v2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2zm-1 0H7V3h6v1zM4 6h12v8H4V6z"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                            </svg>
+                            <span>Print PDF</span>
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

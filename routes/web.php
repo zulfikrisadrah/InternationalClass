@@ -47,7 +47,6 @@ Route::middleware('auth')->group(function () {
         Route::middleware('can:manage class')->group(function () {
             Route::resource('class', ClassController::class);
         });
-
         Route::middleware('can:manage news')->group(function () {
             Route::resource('news', NewsController::class);
         });
@@ -66,6 +65,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('studyProgram', StudyProgramController::class);
             Route::resource('partnerships', PartnershipController::class);
             Route::resource('outboundLecturers', OutboundLecturerController::class);
+            Route::post('program/{program}/add-student', [ProgramController::class, 'addStudentToProgram'])->name('program.addStudent');
         });
         Route::post('program/{programId}/enrollments/{studentId}/update-status', [ProgramController::class, 'updateStatus'])
         ->name('program.updateStatus');

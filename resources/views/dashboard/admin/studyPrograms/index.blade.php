@@ -82,7 +82,7 @@
                 @empty
                     <p class="text-center text-lg font-bold text-black">No Study Programs Available</p>
                 @endforelse
-                @if ($studyPrograms->count() >= 10)
+                @if ($studyPrograms->lastPage() > 1)
                     <div class="mt-6">
                         {{ $studyPrograms->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>

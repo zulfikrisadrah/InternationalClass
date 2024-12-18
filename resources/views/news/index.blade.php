@@ -29,7 +29,7 @@
                                 more</a>
                         </div>
                     @endforeach
-                    @if ($news_page->count() >= 4)
+                    @if ($news_page->lastPage() > 1)
                         <div class="mt-6">
                             {{ $news_page->appends(request()->query())->links('vendor.pagination.custom') }}
                         </div>

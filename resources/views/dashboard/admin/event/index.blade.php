@@ -82,7 +82,7 @@
                 @empty
                     <p class="text-center text-lg font-bold text-black">No Event Available</p>
                 @endforelse
-                @if ($events->count() >= 10)
+                @if ($events->lastPage() > 1)
                     <div class="mt-6 ">
                         {{ $events->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>

@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     @endforeach
-                    @if ($events_page->count() >= 4)
+                    @if ($events_page->lastPage() > 1)
                         <div class="mt-6">
                             {{ $events_page->appends(request()->query())->links('vendor.pagination.custom') }}
                         </div>

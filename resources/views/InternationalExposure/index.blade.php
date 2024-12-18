@@ -86,7 +86,7 @@
                             </div>
                         </div>
                     @endforeach
-                    @if ($allPrograms->count() >= 5)
+                    @if ($allPrograms->lastPage() > 1)
                         <div class="mt-6">
                             {{ $allPrograms->appends(request()->query())->links('vendor.pagination.custom') }}
                         </div>

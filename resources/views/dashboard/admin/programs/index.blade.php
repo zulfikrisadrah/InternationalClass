@@ -176,7 +176,7 @@
                 @endforelse
 
                 <!-- Pagination -->
-                @if ($programs->count() >= 5)
+                @if ($programs->lastPage() > 1)
                     <div class="mt-6">
                         {{ $programs->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>

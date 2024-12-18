@@ -80,7 +80,7 @@
                 @empty
                     <p class="text-center text-lg font-bold text-black">No News Available</p>
                 @endforelse
-                @if ($news->count() >= 10)
+                @if ($news->lastPage() > 1)
                     <div class="mt-6 ">
                         {{ $news->appends(request()->query())->links('vendor.pagination.custom') }}
                     </div>

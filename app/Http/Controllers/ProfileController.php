@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -18,44 +18,23 @@ class ProfileController extends Controller
         $user = Auth::user();
     
         try {
-            $tokenData = $this->loginAndGetToken();
+            $student = $user->student; 
     
-            if ($tokenData['status'] == 200 && isset($tokenData['access_token'])) {
-                $accessToken = $tokenData['access_token'];
-                $nim = $user->username;
-    
-                $response = Http::withOptions(['verify' => false])
-                    ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
-                    ->withBody(json_encode(['nim' => $nim]), 'application/json')
-                    ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-    
-                if ($response->successful()) {
-                    $data = $response->json();
-    
-                    if (isset($data['mahasiswas'][0])) {
-                        $mahasiswa = $data['mahasiswas'][0];
-    
-                        return view('profile.edit', [
-                            'nik' => $mahasiswa['nik'] ?? '-',
-                            'nisn' => $mahasiswa['nisn'] ?? '-',
-                            'handphone' => $mahasiswa['handphone'] ?? '-',
-                            'telepon' => $mahasiswa['telepon'] ?? '-',
-                            'email' => $mahasiswa['email'] ?? '-',
-                            'jalan' => $mahasiswa['jalan'] ?? '-',
-                            'kode_pos' => $mahasiswa['kode_pos'] ?? '-',
-                            'id_wilayah' => $mahasiswa['id_wilayah'] ?? '-',
-                            'tempat_lahir' => $mahasiswa['tempat_lahir'] ?? '-',
-                            'tanggal_lahir' => $mahasiswa['tanggal_lahir'] ?? '-',
-                            'user' => $user 
-                        ]);
-                    } else {
-                        return back()->with('error', 'Data mahasiswa tidak ditemukan.');
-                    }
-                } else {
-                    return back()->with('error', 'Gagal mengambil data mahasiswa.');
-                }
+            if ($student) {
+                return view('profile.edit', [
+                    'nik' => $student->NIK ?? '-',
+                    'nisn' => $student->NISN ?? '-',
+                    'handphone' => $student->Phone_Number ?? null,
+                    'telepon' => $student->Home_Phone ?? null,
+                    'email' => $student->Student_Email ?? null,
+                    'jalan' => $student->Address ?? null,
+                    'kode_pos' => $student->Postal_Code ?? null,
+                    'tempat_lahir' => $student->Birth_Place ?? null,
+                    'tanggal_lahir' => $student->Birth_Date ?? null,
+                    'user' => $user
+                ]);
             } else {
-                return back()->with('error', 'Gagal mendapatkan token akses.');
+                return back()->with('error', 'Data mahasiswa tidak ditemukan.');
             }
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -67,7 +46,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $data = $request->validated();
+        $data = $request->all();
     
         // Ambil data user yang sedang login
         $user = $request->user();
@@ -75,6 +54,19 @@ class ProfileController extends Controller
         // Update data user
         $user->fill($data);
         
+        if ($request->filled('new_password')) {
+            $request->validate([
+                'current_password' => 'required',
+                'new_password' => 'required|min:6|confirmed', 
+            ]);
+    
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->with('error', 'Password lama tidak sesuai.');
+            }
+    
+            $user->password = Hash::make($request->new_password);
+        }
+
         // Simpan perubahan pada user jika ada
         if ($user->isDirty()) {
             $user->save();
@@ -82,8 +74,14 @@ class ProfileController extends Controller
         
         if ($user->student) {
             $studentData = [
-                'Student_Name' => $data['name'] ,
+                'Student_Name' => $data['name'], 
                 'Student_Email' => $data['email'],
+                'Phone_Number' => $data['handphone'] ?? null, 
+                'Home_Phone' => $data['telepon'] ?? $user->student->Home_Phone, 
+                'Address' => $data['jalan']?? null, 
+                'Postal_Code' => $data['kode_pos'] ?? null, 
+                'Birth_Place' => $data['tempat_lahir'] ?? null, 
+                'Birth_Date' => $data['tanggal_lahir'] ?? null, 
             ];
     
             $user->student->update($studentData);
@@ -111,42 +109,5 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
-    }
-    private function loginAndGetToken()
-    {
-        try {
-            $loginResponse = Http::withOptions(['verify' => false])
-                ->post('https://sipakamase.unhas.ac.id:8107/login', [
-                    'username' => 'admin',
-                    'password' => 'UnhasTamalanreaMakassar',
-                ]);
-
-            if ($loginResponse->successful()) {
-                $loginData = $loginResponse->json();
-
-                if (isset($loginData['access_token'])) {
-                    return [
-                        'status' => $loginResponse->status(),
-                        'access_token' => $loginData['access_token'],
-                        'message' => 'Login berhasil',
-                    ];
-                } else {
-                    return [
-                        'status' => $loginResponse->status(),
-                        'message' => 'Access token tidak ditemukan dalam respons API.',
-                    ];
-                }
-            } else {
-                return [
-                    'status' => $loginResponse->status(),
-                    'message' => 'Login gagal. Status: ' . $loginResponse->status() . ' - ' . $loginResponse->body(),
-                ];
-            }
-        } catch (\Exception $e) {
-            return [
-                'status' => 500,
-                'message' => 'Terjadi kesalahan saat menghubungi API: ' . $e->getMessage(),
-            ];
-        }
     }
 }

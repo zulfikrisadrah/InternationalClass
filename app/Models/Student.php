@@ -14,6 +14,17 @@ class Student extends Model
         'Student_Email',
         'isActive',
         'isVerified',
+        'status',
+        'Gender',
+        'English_Score',
+        'NIK',
+        'NISN',
+        'Phone_Number',
+        'Home_Phone',
+        'Address',
+        'Postal_Code',
+        'Birth_Place',
+        'Birth_Date',
         'user_id',
         'ID_study_program'
     ];

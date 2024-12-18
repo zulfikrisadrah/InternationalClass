@@ -214,7 +214,7 @@
                                 class="grow shrink my-auto text-xl font-semibold {{ request()->routeIs('dashboard') ? 'text-blueThird' : 'text-zinc-500' }} w-full">Home</span>
                         </a>
                     </li>
-                    @if (auth()->check() && auth()->user()->student && auth()->user()->student->isActive == 1)
+                    @if (auth()->check() && auth()->user()->student)
                         <li class="w-full mt-4">
                             <a href="{{ route('student.program.index') }}"
                                 class="flex gap-2 py-3 px-4 text-xl font-semibold {{ request()->routeIs('student.program.index') ? 'bg-blue-50 text-blueThird' : 'text-zinc-500' }}">

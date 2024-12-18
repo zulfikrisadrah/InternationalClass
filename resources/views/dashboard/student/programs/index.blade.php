@@ -137,37 +137,41 @@
         </div>
 
     @else
-    <div class="flex items-center justify-center" style="margin-top: 150px">
-        <div class="text-center bg-white text-black p-10 rounded-lg">
-            @if (is_null(Auth::user()->student->ID_study_program))
-                <h2 class="text-2xl font-bold mb-4">Your study program is not available for international classes.</h2>
-            
-            <!-- Check if the user is not verified (not international student) -->
-            @elseif (Auth::user()->student->isVerified != 1)
-                <h2 class="text-2xl font-bold mb-4">You are not verified as an international student.</h2>
-                <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register Now</button>
-                </form>
-    
-            <!-- Check if the user is not active (inactive student) -->
-            @elseif (Auth::user()->student->isActive != 1)
-                <h2 class="text-2xl font-bold mb-4">You are not an active student.</h2>
-                <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="font-bold py-2 px-4 bg-red-500 text-white rounded-lg">Activate Now</button>
-                </form>
-    
-            <!-- Check the student's status if they are neither verified nor active -->
-            @else
-                @if($user->student->status === 'waiting')
+        <div class="flex items-center justify-center" style="margin-top: 150px">
+            <div class="text-center bg-white text-black p-10 rounded-lg">
+                <!-- Cek jika program studi null -->
+                @if (is_null(Auth::user()->student->ID_study_program))
+                    <h2 class="text-2xl font-bold mb-4">Your study program is not available for international classes.</h2>
+        
+                <!-- Cek jika mahasiswa tidak terverifikasi dan status null -->
+                @elseif (Auth::user()->student->isVerified != 1 && Auth::user()->student->status == null)
+                    <h2 class="text-2xl font-bold mb-4">You are not verified as an international student.</h2>
+                    <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register Now</button>
+                    </form>
+        
+                <!-- Cek jika mahasiswa aktif tetapi statusnya null -->
+                @elseif (Auth::user()->student->isVerified == 1 && Auth::user()->student->status == null)
+                    <h2 class="text-2xl font-bold mb-4">You are not an active student.</h2>
+                    <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="font-bold py-2 px-4 bg-red-500 text-white rounded-lg">Activate Now</button>
+                    </form>
+        
+                <!-- Cek jika status mahasiswa 'waiting' -->
+                @elseif (Auth::user()->student->status === 'waiting')
                     <h2 class="text-2xl font-bold mb-4">You are currently waiting for admin verification.</h2>
-                @elseif($user->student->status === 'rejected')
+        
+                <!-- Cek jika status mahasiswa 'rejected' -->
+                @elseif (Auth::user()->student->status === 'rejected')
                     <h2 class="text-2xl font-bold mb-4">You have been rejected as an international student.</h2>
                     <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
                         @csrf
                         <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Reapply Now</button>
                     </form>
+        
+                <!-- Default: Mahasiswa harus mendaftar -->
                 @else
                     <h2 class="text-2xl font-bold mb-4">You are not an international student. Register now!</h2>
                     <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
@@ -175,9 +179,8 @@
                         <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register Now</button>
                     </form>
                 @endif
-            @endif
+            </div>
         </div>
-    </div>    
     @endif
 
     <script>

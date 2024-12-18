@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
         });
         Route::middleware('can:manage user')->group(function () {
             Route::get('user/generate-pdf', [UserController::class, 'generatePdf'])->name('user.generate-pdf');
+            Route::get('user/preview-pdf', [UserController::class, 'previewPdf'])->name('user.preview-pdf');
             Route::resource('user', UserController::class);
             Route::post('user/storeStudent', [UserController::class, 'storeStudent'])->name('user.storeStudent');
             Route::post('user/{userId}/update-english-score', [UserController::class, 'updateEnglishScore'])->name('user.updateEnglishScore');

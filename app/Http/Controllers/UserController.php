@@ -504,57 +504,113 @@ class UserController extends Controller
         // Query untuk mendapatkan data pengguna, hanya mengambil yang aktif
         $users = User::role('student')
             ->whereHas('student', function ($query) use ($request) {
-                // Hanya ambil yang aktif
                 $query->where('isactive', 1);
-
-                // Filter berdasarkan nama jika ada
+    
                 if ($request->filled('search')) {
                     $query->where('Student_Name', 'like', '%' . $request->search . '%');
                 }
-
-                // Filter berdasarkan program studi
+    
                 if ($request->filled('study_program')) {
                     $query->where('id_study_program', $request->study_program);
                 }
-
-                // Filter berdasarkan tahun angkatan
+    
                 if ($request->filled('year')) {
                     $query->whereRaw("CONCAT('20', SUBSTRING(Student_ID_Number, 5, 2)) = ?", [$request->year]);
                 }
             })
-            ->with([
-                'student.programs' => function ($query) {
-                    // Menambahkan hubungan untuk status selesai
-                    $query->withPivot('isFinished');
-                }
-            ])
+            ->with(['student.programs' => function ($query) {
+                $query->withPivot('isFinished');
+            }])
             ->get();
-
-        // Tentukan nama program studi sesuai login user
+    
         $study_program_name = null;
         if (auth()->user()->hasRole('staff')) {
-            // Jika staff, ambil program studi yang terkait dengan staff
             $study_program_name = auth()->user()->staff->studyProgram->study_program_Name ?? null;
         } elseif ($request->filled('study_program')) {
-            // Jika admin dan ada parameter 'study_program' di request
             $studyProgram = StudyProgram::find($request->study_program);
             $study_program_name = $studyProgram->study_program_Name ?? null;
         }
-
-        // Data untuk view PDF
+    
+        $groupedByStudyProgram = $users->groupBy(function ($user) {
+            return $user->student->ID_study_program;
+        });
+    
+        $programsData = [];
+        foreach ($groupedByStudyProgram as $studyProgramId => $usersInProgram) {
+            $groupedByYear = $usersInProgram->groupBy(function ($user) {
+                return '20' . substr($user->student->Student_ID_Number, 4, 2); // Menyaring angkatan dari NIM
+            });
+    
+            $groupedByYear = $groupedByYear->sortKeys();
+    
+            $programsData[] = [
+                'studyProgram' => StudyProgram::find($studyProgramId),
+                'groupedByYear' => $groupedByYear
+            ];
+        }
+    
         $data = [
             'users' => $users,
             'year' => $request->year,
+            'programsData' => $programsData, 
             'study_program_name' => $study_program_name,
         ];
-
-        // Nama file PDF
+    
         $fileName = ($study_program_name ?? 'semua_prodi') . '_' . ($request->year ?? 'semua_angkatan') . '.pdf';
         $fileName = str_replace(' ', '_', strtolower($fileName)); // Format nama file
-
-        // Generate PDF menggunakan view
+    
         $pdf = PDF::loadView('dashboard.admin.pdf', $data);
         return $pdf->stream($fileName);
+    }
+    public function previewPdf(Request $request)
+    {
+        $users = User::role('student')
+            ->whereHas('student', function ($query) use ($request) {
+                $query->where('isactive', 1);
+    
+                if ($request->filled('search')) {
+                    $query->where('Student_Name', 'like', '%' . $request->search . '%');
+                }
+    
+                if ($request->filled('study_program')) {
+                    $query->where('id_study_program', $request->study_program);
+                }
+    
+                if ($request->filled('year')) {
+                    $query->whereRaw("CONCAT('20', SUBSTRING(Student_ID_Number, 5, 2)) = ?", [$request->year]);
+                }
+            })
+            ->with(['student.programs' => function ($query) {
+                $query->withPivot('isFinished');
+            }])
+            ->get();
+    
+        $groupedByStudyProgram = $users->groupBy(function ($user) {
+            return $user->student->ID_study_program;
+        });
+    
+        $study_program_name = auth()->user()->hasRole('staff') 
+            ? auth()->user()->staff->studyProgram->study_program_Name ?? null 
+            : StudyProgram::find($request->study_program)->study_program_Name ?? null;
+    
+        $programsData = [];
+        foreach ($groupedByStudyProgram as $studyProgramId => $usersInProgram) {
+            $groupedByYear = $usersInProgram->groupBy(function ($user) {
+                return '20' . substr($user->student->Student_ID_Number, 4, 2); // Menyaring angkatan dari NIM
+            });
+    
+            $groupedByYear = $groupedByYear->sortKeys();
+    
+            $programsData[] = [
+                'studyProgram' => StudyProgram::find($studyProgramId),
+                'groupedByYear' => $groupedByYear
+            ];
+        }
+    
+        return view('dashboard.admin.preview-pdf', [
+            'programsData' => $programsData,
+            'study_program_name' => $study_program_name,
+        ]);
     }
     /**
      * Show the form for editing the specified resource.

@@ -74,9 +74,21 @@
 
                 <!-- Enroll Button -->
                 <div class="mt-6 flex justify-end">
-                    <button type="button" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full" onclick="openModal()">
-                        Enroll in Program
-                    </button>
+                    @php
+                        $student = auth()->user()->student;
+                        $existingEnrollment = $student->programs()->where('program_enrollment.ID_program', $program->ID_program)->first();
+                        $currentStatus = $existingEnrollment ? $existingEnrollment->pivot->status : null;
+                    @endphp
+                    @if ($currentStatus === 'approved')
+                        <!-- Logbook Button -->
+                        <a href="{{ route('student.logbook.index', $program->ID_program) }}" class="font-bold py-2 px-4 bg-green-700 text-white rounded-full">
+                            Logbook
+                        </a>
+                    @else
+                        <button type="button" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full" onclick="openModal()">
+                            Enroll in Program
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>

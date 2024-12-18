@@ -48,17 +48,17 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>                    
-                    
+                        </div>
+
                         <a href="#" id="openModal" class="ml-auto font-bold py-4 px-6 mr-4 bg-blueThird text-white rounded-full">
                             Add Student
                         </a>
-                    
+
                         <script>
                             document.getElementById('openModal').addEventListener('click', function() {
                                 document.getElementById('studentModal').classList.remove('hidden');
                             });
-                    
+
                             document.getElementById('closeModal').addEventListener('click', function() {
                                 document.getElementById('studentModal').classList.add('hidden');
                             });
@@ -206,7 +206,7 @@
                                             @if (request()->get('role') == 'student' || request()->get('role') == '' && request()->get('status') != 'waiting')
                                                 @php
                                                     $programs = $user->student?->programs ?? collect();
-                                                    
+
                                                     $completedProgram = $programs->firstWhere(function($program) {
                                                         return $program->pivot->status === 'approved' && $program->pivot->isFinished === 1;
                                                     });
@@ -316,8 +316,8 @@
                                                                     -
                                                                 @endif
                                                             </td>
-                                                        </tr>                                                                                                                                                   
-                                                        
+                                                        </tr>
+
                                                         <tr class="hover:bg-gray-50 border-b">
                                                             <td class="py-3 px-4 text-gray-600 font-medium">IE Program</td>
                                                             <td class="py-3 px-4">
@@ -331,14 +331,14 @@
                                                                 @endif
                                                             </td>
                                                         </tr>
-                                                        
+
                                                         <tr class="hover:bg-gray-50 border-b">
                                                             <td class="py-3 px-4 text-gray-600 font-medium">Program Date</td>
                                                             <td class="py-3 px-4">
                                                                 @if (isset($user->student) && $user->student->programs->isNotEmpty())
                                                                     @foreach ($user->student->programs as $program)
                                                                         <div>
-                                                                            {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d F Y') }} - 
+                                                                            {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d F Y') }} -
                                                                             {{ \Carbon\Carbon::parse($program->End_Date)->format('d F Y') }}
                                                                         </div>
                                                                     @endforeach
@@ -346,8 +346,8 @@
                                                                     -
                                                                 @endif
                                                             </td>
-                                                        </tr>                                                    
-                                                        
+                                                        </tr>
+
                                                         <tr class="hover:bg-gray-50 border-b">
                                                             <td class="py-3 px-4 text-gray-600 font-medium">Status</td>
                                                             <td class="py-3 px-4">
@@ -370,14 +370,14 @@
                                                                 @endif
                                                             </td>
                                                         </tr>
-                                                        
+
                                                         <tr class="hover:bg-gray-50">
                                                             <td class="py-3 px-4 text-gray-600 font-medium">Logbook</td>
                                                             <td class="py-3 px-4">
                                                                 @if (isset($user->student) && $user->student->programs->isNotEmpty())
                                                                     @foreach ($user->student->programs as $program)
-                                                                        <div class="py-2"> 
-                                                                            <a href="{{ route('admin.program.show', $program->ID_program) }}"
+                                                                        <div class="py-2">
+                                                                            <a href="{{ route('admin.admin.logbook.index', ['program' => $program->ID_program, 'user' => $user->id]) }}"
                                                                                 class="text-white text-sm px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition duration-200">
                                                                                 Read Logbook ({{ $program->program_Name }})
                                                                             </a>
@@ -387,17 +387,17 @@
                                                                     -
                                                                 @endif
                                                             </td>
-                                                        </tr>                                                    
-                                                        
+                                                        </tr>
+
                                                         <tr class="hover:bg-gray-50 border-b border-t">
                                                             <td class="py-3 px-4 text-gray-600 font-medium">English Score</td>
                                                             <td class="py-3 px-4">
                                                                 <form action="{{ route('admin.user.updateEnglishScore', ['userId' => $user->id]) }}" method="POST" id="update-score-form-{{ $user->id }}">
                                                                     @csrf
-                                                                    <input type="number" name="English_Score" id="english-score-{{ $user->id }}" 
-                                                                        value="{{ $user->student->English_Score }}" 
-                                                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg" 
-                                                                        min="0" max="100" 
+                                                                    <input type="number" name="English_Score" id="english-score-{{ $user->id }}"
+                                                                        value="{{ $user->student->English_Score }}"
+                                                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                                                                        min="0" max="100"
                                                                         disabled
                                                                     />
                                                                 </form>
@@ -409,20 +409,20 @@
 
                                             <!-- Modal Footer -->
                                             <div class="flex justify-end mt-4">
-                                                <button id="edit-btn-{{ $user->id }}" 
+                                                <button id="edit-btn-{{ $user->id }}"
                                                         onclick="toggleEditSave({{ $user->id }})"
                                                         class="mr-2 bg-blue-500 text-white px-4 py-2 rounded-lg">
                                                     Edit
                                                 </button>
-                                            
-                                                <button type="submit" 
-                                                        class="mr-2 bg-blue-500 text-white px-4 py-2 rounded-lg" 
-                                                        style="display: none;" 
-                                                        id="save-btn-{{ $user->id }}" 
+
+                                                <button type="submit"
+                                                        class="mr-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                                        style="display: none;"
+                                                        id="save-btn-{{ $user->id }}"
                                                         form="update-score-form-{{ $user->id }}">
                                                     Save
                                                 </button>
-                                            
+
                                                 <button onclick="closeModal('{{ $user->id }}')"
                                                         class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-200">
                                                     Close
@@ -449,11 +449,11 @@
                                         if (englishScoreInput.disabled) {
                                             englishScoreInput.disabled = false;
                                             editButton.style.display = 'none';
-                                            saveButton.style.display = 'inline-block'; 
+                                            saveButton.style.display = 'inline-block';
                                         } else {
                                             englishScoreInput.disabled = true;
                                             editButton.style.display = 'inline-block';
-                                            saveButton.style.display = 'none'; 
+                                            saveButton.style.display = 'none';
                                         }
                                     }
                                 </script>

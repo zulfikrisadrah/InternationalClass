@@ -42,24 +42,24 @@ class UserController extends Controller
 
         if (Auth::user()->hasRole('admin')) {
             $validStudyPrograms = StudyProgram::pluck('study_program_Name')->toArray();
-        
+
             $waitingCount = User::role('student')
                 ->whereHas('student', function ($query) use ($validStudyPrograms) {
                     $query->where('status', 'waiting')
                           ->whereIn('ID_study_program', StudyProgram::whereIn('study_program_Name', $validStudyPrograms)->pluck('ID_study_program'));
                 })
                 ->count();
-        
+
         } elseif (Auth::user()->hasRole('staff')) {
             $adminStudyProgram = Auth::user()->staff->studyProgram->ID_study_program;
-        
+
             $waitingCount = User::role('student')
                 ->whereHas('student', function ($query) use ($adminStudyProgram) {
                     $query->where('status', 'waiting')
                           ->where('ID_study_program', $adminStudyProgram);
                 })
                 ->count();
-        }        
+        }
 
         $users = collect();
         $programNames = [];
@@ -129,12 +129,12 @@ class UserController extends Controller
             } elseif ($status == 'waiting') {
                 if (Auth::user()->hasRole('staff')) {
                     $staffStudyProgram = auth()->user()->staff->studyProgram->study_program_Name;
-            
+
                     $usersQuery = User::role('student')
                         ->whereHas('student', function ($query) {
                             $query->where('status', 'waiting');
                         });
-            
+
                     if ($search) {
                         $usersQuery->where(function ($query) use ($search) {
                             $query->where('name', 'like', "%$search%")
@@ -142,14 +142,14 @@ class UserController extends Controller
                                 ->orWhere('username', 'like', '%' . $search . '%');
                         });
                     }
-            
+
                     $users = $usersQuery->paginate(5);
-                    
+
                     $validUsers = $users->filter(function ($user) use ($staffStudyProgram) {
                         $studentStudyProgram = $user->student->studyProgram->study_program_Name;
                         return $studentStudyProgram == $staffStudyProgram;
                     });
-            
+
                     $users = new \Illuminate\Pagination\LengthAwarePaginator(
                         $validUsers->forPage(1, 5),
                         $validUsers->count(),
@@ -157,17 +157,17 @@ class UserController extends Controller
                         1,
                         ['path' => url()->current()]
                     );
-            
+
                     $users->appends(['role' => $role, 'status' => $status]);
-            
+
                 } else if (Auth::user()->hasRole('admin')) {
                     $validStudyPrograms = StudyProgram::pluck('study_program_Name')->toArray();
-            
+
                     $usersQuery = User::role('student')
                         ->whereHas('student', function ($query) {
                             $query->where('status', 'waiting');
                         });
-            
+
                     if ($search) {
                         $usersQuery->where(function ($query) use ($search) {
                             $query->where('name', 'like', "%$search%")
@@ -175,12 +175,12 @@ class UserController extends Controller
                                 ->orWhere('username', 'like', '%' . $search . '%');
                         });
                     }
-            
+
                     $users = $usersQuery->get()->filter(function ($user) use ($validStudyPrograms) {
                         $studentStudyProgram = $user->student->studyProgram->study_program_Name;
                         return in_array($studentStudyProgram, $validStudyPrograms);
                     });
-            
+
                     $users = new \Illuminate\Pagination\LengthAwarePaginator(
                         $users->forPage(1, 5),
                         $users->count(),
@@ -188,10 +188,10 @@ class UserController extends Controller
                         1,
                         ['path' => url()->current()]
                     );
-            
+
                     $users->appends(['role' => $role, 'status' => $status]);
                 }
-            
+
                 foreach ($users as $user) {
                     $programNames[$user->id] = $user->student->studyProgram->study_program_Name;
                 }
@@ -324,18 +324,18 @@ class UserController extends Controller
         $request->validate([
             'nim' => 'required',
         ]);
-        
+
         $nim = $request->nim;
         $tokenResponse = $this->loginAndGetToken();
-        
+
         if ($tokenResponse['status'] != 200) {
             throw ValidationException::withMessages([
                 'email' => 'Login failed: ' . $tokenResponse['message'],
             ]);
         }
-        
+
         $accessToken = $tokenResponse['access_token'];
-        
+
         $response = Http::withOptions(['verify' => false])
             ->withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken
@@ -344,16 +344,16 @@ class UserController extends Controller
                 'nim' => $nim,
             ]), 'application/json')
             ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-        
+
         if ($response->successful()) {
             $mahasiswaData = $response->json();
-        
+
             if (empty($mahasiswaData['mahasiswas'])) {
                 return redirect()->back()->with('error', 'NIM not valid or not found.');
             }
-        
+
             $mahasiswa = $mahasiswaData['mahasiswas'][0];
-        
+
             $namaMahasiswa = $mahasiswa['nama_mahasiswa'] ?? 'No Name';
             $emailMahasiswa = $mahasiswa['email'] ?? "{$nim}@unhas.ac.id";
             $nik = $mahasiswa['nik'] ?? null;
@@ -365,31 +365,31 @@ class UserController extends Controller
             $birthPlace = $mahasiswa['tempat_lahir'] ?? null;
             $birthDate = $mahasiswa['tanggal_lahir'] ?? null;
             $programName = $mahasiswa['prodi']['nama_resmi'];
-        
+
             $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
-        
+
             if (!$studyProgram) {
                 // dd('Program Name: ', $programName);
                 return redirect()->back()->with('error', 'The study program is not available for the international class.');
             }
-    
+
             $studyProgramId = $studyProgram->ID_study_program;
-        
+
             $user = auth()->user();
-        
+
             // Pengecekan apakah user adalah admin
             if ($user->hasRole('admin')) {
                 $nim = strtoupper($nim);
-        
+
                 $student = Student::where('Student_ID_Number', $nim)->first();
-        
+
                 if ($student) {
                     $student->update([
                         'status' => 'accepted',
                         'isActive' => 1,
                         'isVerified' => 1,
                     ]);
-        
+
                     return redirect()->route('admin.user.index')->with('success', 'Student updated successfully.');
                 } else {
                     $user = User::create([
@@ -398,9 +398,9 @@ class UserController extends Controller
                         'email' => $emailMahasiswa,
                         'password' => bcrypt("{$nim}@internasional"),
                     ]);
-        
+
                     $user->assignRole('student');
-        
+
                     Student::create([
                         'Student_Name' => ucfirst($namaMahasiswa),
                         'Student_ID_Number' => strtoupper($nim),
@@ -419,29 +419,29 @@ class UserController extends Controller
                         'isVerified' => 1,
                         'ID_study_program' => $studyProgramId,
                     ]);
-        
+
                     return redirect()->route('admin.user.index')->with('success', 'Student added successfully.');
                 }
             } elseif ($user->hasRole('staff')) {
-                $staffStudyProgramId = $user->staff->ID_study_program; 
-    
+                $staffStudyProgramId = $user->staff->ID_study_program;
+
                 if ($studyProgramId !== $staffStudyProgramId) {
                     return redirect()->back()->with('error', 'The student is not under your authority.');
                 }
-            
+
             }
-    
+
             $nim = strtoupper($nim);
-    
+
             $student = Student::where('Student_ID_Number', $nim)->first();
-        
+
             if ($student) {
                 $student->update([
                     'status' => 'accepted',
                     'isActive' => 1,
                     'isVerified' => 1,
                 ]);
-        
+
                 return redirect()->route('admin.user.index')->with('success', 'Student updated successfully.');
             } else {
                 $user = User::create([
@@ -450,9 +450,9 @@ class UserController extends Controller
                     'email' => $emailMahasiswa,
                     'password' => bcrypt("{$nim}@internasional"),
                 ]);
-        
+
                 $user->assignRole('student');
-        
+
                 Student::create([
                     'Student_Name' => ucfirst($namaMahasiswa),
                     'Student_ID_Number' => strtoupper($nim),
@@ -471,7 +471,7 @@ class UserController extends Controller
                     'isVerified' => 1,
                     'ID_study_program' => $studyProgramId,
                 ]);
-        
+
                 return redirect()->route('admin.user.index')->with('success', 'Student added successfully.');
             }
         } else {
@@ -480,11 +480,11 @@ class UserController extends Controller
             ]);
         }
     }
-    
+
     public function updateEnglishScore(Request $request, $userId)
     {
         $request->validate([
-            'English_Score' => 'required|numeric', 
+            'English_Score' => 'required|numeric',
         ]);
 
         $user = User::find($userId);
@@ -585,32 +585,9 @@ class UserController extends Controller
         $action = $request->input('action');
 
         if (in_array($action, ['accept', 'reject'])) {
-            $tokenData = $this->loginAndGetToken();
-
-            if ($tokenData['status'] == 200) {
-                $accessToken = $tokenData['access_token'];
-
-                $response = Http::withOptions(['verify' => false])
-                    ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
-                    ->withBody(json_encode(['nim' => $user->username]), 'application/json')
-                    ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-            }
-            if (!$response->successful()) {
-                abort(500, 'Failed to fetch program data from API.');
-            }
-
-            $data = $response->json();
-            if (!isset($data['mahasiswas'][0]['prodi']['nama_resmi'])) {
-                abort(500, 'Invalid response structure from API.');
-            }
-
-            $programName = $data['mahasiswas'][0]['prodi']['nama_resmi'];
+            $programName = $user->student->studyProgram->study_program_Name;
 
             $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
-
-            if (!$studyProgram) {
-                return response()->json(['error' => 'Program studi not found.'], 404);
-            }
 
             $studyProgramId = $studyProgram->ID_study_program;
 

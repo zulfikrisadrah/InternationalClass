@@ -430,18 +430,18 @@ class UserController extends Controller
         $request->validate([
             'nim' => 'required',
         ]);
-    
+        
         $nim = $request->nim;
         $tokenResponse = $this->loginAndGetToken();
-    
+        
         if ($tokenResponse['status'] != 200) {
             throw ValidationException::withMessages([
                 'email' => 'Login failed: ' . $tokenResponse['message'],
             ]);
         }
-    
+        
         $accessToken = $tokenResponse['access_token'];
-    
+        
         $response = Http::withOptions(['verify' => false])
             ->withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken
@@ -450,16 +450,16 @@ class UserController extends Controller
                 'nim' => $nim,
             ]), 'application/json')
             ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-    
+        
         if ($response->successful()) {
             $mahasiswaData = $response->json();
-    
+        
             if (empty($mahasiswaData['mahasiswas'])) {
                 return redirect()->back()->with('error', 'NIM not valid or not found.');
             }
-    
+        
             $mahasiswa = $mahasiswaData['mahasiswas'][0];
-    
+        
             $namaMahasiswa = $mahasiswa['nama_mahasiswa'] ?? 'No Name';
             $emailMahasiswa = $mahasiswa['email'] ?? "{$nim}@unhas.ac.id";
             $nik = $mahasiswa['nik'] ?? null;
@@ -471,24 +471,31 @@ class UserController extends Controller
             $birthPlace = $mahasiswa['tempat_lahir'] ?? null;
             $birthDate = $mahasiswa['tanggal_lahir'] ?? null;
             $programName = $mahasiswa['prodi']['nama_resmi'];
-    
+        
             $studyProgram = StudyProgram::where('study_program_Name', $programName)->first();
+        
+            if (!$studyProgram) {
+                // dd('Program Name: ', $programName);
+                return redirect()->back()->with('error', 'The study program is not available for the international class.');
+            }
+    
             $studyProgramId = $studyProgram->ID_study_program;
-    
+        
             $user = auth()->user();
-    
+        
+            // Pengecekan apakah user adalah admin
             if ($user->hasRole('admin')) {
                 $nim = strtoupper($nim);
-    
+        
                 $student = Student::where('Student_ID_Number', $nim)->first();
-    
+        
                 if ($student) {
                     $student->update([
                         'status' => 'accepted',
                         'isActive' => 1,
                         'isVerified' => 1,
                     ]);
-    
+        
                     return redirect()->route('admin.user.index')->with('success', 'Student updated successfully.');
                 } else {
                     $user = User::create([
@@ -497,9 +504,9 @@ class UserController extends Controller
                         'email' => $emailMahasiswa,
                         'password' => bcrypt("{$nim}@internasional"),
                     ]);
-    
+        
                     $user->assignRole('student');
-    
+        
                     Student::create([
                         'Student_Name' => ucfirst($namaMahasiswa),
                         'Student_ID_Number' => strtoupper($nim),
@@ -518,29 +525,29 @@ class UserController extends Controller
                         'isVerified' => 1,
                         'ID_study_program' => $studyProgramId,
                     ]);
-    
+        
                     return redirect()->route('admin.user.index')->with('success', 'Student added successfully.');
                 }
             } elseif ($user->hasRole('staff')) {
                 $staffStudyProgramId = $user->staff->ID_study_program; 
-
+    
                 if ($studyProgramId !== $staffStudyProgramId) {
                     return redirect()->back()->with('error', 'The student is not under your authority.');
                 }
             
             }
-
-            $nim = strtoupper($nim);
-
-            $student = Student::where('Student_ID_Number', $nim)->first();
     
+            $nim = strtoupper($nim);
+    
+            $student = Student::where('Student_ID_Number', $nim)->first();
+        
             if ($student) {
                 $student->update([
                     'status' => 'accepted',
                     'isActive' => 1,
                     'isVerified' => 1,
                 ]);
-    
+        
                 return redirect()->route('admin.user.index')->with('success', 'Student updated successfully.');
             } else {
                 $user = User::create([
@@ -549,9 +556,9 @@ class UserController extends Controller
                     'email' => $emailMahasiswa,
                     'password' => bcrypt("{$nim}@internasional"),
                 ]);
-    
+        
                 $user->assignRole('student');
-    
+        
                 Student::create([
                     'Student_Name' => ucfirst($namaMahasiswa),
                     'Student_ID_Number' => strtoupper($nim),
@@ -570,7 +577,7 @@ class UserController extends Controller
                     'isVerified' => 1,
                     'ID_study_program' => $studyProgramId,
                 ]);
-    
+        
                 return redirect()->route('admin.user.index')->with('success', 'Student added successfully.');
             }
         } else {

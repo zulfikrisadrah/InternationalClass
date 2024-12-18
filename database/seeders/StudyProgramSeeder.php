@@ -61,7 +61,7 @@ class StudyProgramSeeder extends Seeder
                 'courses_fully_filled_in_sikola' => 5, 
             ],
             [
-                'study_program_Name' => 'ILMU KEPERAWATAN - S1',
+                'study_program_Name' => 'KEPERAWATAN - S1',
                 'ID_Faculty' => 15,
                 'study_program_Image' => $this->storeImage('keperawatan.png'),
                 'study_program_Description' =>'',
@@ -84,7 +84,7 @@ class StudyProgramSeeder extends Seeder
                 'courses_fully_filled_in_sikola' => 0, 
             ],
             [
-                'study_program_Name' => 'KESEHATAN MASYARAKAT - S1',
+                'study_program_Name' => 'KESEHATAN MASYARAKAT (S1)',
                 'ID_Faculty' => 11,
                 'study_program_Image' => $this->storeImage('kesmas.png'),
                 'study_program_Description' =>'The International Class Program of the Faculty of Public Health, Hasanuddin University, has been established since 2016 and has graduated a total of 5 alumni.',
@@ -221,7 +221,7 @@ class StudyProgramSeeder extends Seeder
                 'courses_fully_filled_in_sikola' => 0, 
             ],
             [
-                'study_program_Name' => 'ILMU HUBUNGAN INTERNASIONAL - S1',
+                'study_program_Name' => 'ILMU HUB. INTERNASIONAL - S1',
                 'ID_Faculty' => 5,
                 'study_program_Image' => $this->storeImage('hi.png'),
                 'study_program_Description' =>'',
@@ -290,7 +290,7 @@ class StudyProgramSeeder extends Seeder
                 'courses_fully_filled_in_sikola' => 0, 
             ],
             [
-                'study_program_Name' => 'AKUTANSI - S1',
+                'study_program_Name' => 'AKUNTANSI - S1',
                 'ID_Faculty' => 1,
                 'study_program_Image' => $this->storeImage('Fakultas-Ekonomi-dan-Bisnis.png'),
                 'study_program_Description' =>'',

@@ -12,6 +12,9 @@ class StudyProgramController extends Controller
     public function index(Request $request)
     {
         $studyPrograms = StudyProgram::paginate(10);
+        $data = [
+            'title' => 'Manage Study Program',
+        ];
         $search = $request->input('search');
 
         // Query the StudyProgram model
@@ -21,7 +24,7 @@ class StudyProgramController extends Controller
                 $query->where('study_program_Name', 'like', "%{$search}%");
             })
             ->paginate(10);
-        return view('dashboard.admin.studyPrograms.index', compact('studyPrograms', 'search'));
+        return view('dashboard.admin.studyPrograms.index', compact('studyPrograms', 'search', 'data'));
     }
 
     public function create()
@@ -68,7 +71,7 @@ class StudyProgramController extends Controller
 
         return redirect()->route('admin.studyProgram.index')->with('success', 'Study Program created successfully');
     }
-    
+
     public function show(StudyProgram $studyProgram)
     {
         return view('dashboard.admin.studyPrograms.show', compact('studyProgram'));

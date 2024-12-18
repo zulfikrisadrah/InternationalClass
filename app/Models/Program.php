@@ -35,6 +35,10 @@ class Program extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function logbooks()
+    {
+        return $this->hasMany(Logbook::class, 'ID_program');
+    }
     public function students()
     {
         return $this->belongsToMany(Student::class, 'program_enrollment', 'ID_program', 'ID_Student')

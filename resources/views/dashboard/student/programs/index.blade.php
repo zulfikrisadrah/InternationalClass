@@ -62,14 +62,14 @@
                             </div>
 
                             <!-- Execution Date -->
-                            <div class="flex flex-col items-center text-center w-[170px]">
+                            <div class="flex flex-col items-center text-center w-[140px]">
                                 <p class="text-slate-500 font-semibold">Execution Date</p>
                                 <p class="text-indigo-900 font-bold">
                                     {{ \Carbon\Carbon::parse($program->Execution_Date)->format('d M Y') }}
                                 </p>
                             </div>
 
-                            <div class="flex flex-col items-center text-center w-[170px]">
+                            <div class="flex flex-col items-center text-center w-[140px]">
                                 <p class="text-slate-500 font-semibold">Course Credits</p>
                                 <p class="text-indigo-900 font-bold">
                                     {{ $program->Course_Credits }} SKS
@@ -77,7 +77,7 @@
                             </div>
 
                             <!-- Participants Count and Limit -->
-                            <div class="flex flex-col items-center text-center w-[170px]">
+                            <div class="flex flex-col items-center text-center w-[140px]">
                                 @php
                                     $approvedCount = $program->students()->wherePivot('status', 'approved')->count();
                                     $participantLimit = $program->Participants_Count;
@@ -99,10 +99,23 @@
                                 <a href="{{ route('student.program.show', $program->ID_program) }}" class="font-bold py-2 px-4 bg-blue-700 text-white rounded-full">
                                     Detail
                                 </a>
-                                <!-- Enroll Button -->
-                                <button type="button" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full" onclick="openModal({{ $program->ID_program }})">
-                                    Enroll
-                                </button>
+                                @php
+                                    $student = auth()->user()->student;
+                                    $existingEnrollment = $student->programs()->where('program_enrollment.ID_program', $program->ID_program)->first();
+                                    $currentStatus = $existingEnrollment ? $existingEnrollment->pivot->status : null;
+                                @endphp
+
+                                @if ($currentStatus === 'approved')
+                                    <!-- Logbook Button -->
+                                    <a href="{{ route('student.logbook.index', $program->ID_program) }}" class="font-bold py-2 px-4 bg-green-700 text-white rounded-full">
+                                        Logbook
+                                    </a>
+                                @else
+                                    <!-- Enroll Button -->
+                                    <button type="button" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full" onclick="openModal({{ $program->ID_program }})">
+                                        Enroll
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     @empty
@@ -142,7 +155,7 @@
                 <!-- Cek jika program studi null -->
                 @if (is_null(Auth::user()->student->ID_study_program))
                     <h2 class="text-2xl font-bold mb-4">Your study program is not available for international classes.</h2>
-        
+
                 <!-- Cek jika mahasiswa tidak terverifikasi dan status null -->
                 @elseif (Auth::user()->student->isVerified != 1 && Auth::user()->student->status == null)
                     <h2 class="text-2xl font-bold mb-4">You are not verified as an international student.</h2>
@@ -150,7 +163,7 @@
                         @csrf
                         <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register Now</button>
                     </form>
-        
+
                 <!-- Cek jika mahasiswa aktif tetapi statusnya null -->
                 @elseif (Auth::user()->student->isVerified == 1 && Auth::user()->student->status == null)
                     <h2 class="text-2xl font-bold mb-4">You are not an active student.</h2>
@@ -158,11 +171,11 @@
                         @csrf
                         <button type="submit" class="font-bold py-2 px-4 bg-red-500 text-white rounded-lg">Activate Now</button>
                     </form>
-        
+
                 <!-- Cek jika status mahasiswa 'waiting' -->
                 @elseif (Auth::user()->student->status === 'waiting')
                     <h2 class="text-2xl font-bold mb-4">You are currently waiting for admin verification.</h2>
-        
+
                 <!-- Cek jika status mahasiswa 'rejected' -->
                 @elseif (Auth::user()->student->status === 'rejected')
                     <h2 class="text-2xl font-bold mb-4">You have been rejected as an international student.</h2>
@@ -170,7 +183,7 @@
                         @csrf
                         <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Reapply Now</button>
                     </form>
-        
+
                 <!-- Default: Mahasiswa harus mendaftar -->
                 @else
                     <h2 class="text-2xl font-bold mb-4">You are not an international student. Register now!</h2>

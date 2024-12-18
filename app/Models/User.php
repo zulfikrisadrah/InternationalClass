@@ -73,4 +73,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Program::class, 'user_id');
     }
+    public function logbooks()
+    {
+        return $this->hasMany(Logbook::class, 'user_id');
+    }
 }

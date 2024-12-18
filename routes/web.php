@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudyPlanController;
 use App\Http\Controllers\TranscriptController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\LogbookController;
 use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\StudyProgramController;
 use App\Http\Controllers\OutboundLecturerController;
@@ -58,6 +59,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('user', UserController::class);
             Route::post('user/storeStudent', [UserController::class, 'storeStudent'])->name('user.storeStudent');
             Route::post('user/{userId}/update-english-score', [UserController::class, 'updateEnglishScore'])->name('user.updateEnglishScore');
+            Route::get('program/{program}/user/{user}/logbook', [LogbookController::class, 'indexForAdmin'])->name('admin.logbook.index');
         });
         Route::middleware('can:manage program')->group(function () {
             Route::resource('program', ProgramController::class);
@@ -94,6 +96,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/calendar/events', [CalenderController::class, 'getEvents'])->name('calendar.events');
         Route::post('/calendar/events', [CalenderController::class, 'store'])->name('calendar.store');
         Route::resource('program', ProgramController::class);
+        Route::get('program/{program}/logbook', [LogbookController::class, 'index'])->name('logbook.index');
+        Route::get('program/{program}/logbook/create', [LogbookController::class, 'create'])->name('logbook.create');
+        Route::post('/program/{program}/logbook', [LogbookController::class, 'store'])->name('logbook.store');
+        Route::get('program/{program}/logbook/{logbook}/edit', [LogbookController::class, 'edit'])->name('logbook.edit');
+        Route::put('program/{program}/logbook/{logbook}', [LogbookController::class, 'update'])->name('logbook.update');
+        Route::delete('program/{program}/logbook/{logbook}', [LogbookController::class, 'destroy'])->name('logbook.destroy');
         Route::post('program/update-status/{student}', [UserController::class, 'updateStatus'])->name('user.updateStatus');
         Route::post('student/program/{programId}/enroll', [ProgramController::class, 'enroll'])->name('program.enroll');
     });

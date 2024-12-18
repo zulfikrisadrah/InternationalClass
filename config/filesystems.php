@@ -37,6 +37,13 @@ return [
             'throw' => false,
         ],
 
+        'certificate' => [
+            'driver' => 'local',
+            'root' => storage_path('app/certificate'),
+            'url' => env('APP_URL') . '/storage/certificate',
+            'visibility' => 'public',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

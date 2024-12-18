@@ -114,6 +114,7 @@
     @foreach ($programsData as $programData)
         <div>
             <h4><span>Program Studi :</span> {{ $programData['studyProgram']->study_program_Name }}</h4>
+
             @foreach ($programData['groupedByYear'] as $year => $usersByYear)
                 <h4><span>Angkatan :</span> {{ $year }}</h4>
                 <table>

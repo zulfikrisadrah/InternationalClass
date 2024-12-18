@@ -114,6 +114,7 @@
                     <input type="hidden" name="role" value="{{ request()->get('role') }}">
                     <input type="hidden" name="study_program" value="{{ request()->get('study_program') }}">
                     <input type="hidden" name="year" value="{{ request()->get('year') }}">
+                    <input type="hidden" name="studentStatus" value="{{ request()->get('studentStatus') }}">
                     <input type="text" name="search" value="{{ request()->get('search') }}"
                         placeholder="Search users by name or email" class="py-2 px-4 border rounded-lg">
 
@@ -125,6 +126,15 @@
                         <input type="hidden" name="role" value="{{ request()->get('role', '') }}">
                         <input type="hidden" name="search" value="{{ request()->get('search') }}">
                         <input type="hidden" name="status" value="{{ request()->get('status') }}">
+
+                        <div class="flex flex-col">
+                            <select id="studentStatus" name="studentStatus" class="py-2 px-4 border rounded-lg" required style="width: 150px">
+                                <option value="">Status</option>
+                                <option value="completed" {{ request()->get('studentStatus') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="in_progress" {{ request()->get('studentStatus') == 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                                <option value="not_started" {{ request()->get('studentStatus') == 'not_started' ? 'selected' : '' }}>Not Started</option>
+                            </select>
+                        </div>
 
                         @role('admin')
                             <div class="flex flex-col">
@@ -165,6 +175,10 @@
                     });
 
                     $('#year').on('change', function() {
+                        var year = $(this).val();
+                        $(this).closest('form').submit();
+                    });
+                    $('#studentStatus').on('change', function() {
                         var year = $(this).val();
                         $(this).closest('form').submit();
                     });

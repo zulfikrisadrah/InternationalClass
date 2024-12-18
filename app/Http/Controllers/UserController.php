@@ -35,6 +35,7 @@ class UserController extends Controller
         $user = Auth::user();
         $role = $request->input('role');
         $status = $request->input('status');
+        $studentStatus = $request->input('studentStatus');
 
         $data = [
             'title' => 'Manage User',
@@ -67,28 +68,53 @@ class UserController extends Controller
         if ($role == 'student') {
             if (Auth::user()->hasRole('admin')) {
                 $users = User::role('student')
-                    ->whereHas('student', function ($query) {
-                        $query->where('isActive', 1);
-                    })
-                    ->where(function ($query) use ($search) {
-                        $query->where('name', 'like', '%' . $search . '%')
-                            ->orWhere('email', 'like', '%' . $search . '%')
-                            ->orWhere('username', 'like', '%' . $search . '%');
-                    })
-                    ->when($request->filled('study_program'), function ($query) use ($request) {
-                        $query->whereHas('student', function ($subQuery) use ($request) {
-                            $subQuery->where('ID_study_program', $request->study_program);
+                ->whereHas('student', function ($query) {
+                    $query->where('isActive', 1);
+                })
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('username', 'like', '%' . $search . '%');
+                })
+                ->when($request->filled('study_program'), function ($query) use ($request) {
+                    $query->whereHas('student', function ($subQuery) use ($request) {
+                        $subQuery->where('ID_study_program', $request->study_program);
+                    });
+                })
+                ->when($request->filled('year'), function ($query) use ($request) {
+                    $year = $request->year;
+                    $query->whereHas('student', function ($subQuery) use ($year) {
+                        $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                    });
+                })
+                ->when($request->filled('studentStatus'), function ($query) use ($request) {
+                    $studentStatus = $request->input('studentStatus');
+                
+                    if ($studentStatus == 'completed') {
+                        $query->whereHas('student.programs', function ($subQuery) {
+                            $subQuery->where('program_enrollment.status', 'approved')
+                                     ->where('program_enrollment.isFinished', 1);
                         });
-                    })
-                    ->where(function ($query) use ($request) {
-                        if ($request->filled('year')) {
-                            $year = $request->year;
-                            $query->whereHas('student', function ($subQuery) use ($year) {
-                                $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                    } elseif ($studentStatus == 'in_progress') {
+                        $query->whereHas('student.programs', function ($subQuery) {
+                            $subQuery->where('program_enrollment.status', 'approved')
+                                     ->where('program_enrollment.isFinished', 0);
+                        });
+                    } elseif ($studentStatus == 'not_started') {
+                        $query->whereHas('student', function ($subQuery) {
+                            $subQuery->where(function ($innerQuery) {
+                                $innerQuery->whereNotIn('ID_Student', function ($subSubQuery) {
+                                    $subSubQuery->select('ID_Student')
+                                                ->from('program_enrollment');
+                                })
+                                ->orWhereHas('programs', function ($pendingQuery) {
+                                    $pendingQuery->where('program_enrollment.status', 'pending');
+                                });
                             });
-                        }
-                    })
-                    ->paginate(5);
+                        });
+                    }
+                })                    
+                ->paginate(5);
             } else if (Auth::user()->hasRole('staff')) {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
 
@@ -115,6 +141,33 @@ class UserController extends Controller
                             });
                         }
                     })
+                    ->when($request->filled('studentStatus'), function ($query) use ($request) {
+                        $studentStatus = $request->input('studentStatus');
+                    
+                        if ($studentStatus == 'completed') {
+                            $query->whereHas('student.programs', function ($subQuery) {
+                                $subQuery->where('program_enrollment.status', 'approved')
+                                         ->where('program_enrollment.isFinished', 1);
+                            });
+                        } elseif ($studentStatus == 'in_progress') {
+                            $query->whereHas('student.programs', function ($subQuery) {
+                                $subQuery->where('program_enrollment.status', 'approved')
+                                         ->where('program_enrollment.isFinished', 0);
+                            });
+                        } elseif ($studentStatus == 'not_started') {
+                            $query->whereHas('student', function ($subQuery) {
+                                $subQuery->where(function ($innerQuery) {
+                                    $innerQuery->whereNotIn('ID_Student', function ($subSubQuery) {
+                                        $subSubQuery->select('ID_Student')
+                                                    ->from('program_enrollment');
+                                    })
+                                    ->orWhereHas('programs', function ($pendingQuery) {
+                                        $pendingQuery->where('program_enrollment.status', 'pending');
+                                    });
+                                });
+                            });
+                        }
+                    })                    
                     ->paginate(5);
             }
         } elseif ($role == 'staff') {
@@ -228,6 +281,33 @@ class UserController extends Controller
                             });
                         }
                     })
+                    ->when($request->filled('studentStatus'), function ($query) use ($request) {
+                        $studentStatus = $request->input('studentStatus');
+                    
+                        if ($studentStatus == 'completed') {
+                            $query->whereHas('student.programs', function ($subQuery) {
+                                $subQuery->where('program_enrollment.status', 'approved')
+                                         ->where('program_enrollment.isFinished', 1);
+                            });
+                        } elseif ($studentStatus == 'in_progress') {
+                            $query->whereHas('student.programs', function ($subQuery) {
+                                $subQuery->where('program_enrollment.status', 'approved')
+                                         ->where('program_enrollment.isFinished', 0);
+                            });
+                        } elseif ($studentStatus == 'not_started') {
+                            $query->whereHas('student', function ($subQuery) {
+                                $subQuery->where(function ($innerQuery) {
+                                    $innerQuery->whereNotIn('ID_Student', function ($subSubQuery) {
+                                        $subSubQuery->select('ID_Student')
+                                                    ->from('program_enrollment');
+                                    })
+                                    ->orWhereHas('programs', function ($pendingQuery) {
+                                        $pendingQuery->where('program_enrollment.status', 'pending');
+                                    });
+                                });
+                            });
+                        }
+                    })                    
                     ->paginate(5);
             } else {
                 $staffStudyProgram = auth()->user()->staff->ID_study_program;
@@ -250,14 +330,39 @@ class UserController extends Controller
                             $subQuery->where('ID_study_program', $request->study_program);
                         });
                     })
-                    ->where(function ($query) use ($request) {
-                        if ($request->filled('year')) {
-                            $year = $request->year;
-                            $query->whereHas('student', function ($subQuery) use ($year) {
-                                $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                    ->when($request->filled('year'), function ($query) use ($request) {
+                        $year = $request->year;
+                        $query->whereHas('student', function ($subQuery) use ($year) {
+                            $subQuery->whereRaw("SUBSTRING(Student_ID_Number, 5, 2) = ?", [substr($year, -2)]);
+                        });
+                    })
+                    ->when($request->filled('studentStatus'), function ($query) use ($request) {
+                        $studentStatus = $request->input('studentStatus');
+                    
+                        if ($studentStatus == 'completed') {
+                            $query->whereHas('student.programs', function ($subQuery) {
+                                $subQuery->where('program_enrollment.status', 'approved')
+                                         ->where('program_enrollment.isFinished', 1);
+                            });
+                        } elseif ($studentStatus == 'in_progress') {
+                            $query->whereHas('student.programs', function ($subQuery) {
+                                $subQuery->where('program_enrollment.status', 'approved')
+                                         ->where('program_enrollment.isFinished', 0);
+                            });
+                        } elseif ($studentStatus == 'not_started') {
+                            $query->whereHas('student', function ($subQuery) {
+                                $subQuery->where(function ($innerQuery) {
+                                    $innerQuery->whereNotIn('ID_Student', function ($subSubQuery) {
+                                        $subSubQuery->select('ID_Student')
+                                                    ->from('program_enrollment');
+                                    })
+                                    ->orWhereHas('programs', function ($pendingQuery) {
+                                        $pendingQuery->where('program_enrollment.status', 'pending');
+                                    });
+                                });
                             });
                         }
-                    })
+                    })                    
                     ->paginate(5);
             }
         }
@@ -501,16 +606,23 @@ class UserController extends Controller
 
     public function generatePdf(Request $request)
     {
-        // Query untuk mendapatkan data pengguna, hanya mengambil yang aktif
-        $users = User::role('student')
-            ->whereHas('student', function ($query) use ($request) {
+        $staffStudyProgramName = auth()->user()->hasRole('staff') 
+            ? auth()->user()->staff->studyProgram->study_program_Name ?? null 
+            : null;
+    
+        $usersQuery = User::role('student')
+            ->whereHas('student', function ($query) use ($request, $staffStudyProgramName) {
                 $query->where('isactive', 1);
     
                 if ($request->filled('search')) {
                     $query->where('Student_Name', 'like', '%' . $request->search . '%');
                 }
     
-                if ($request->filled('study_program')) {
+                if ($staffStudyProgramName) {
+                    $query->whereHas('studyProgram', function ($subQuery) use ($staffStudyProgramName) {
+                        $subQuery->where('study_program_Name', $staffStudyProgramName);
+                    });
+                } elseif ($request->filled('study_program')) {
                     $query->where('id_study_program', $request->study_program);
                 }
     
@@ -518,22 +630,44 @@ class UserController extends Controller
                     $query->whereRaw("CONCAT('20', SUBSTRING(Student_ID_Number, 5, 2)) = ?", [$request->year]);
                 }
             })
+            ->when($request->filled('studentStatus'), function ($query) use ($request) {
+                $studentStatus = $request->input('studentStatus');
+    
+                if ($studentStatus == 'completed') {
+                    $query->whereHas('student.programs', function ($subQuery) {
+                        $subQuery->where('program_enrollment.status', 'approved')
+                                 ->where('program_enrollment.isFinished', 1);
+                    });
+                } elseif ($studentStatus == 'in_progress') {
+                    $query->whereHas('student.programs', function ($subQuery) {
+                        $subQuery->where('program_enrollment.status', 'approved')
+                                 ->where('program_enrollment.isFinished', 0);
+                    });
+                } elseif ($studentStatus == 'not_started') {
+                    $query->whereHas('student', function ($subQuery) {
+                        $subQuery->where(function ($innerQuery) {
+                            $innerQuery->whereNotIn('ID_Student', function ($subSubQuery) {
+                                $subSubQuery->select('ID_Student')
+                                            ->from('program_enrollment');
+                            })
+                            ->orWhereHas('programs', function ($pendingQuery) {
+                                $pendingQuery->where('program_enrollment.status', 'pending');
+                            });
+                        });
+                    });
+                }
+            })
             ->with(['student.programs' => function ($query) {
                 $query->withPivot('isFinished');
-            }])
-            ->get();
+            }]);
     
-        $study_program_name = null;
-        if (auth()->user()->hasRole('staff')) {
-            $study_program_name = auth()->user()->staff->studyProgram->study_program_Name ?? null;
-        } elseif ($request->filled('study_program')) {
-            $studyProgram = StudyProgram::find($request->study_program);
-            $study_program_name = $studyProgram->study_program_Name ?? null;
-        }
+        $users = $usersQuery->get();
     
         $groupedByStudyProgram = $users->groupBy(function ($user) {
             return $user->student->ID_study_program;
         });
+    
+        $study_program_name = $staffStudyProgramName ?? StudyProgram::find($request->study_program)->study_program_Name ?? null;
     
         $programsData = [];
         foreach ($groupedByStudyProgram as $studyProgramId => $usersInProgram) {
@@ -552,7 +686,7 @@ class UserController extends Controller
         $data = [
             'users' => $users,
             'year' => $request->year,
-            'programsData' => $programsData, 
+            'programsData' => $programsData,
             'study_program_name' => $study_program_name,
         ];
     
@@ -564,15 +698,24 @@ class UserController extends Controller
     }
     public function previewPdf(Request $request)
     {
-        $users = User::role('student')
-            ->whereHas('student', function ($query) use ($request) {
+        // Ambil data staff study program jika user adalah staff
+        $staffStudyProgramName = auth()->user()->hasRole('staff') 
+            ? auth()->user()->staff->studyProgram->study_program_Name ?? null 
+            : null;
+    
+        $usersQuery = User::role('student')
+            ->whereHas('student', function ($query) use ($request, $staffStudyProgramName) {
                 $query->where('isactive', 1);
     
                 if ($request->filled('search')) {
                     $query->where('Student_Name', 'like', '%' . $request->search . '%');
                 }
     
-                if ($request->filled('study_program')) {
+                if ($staffStudyProgramName) {
+                    $query->whereHas('studyProgram', function ($subQuery) use ($staffStudyProgramName) {
+                        $subQuery->where('study_program_Name', $staffStudyProgramName);
+                    });
+                } elseif ($request->filled('study_program')) {
                     $query->where('id_study_program', $request->study_program);
                 }
     
@@ -580,23 +723,49 @@ class UserController extends Controller
                     $query->whereRaw("CONCAT('20', SUBSTRING(Student_ID_Number, 5, 2)) = ?", [$request->year]);
                 }
             })
+            ->when($request->filled('studentStatus'), function ($query) use ($request) {
+                $studentStatus = $request->input('studentStatus');
+    
+                if ($studentStatus == 'completed') {
+                    $query->whereHas('student.programs', function ($subQuery) {
+                        $subQuery->where('program_enrollment.status', 'approved')
+                                 ->where('program_enrollment.isFinished', 1);
+                    });
+                } elseif ($studentStatus == 'in_progress') {
+                    $query->whereHas('student.programs', function ($subQuery) {
+                        $subQuery->where('program_enrollment.status', 'approved')
+                                 ->where('program_enrollment.isFinished', 0);
+                    });
+                } elseif ($studentStatus == 'not_started') {
+                    $query->whereHas('student', function ($subQuery) {
+                        $subQuery->where(function ($innerQuery) {
+                            $innerQuery->whereNotIn('ID_Student', function ($subSubQuery) {
+                                $subSubQuery->select('ID_Student')
+                                            ->from('program_enrollment');
+                            })
+                            ->orWhereHas('programs', function ($pendingQuery) {
+                                $pendingQuery->where('program_enrollment.status', 'pending');
+                            });
+                        });
+                    });
+                }
+            })
             ->with(['student.programs' => function ($query) {
                 $query->withPivot('isFinished');
-            }])
-            ->get();
+            }]);
+    
+        $users = $usersQuery->get();
     
         $groupedByStudyProgram = $users->groupBy(function ($user) {
             return $user->student->ID_study_program;
         });
     
-        $study_program_name = auth()->user()->hasRole('staff') 
-            ? auth()->user()->staff->studyProgram->study_program_Name ?? null 
-            : StudyProgram::find($request->study_program)->study_program_Name ?? null;
+        $study_program_name = $staffStudyProgramName ?? StudyProgram::find($request->study_program)->study_program_Name ?? null;
     
         $programsData = [];
         foreach ($groupedByStudyProgram as $studyProgramId => $usersInProgram) {
             $groupedByYear = $usersInProgram->groupBy(function ($user) {
-                return '20' . substr($user->student->Student_ID_Number, 4, 2); // Menyaring angkatan dari NIM
+                return '20' . substr($user->student->Student_ID_Number, 4, 2); 
             });
     
             $groupedByYear = $groupedByYear->sortKeys();

@@ -79,7 +79,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-6">
-                        <button type="submit" class="font-bold py-3 px-6 bg-indigo-600 text-white rounded-full">
+                        <button type="submit" class="btn btn-primary">
                             Update Logbook Entry
                         </button>
                     </div>

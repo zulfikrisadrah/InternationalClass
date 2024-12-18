@@ -81,11 +81,11 @@
                     @endphp
                     @if ($currentStatus === 'approved')
                         <!-- Logbook Button -->
-                        <a href="{{ route('student.logbook.index', $program->ID_program) }}" class="font-bold py-2 px-4 bg-green-700 text-white rounded-full">
+                        <a href="{{ route('student.logbook.index', $program->ID_program) }}" class="btn btn-success text-white">
                             Logbook
                         </a>
                     @else
-                        <button type="button" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full" onclick="openModal()">
+                        <button type="button" class="btn btn-primary text-white" onclick="openModal()">
                             Enroll in Program
                         </button>
                     @endif

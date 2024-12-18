@@ -77,7 +77,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex items-center justify-end mt-4">
-                        <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                        <button type="submit" class="btn btn-primary">
                             Add New Logbook Entry
                         </button>
                     </div>

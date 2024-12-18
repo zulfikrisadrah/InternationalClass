@@ -30,7 +30,8 @@
                     <select name="ie_program_id" class="p-2 pr-8 rounded-md border border-gray-300">
                         <option value="">All</option>
                         @foreach ($iePrograms as $ie)
-                            <option value="{{ $ie->ID_Ie_program }}" {{ request('ie_program_id') == $ie->ID_Ie_program ? 'selected' : '' }}>
+                            <option value="{{ $ie->ID_Ie_program }}"
+                                {{ request('ie_program_id') == $ie->ID_Ie_program ? 'selected' : '' }}>
                                 {{ $ie->ie_program_name }}
                             </option>
                         @endforeach
@@ -49,15 +50,19 @@
                             <!-- Program Image and Name -->
                             <div class="flex flex-row items-center gap-x-3 flex-grow">
                                 @if ($program->program_Image)
-                                    <img src="{{ asset('storage/' . $program->program_Image) }}" alt="Program Image" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                                    <img src="{{ asset('storage/' . $program->program_Image) }}" alt="Program Image"
+                                        class="rounded-2xl object-cover w-[120px] h-[90px]">
                                 @else
-                                    <div class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center text-gray-500">
+                                    <div
+                                        class="w-[120px] h-[90px] bg-gray-300 rounded-2xl flex items-center justify-center text-gray-500">
                                         No Image
                                     </div>
                                 @endif
                                 <div class="flex flex-col">
-                                    <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">{{ $program->program_Name }}</h3>
-                                    <p class="text-slate-500">{{ $program->Country_of_Execution }} - {{ $program->ieProgram->ie_program_name ?? 'No IE Program Assigned' }}</p>
+                                    <h3 class="text-indigo-950 text-xl font-bold truncate max-w-[200px]">
+                                        {{ $program->program_Name }}</h3>
+                                    <p class="text-slate-500">{{ $program->Country_of_Execution }} -
+                                        {{ $program->ieProgram->ie_program_name ?? 'No IE Program Assigned' }}</p>
                                 </div>
                             </div>
 
@@ -96,23 +101,29 @@
                             <!-- Button Section (Detail and Enroll) -->
                             <div class="flex items-center gap-x-3">
                                 <!-- Detail Button -->
-                                <a href="{{ route('student.program.show', $program->ID_program) }}" class="font-bold py-2 px-4 bg-blue-700 text-white rounded-full">
+                                <a href="{{ route('student.program.show', $program->ID_program) }}"
+                                    class="btn btn-primary text-white">
                                     Detail
                                 </a>
                                 @php
                                     $student = auth()->user()->student;
-                                    $existingEnrollment = $student->programs()->where('program_enrollment.ID_program', $program->ID_program)->first();
+                                    $existingEnrollment = $student
+                                        ->programs()
+                                        ->where('program_enrollment.ID_program', $program->ID_program)
+                                        ->first();
                                     $currentStatus = $existingEnrollment ? $existingEnrollment->pivot->status : null;
                                 @endphp
 
                                 @if ($currentStatus === 'approved')
                                     <!-- Logbook Button -->
-                                    <a href="{{ route('student.logbook.index', $program->ID_program) }}" class="font-bold py-2 px-4 bg-green-700 text-white rounded-full">
+                                    <a href="{{ route('student.logbook.index', $program->ID_program) }}"
+                                        class="btn btn-success text-white">
                                         Logbook
                                     </a>
                                 @else
                                     <!-- Enroll Button -->
-                                    <button type="button" class="font-bold py-2 px-4 bg-indigo-700 text-white rounded-full" onclick="openModal({{ $program->ID_program }})">
+                                    <button type="button" class="btn btn-primary text-white"
+                                        onclick="openModal({{ $program->ID_program }})">
                                         Enroll
                                     </button>
                                 @endif
@@ -141,55 +152,60 @@
                 <form id="enrollForm" method="POST" action="" class="flex justify-between items-center">
                     @csrf
                     <input type="hidden" name="program_id" id="program_id">
-                    <button type="button" class="py-2 px-4 bg-gray-300 text-gray-700 rounded-full" onclick="closeModal()">Cancel</button>
+                    <button type="button" class="py-2 px-4 bg-gray-300 text-gray-700 rounded-full"
+                        onclick="closeModal()">Cancel</button>
                     <button type="submit" class="py-2 px-4 bg-indigo-700 text-white rounded-full">
                         Confirm Enrollment
                     </button>
                 </form>
             </div>
         </div>
-
     @else
         <div class="flex items-center justify-center" style="margin-top: 150px">
             <div class="text-center bg-white text-black p-10 rounded-lg">
                 <!-- Cek jika program studi null -->
                 @if (is_null(Auth::user()->student->ID_study_program))
-                    <h2 class="text-2xl font-bold mb-4">Your study program is not available for international classes.</h2>
+                    <h2 class="text-2xl font-bold mb-4">Your study program is not available for international classes.
+                    </h2>
 
-                <!-- Cek jika mahasiswa tidak terverifikasi dan status null -->
+                    <!-- Cek jika mahasiswa tidak terverifikasi dan status null -->
                 @elseif (Auth::user()->student->isVerified != 1 && Auth::user()->student->status == null)
                     <h2 class="text-2xl font-bold mb-4">You are not verified as an international student.</h2>
                     <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
                         @csrf
-                        <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register Now</button>
+                        <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register
+                            Now</button>
                     </form>
 
-                <!-- Cek jika mahasiswa aktif tetapi statusnya null -->
+                    <!-- Cek jika mahasiswa aktif tetapi statusnya null -->
                 @elseif (Auth::user()->student->isVerified == 1 && Auth::user()->student->status == null)
                     <h2 class="text-2xl font-bold mb-4">You are not an active student.</h2>
                     <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
                         @csrf
-                        <button type="submit" class="font-bold py-2 px-4 bg-red-500 text-white rounded-lg">Activate Now</button>
+                        <button type="submit" class="font-bold py-2 px-4 bg-red-500 text-white rounded-lg">Activate
+                            Now</button>
                     </form>
 
-                <!-- Cek jika status mahasiswa 'waiting' -->
+                    <!-- Cek jika status mahasiswa 'waiting' -->
                 @elseif (Auth::user()->student->status === 'waiting')
                     <h2 class="text-2xl font-bold mb-4">You are currently waiting for admin verification.</h2>
 
-                <!-- Cek jika status mahasiswa 'rejected' -->
+                    <!-- Cek jika status mahasiswa 'rejected' -->
                 @elseif (Auth::user()->student->status === 'rejected')
                     <h2 class="text-2xl font-bold mb-4">You have been rejected as an international student.</h2>
                     <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
                         @csrf
-                        <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Reapply Now</button>
+                        <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Reapply
+                            Now</button>
                     </form>
 
-                <!-- Default: Mahasiswa harus mendaftar -->
+                    <!-- Default: Mahasiswa harus mendaftar -->
                 @else
                     <h2 class="text-2xl font-bold mb-4">You are not an international student. Register now!</h2>
                     <form action="{{ route('student.user.updateStatus', $user->student->ID_Student) }}" method="POST">
                         @csrf
-                        <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register Now</button>
+                        <button type="submit" class="font-bold py-2 px-4 bg-green-500 text-white rounded-lg">Register
+                            Now</button>
                     </form>
                 @endif
             </div>

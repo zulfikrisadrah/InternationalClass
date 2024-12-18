@@ -10,6 +10,7 @@ class OutboundLecturer extends Model
     use HasFactory;
 
     protected $table = 'outbound_lecturers';
+    protected $primaryKey = 'ID_outbound_lecturer';
 
     protected $fillable = [
         'lecturer_name',

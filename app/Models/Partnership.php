@@ -10,6 +10,7 @@ class Partnership extends Model
     use HasFactory;
 
     protected $table = 'partnership';
+    protected $primaryKey = 'ID_partnership';
 
     protected $fillable = [
         'mou_moa_ia_number',

@@ -8,7 +8,6 @@ use App\Models\Student;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ProgramController extends Controller
@@ -200,7 +199,7 @@ class ProgramController extends Controller
                 'program_Name' => 'required|string|max:255',
                 'program_description' => 'required|string',
                 'Country_of_Execution' => 'required|string|max:255',
-                'Execution_Date' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
+                'Execution_Date' => 'required|date|',
                 'End_Date' => 'required|date|after_or_equal:Execution_Date',
                 'Participants_Count' => 'required|integer|min:1',
                 'Course_Credits' => 'required|integer|min:1',
@@ -238,7 +237,7 @@ class ProgramController extends Controller
                 'program_Name' => 'required|string|max:255',
                 'program_description' => 'required|string',
                 'Country_of_Execution' => 'required|string|max:255',
-                'Execution_Date' => 'required|date|after_or_equal:' . Carbon::now()->toDateString(),
+                'Execution_Date' => 'required|date|',
                 'End_Date' => 'required|date|after_or_equal:Execution_Date',
                 'Participants_Count' => 'required|integer|min:1',
                 'Course_Credits' => 'required|integer|min:1',

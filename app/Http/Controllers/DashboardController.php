@@ -16,75 +16,69 @@ class DashboardController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
 
-            function generateColor($index) {
+            function generateColor($index)
+            {
                 $hue = ($index * 137) % 360;
                 return "hsla($hue, 70%, 50%, 0.7)";
             }
 
-            function generateBorderColor($index) {
+            function generateBorderColor($index)
+            {
                 $hue = ($index * 137) % 360;
                 return "hsla($hue, 70%, 50%, 1)";
             }
 
             if ($user->hasRole('admin')) {
                 $programCounts = Program::selectRaw('count(*) as count, ID_Ie_program')
-                                        ->groupBy('ID_Ie_program')
-                                        ->with('ieProgram')
-                                        ->get();
+                    ->groupBy('ID_Ie_program')
+                    ->with('ieProgram')
+                    ->get();
 
                 $studentCountsByYear = Program::selectRaw('YEAR(execution_date) as year, count(*) as student_count')
-                                        ->join('program_enrollment', 'program_enrollment.ID_program', '=', 'programs.ID_program')
-                                        ->where('program_enrollment.status', 'approved')
-                                        ->groupByRaw('YEAR(execution_date)')
-                                        ->with('ieProgram')
-                                        ->get();
+                    ->join('program_enrollment', 'program_enrollment.ID_program', '=', 'programs.ID_program')
+                    ->where('program_enrollment.status', 'approved')
+                    ->groupByRaw('YEAR(execution_date)')
+                    ->with('ieProgram')
+                    ->get();
 
 
-                $activeStudents = Student::where('isActive', 1)
-                                        ->join('study_programs', 'students.ID_study_program', '=', 'study_programs.ID_study_program')
-                                        ->select('students.Student_ID_Number', 'study_programs.study_program_Name as program_name')
-                                        ->get();
+                $activeStudents = Student::where('isVerified', 1)
+                    ->join('study_programs', 'students.ID_study_program', '=', 'study_programs.ID_study_program')
+                    ->select('students.Student_ID_Number', 'study_programs.study_program_Name as program_name')
+                    ->get();
 
                 $tokenData = $this->loginAndGetToken();
                 $studentBatches = [];
                 $studentBatchesByProgram = [];
                 $chartYears = [];
 
-                if ($tokenData['status'] == 200) {
-                    $accessToken = $tokenData['access_token'];
-
-                    foreach ($activeStudents as $student) {
-                        $response = Http::withOptions(['verify' => false])
-                            ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
-                            ->withBody(json_encode(['nim' => $student->Student_ID_Number]), 'application/json')
-                            ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-
-                        if ($response->successful()) {
-                            $data = $response->json();
-
-                            if (isset($data['mahasiswas'][0]['angkatan'])) {
-                                $angkatan = $data['mahasiswas'][0]['angkatan'];
-                                $programName = $student->program_name;
-
-                                if (!in_array($angkatan, $chartYears)) {
-                                    $chartYears[] = $angkatan;
-                                }
-
-                                if (!isset($studentBatches[$angkatan])) {
-                                    $studentBatches[$angkatan] = 0;
-                                }
-                                $studentBatches[$angkatan]++;
-
-                                if (!isset($studentBatchesByProgram[$programName][$angkatan])) {
-                                    $studentBatchesByProgram[$programName][$angkatan] = 0;
-                                }
-                                $studentBatchesByProgram[$programName][$angkatan]++;
-                            }
-                        }
+                foreach ($activeStudents as $student) {
+                    $angkatan = null;
+                    if (preg_match('/[A-NR]\d{3}(\d{2})\d{3}/', $student->Student_ID_Number, $matches)) {
+                        $angkatan = '20' . $matches[1]; 
                     }
+                    if ($angkatan) {
+                        $programName = $student->program_name;
 
-                    ksort($studentBatches);
+                        if (!in_array($angkatan, $chartYears)) {
+                            $chartYears[] = $angkatan;
+                        }
+
+                        if (!isset($studentBatches[$angkatan])) {
+                            $studentBatches[$angkatan] = 0;
+                        }
+                        $studentBatches[$angkatan]++;
+
+                        if (!isset($studentBatchesByProgram[$programName][$angkatan])) {
+                            $studentBatchesByProgram[$programName][$angkatan] = 0;
+                        }
+                        $studentBatchesByProgram[$programName][$angkatan]++;
+
+                    }
                 }
+
+                ksort($studentBatches);
+
 
                 sort($chartYears);
 
@@ -132,57 +126,40 @@ class DashboardController extends Controller
                 ->groupBy('ID_Ie_program')
                 ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
                 ->get();
-
-            // Query student counts by year yang hanya terkait dengan study program staff
-            $studentCountsByYear = Program::selectRaw('YEAR(execution_date) as year, count(*) as student_count')
+                
+                $studentCountsByYear = Program::selectRaw('YEAR(execution_date) as year, count(*) as student_count')
                 ->join('program_enrollment', 'program_enrollment.ID_program', '=', 'programs.ID_program')
-                ->where('program_enrollment.status', 'approved')
-                ->whereHas('studyProgram', function ($query) use ($studyProgramId) {
-                    $query->where('ID_study_program', $studyProgramId);
-                })
-                ->groupByRaw('YEAR(execution_date)')
-                ->with('ieProgram') // Pastikan relasi 'ieProgram' terdefinisi di model Program
+                ->join('students', 'program_enrollment.ID_student', '=', 'students.ID_Student') 
+                ->where('program_enrollment.status', 'approved') 
+                ->where('students.ID_study_program', $studyProgramId) 
+                ->groupByRaw('YEAR(execution_date)') 
+                ->with('ieProgram')
                 ->get();
 
-            // Ambil data mahasiswa aktif berdasarkan program studi yang sesuai dengan staff
-            $activeStudents = Student::where('students.isActive', 1) // Alias tabel 'students'
-                ->join('study_programs', 'students.ID_study_program', '=', 'study_programs.ID_study_program') // Join eksplisit ke tabel study_programs
-                ->select('students.Student_ID_Number', 'study_programs.study_program_Name as program_name') // Select kolom dari tabel study_programs
-                ->where('study_programs.ID_study_program', $studyProgramId) // Filter berdasarkan study program
-                ->get();
+                $activeStudents = Student::where('students.isVerified', 1) // Alias tabel 'students'
+                    ->join('study_programs', 'students.ID_study_program', '=', 'study_programs.ID_study_program') // Join eksplisit ke tabel study_programs
+                    ->select('students.Student_ID_Number', 'study_programs.study_program_Name as program_name') // Select kolom dari tabel study_programs
+                    ->where('study_programs.ID_study_program', $studyProgramId) // Filter berdasarkan study program
+                    ->get();
 
                 $tokenData = $this->loginAndGetToken();
                 $studentBatches = [];
 
-                if ($tokenData['status'] == 200) {
-                    $accessToken = $tokenData['access_token'];
+                foreach ($activeStudents as $student) {
+                    $angkatan = null;
+                    if (preg_match('/[A-NR]\d{3}(\d{2})\d{3}/', $student->Student_ID_Number, $matches)) {
+                        $angkatan = '20' . $matches[1]; // Menambahkan '20' untuk membuat tahun lengkap (misalnya, '22' menjadi '2022')
+                    }
 
-                    foreach ($activeStudents as $student) {
-                        // Lakukan request ke API untuk setiap mahasiswa berdasarkan NIM
-                        $response = Http::withOptions(['verify' => false])
-                            ->withHeaders(['Authorization' => 'Bearer ' . $accessToken])
-                            ->withBody(json_encode(['nim' => $student->Student_ID_Number]), 'application/json')
-                            ->get('https://sipakamase.unhas.ac.id:8107/get_mahasiswa_by_nim');
-
-                        if ($response->successful()) {
-                            $data = $response->json();
-
-                            // Memeriksa apakah ada data angkatan
-                            if (isset($data['mahasiswas'][0]['angkatan'])) {
-                                $angkatan = $data['mahasiswas'][0]['angkatan'];  // Mendapatkan angkatan mahasiswa
-
-                                // Inisialisasi jika belum ada data untuk angkatan ini
-                                if (!isset($studentBatches[$angkatan])) {
-                                    $studentBatches[$angkatan] = 0;
-                                }
-
-                                // Menambahkan mahasiswa ke batch sesuai angkatan
-                                $studentBatches[$angkatan]++;
-                            }
+                    if ($angkatan) {
+                        if (!isset($studentBatches[$angkatan])) {
+                            $studentBatches[$angkatan] = 0;
                         }
+
+                        // Menambahkan mahasiswa ke batch sesuai angkatan
+                        $studentBatches[$angkatan]++;
                     }
                 }
-
                 // Kirimkan data ke view
                 return view('dashboard.staff.home', compact('programCounts', 'studentCountsByYear', 'studentBatches'));
             }
@@ -227,7 +204,7 @@ class DashboardController extends Controller
                         $last_year_ajaran = isset($transkrip_terakhir[0]['semester']['tahun']) ? $transkrip_terakhir[0]['semester']['tahun'] + 1 : null;
                         $last_semester_ajaran = isset($transkrip_terakhir[0]['semester']['jenis']) ? $transkrip_terakhir[0]['semester']['jenis'] : null;
 
-                        if($last_semester_ajaran == "genap") {
+                        if ($last_semester_ajaran == "genap") {
                             if ($last_year_ajaran !== null) {
                                 if ($angkatan <= 2022) {
                                     $masa_studi_maksimal = 14;

@@ -35,7 +35,7 @@ Route::get('/studyProgram', [LandingPageController::class, 'studyProgram'])->nam
 Route::get('/studyProgram/{id}', [LandingPageController::class, 'studyProgramShow'])->name('studyProgram.show');
 Route::post('/update-english-score/{userId}', [UserController::class, 'updateEnglishScore']);
 
-
+Route::get('/autocomplete-study-programs', [StudyProgramController::class, 'autocomplete'])->name('autocomplete.studyPrograms');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -44,9 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::middleware('can:manage class')->group(function () {
-            Route::resource('class', ClassController::class);
-        });
         Route::middleware('can:manage news')->group(function () {
             Route::resource('news', NewsController::class);
         });
@@ -75,9 +72,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/calendar/events', [CalenderController::class, 'getEvents'])->name('calendar.events');
     });
     Route::prefix('staff')->name('staff.')->group(function () {
-        Route::middleware('can:manage class')->group(function () {
-            Route::resource('class', ClassController::class);
-        });
         Route::middleware('can:manage news')->group(function () {
             Route::resource('news', NewsController::class);
         });

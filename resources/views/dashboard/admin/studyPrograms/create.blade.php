@@ -26,37 +26,37 @@
                         <input id="study_program_Name" type="text" class="block mt-1 w-full" name="study_program_Name" required />
                         <ul id="autocomplete-results" class="dropdown-menu hidden absolute bg-white border border-gray-300 max-h-60 overflow-y-auto z-10"></ul>
                     </div>
-                    
+
                     <script>
                         document.getElementById('study_program_Name').addEventListener('input', async function () {
                             const query = this.value;
                             const results = document.getElementById('autocomplete-results');
-                            
+
                             if (query.length >= 2) {
                                 const response = await fetch('/autocomplete-study-programs?query=' + query, {
                                     headers: {
                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                                     }
                                 });
-                                
-                                const programs = await response.json();
-                                console.log(programs); 
 
-                                results.innerHTML = '';  
-                                
+                                const programs = await response.json();
+                                console.log(programs);
+
+                                results.innerHTML = '';
+
                                 if (programs.length > 0) {
                                     results.classList.remove('hidden');
                                     programs.forEach(program => {
                                         const listItem = document.createElement('li');
                                         listItem.textContent = program.prodiNama;
                                         listItem.className = 'p-2 cursor-pointer hover:bg-gray-100';
-                                        
+
                                         listItem.addEventListener('click', () => {
                                             document.getElementById('study_program_Name').value = program.prodiNama;
                                             results.innerHTML = '';
                                             results.classList.add('hidden');
                                         });
-                                        
+
                                         results.appendChild(listItem);
                                     });
                                 } else {
@@ -66,7 +66,7 @@
                                 results.classList.add('hidden');
                             }
                         });
-                    </script>                   
+                    </script>
 
                     <div class="mt-4">
                         <x-input-label for="degree" :value="__('Degree')" />
@@ -105,15 +105,15 @@
                     </div>
 
                     <div class="mt-4">
-                        <x-input-label for="manager_name" :value="__('Manager Name')" />
-                        <x-text-input id="manager_name" class="block mt-1 w-full" type="text" name="manager_name"
-                            :value="old('manager_name')" />
+                        <x-input-label for="director_name" :value="__('Director Name')" />
+                        <x-text-input id="director_name" class="block mt-1 w-full" type="text" name="director_name"
+                            :value="old('director_name')" />
                     </div>
 
                     <div class="mt-4">
-                        <x-input-label for="manager_contact" :value="__('Manager Contact')" />
-                        <x-text-input id="manager_contact" class="block mt-1 w-full" type="text"
-                            name="manager_contact" :value="old('manager_contact')" />
+                        <x-input-label for="director_contact" :value="__('Director Contact')" />
+                        <x-text-input id="director_contact" class="block mt-1 w-full" type="text"
+                            name="director_contact" :value="old('director_contact')" />
                     </div>
 
                     <div class="mt-4">
@@ -128,7 +128,7 @@
                             :value="old('lecturers')" />
                     </div>
                     <div class="mt-4">
-                        <x-input-label for="national_accreditation" :value="__('National Accreditation')" /> 
+                        <x-input-label for="national_accreditation" :value="__('National Accreditation')" />
                         <x-text-input id="national_accreditation" class="block mt-1 w-full" type="text"
                             name="national_accreditation" required :value="old('national_accreditation')" />
                     </div>

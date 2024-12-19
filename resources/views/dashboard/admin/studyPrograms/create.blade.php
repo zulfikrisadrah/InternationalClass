@@ -23,9 +23,50 @@
 
                     <div>
                         <x-input-label for="study_program_Name" :value="__('Program Name')" />
-                        <x-text-input id="study_program_Name" class="block mt-1 w-full" type="text"
-                            name="study_program_Name" :value="old('study_program_Name')" required />
+                        <input id="study_program_Name" type="text" class="block mt-1 w-full" name="study_program_Name" required />
+                        <ul id="autocomplete-results" class="dropdown-menu hidden absolute bg-white border border-gray-300 max-h-60 overflow-y-auto z-10"></ul>
                     </div>
+                    
+                    <script>
+                        document.getElementById('study_program_Name').addEventListener('input', async function () {
+                            const query = this.value;
+                            const results = document.getElementById('autocomplete-results');
+                            
+                            if (query.length >= 2) {
+                                const response = await fetch('/autocomplete-study-programs?query=' + query, {
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                    }
+                                });
+                                
+                                const programs = await response.json();
+                                console.log(programs); 
+
+                                results.innerHTML = '';  
+                                
+                                if (programs.length > 0) {
+                                    results.classList.remove('hidden');
+                                    programs.forEach(program => {
+                                        const listItem = document.createElement('li');
+                                        listItem.textContent = program.prodiNama;
+                                        listItem.className = 'p-2 cursor-pointer hover:bg-gray-100';
+                                        
+                                        listItem.addEventListener('click', () => {
+                                            document.getElementById('study_program_Name').value = program.prodiNama;
+                                            results.innerHTML = '';
+                                            results.classList.add('hidden');
+                                        });
+                                        
+                                        results.appendChild(listItem);
+                                    });
+                                } else {
+                                    results.classList.add('hidden');
+                                }
+                            } else {
+                                results.classList.add('hidden');
+                            }
+                        });
+                    </script>                   
 
                     <div class="mt-4">
                         <x-input-label for="degree" :value="__('Degree')" />
@@ -77,24 +118,24 @@
 
                     <div class="mt-4">
                         <x-input-label for="classrooms" :value="__('Classrooms')" />
-                        <x-text-input id="classrooms" class="block mt-1 w-full" type="number" name="classrooms"
+                        <x-text-input id="classrooms" class="block mt-1 w-full" type="number" name="classrooms" required
                             :value="old('classrooms')" />
                     </div>
 
                     <div class="mt-4">
                         <x-input-label for="lecturers" :value="__('Lecturers')" />
-                        <x-text-input id="lecturers" class="block mt-1 w-full" type="number" name="lecturers"
+                        <x-text-input id="lecturers" class="block mt-1 w-full" type="number" name="lecturers" required
                             :value="old('lecturers')" />
                     </div>
                     <div class="mt-4">
-                        <x-input-label for="national_accreditation" :value="__('National Accreditation')" />
+                        <x-input-label for="national_accreditation" :value="__('National Accreditation')" /> 
                         <x-text-input id="national_accreditation" class="block mt-1 w-full" type="text"
-                            name="national_accreditation" :value="old('national_accreditation')" />
+                            name="national_accreditation" required :value="old('national_accreditation')" />
                     </div>
                     <div class="mt-4">
                         <x-input-label for="international_accreditation" :value="__('International Accreditation')" />
                         <x-text-input id="international_accreditation" class="block mt-1 w-full" type="text"
-                            name="international_accreditation" :value="old('international_accreditation')" />
+                            name="international_accreditation" required :value="old('international_accreditation')" />
                     </div>
                     <div class="mt-4">
                         <x-input-label for="ukt_fee" :value="__('UKT Fee')" />
@@ -130,27 +171,27 @@
 
                     <div class="mt-4">
                         <x-input-label for="total_courses" :value="__('Total Courses')" />
-                        <x-text-input id="total_courses" class="block mt-1 w-full" type="number" name="total_courses" :value="old('total_courses')" />
+                        <x-text-input id="total_courses" class="block mt-1 w-full" type="number" name="total_courses" :value="old('total_courses')" required/>
                     </div>
 
                     <div class="mt-4">
                         <x-input-label for="rps_courses_in_english" :value="__('RPS Courses in English')" />
-                        <x-text-input id="rps_courses_in_english" class="block mt-1 w-full" type="number" name="rps_courses_in_english" :value="old('rps_courses_in_english')" />
+                        <x-text-input id="rps_courses_in_english" class="block mt-1 w-full" type="number" name="rps_courses_in_english" :value="old('rps_courses_in_english')" required/>
                     </div>
 
                     <div class="mt-4">
                         <x-input-label for="teaching_materials_in_english" :value="__('Teaching Materials in English')" />
-                        <x-text-input id="teaching_materials_in_english" class="block mt-1 w-full" type="number" name="teaching_materials_in_english" :value="old('teaching_materials_in_english')" />
+                        <x-text-input id="teaching_materials_in_english" class="block mt-1 w-full" type="number" name="teaching_materials_in_english" :value="old('teaching_materials_in_english')" required/>
                     </div>
 
                     <div class="mt-4">
                         <x-input-label for="courses_delivered_in_english" :value="__('Courses Delivered in English')" />
-                        <x-text-input id="courses_delivered_in_english" class="block mt-1 w-full" type="number" name="courses_delivered_in_english" :value="old('courses_delivered_in_english')" />
+                        <x-text-input id="courses_delivered_in_english" class="block mt-1 w-full" type="number" name="courses_delivered_in_english" :value="old('courses_delivered_in_english')" required/>
                     </div>
 
                     <div class="mt-4">
                         <x-input-label for="courses_fully_filled_in_sikola" :value="__('Courses Fully Filled in SIKOLA 2.0')" />
-                        <x-text-input id="courses_fully_filled_in_sikola" class="block mt-1 w-full" type="number" name="courses_fully_filled_in_sikola" :value="old('courses_fully_filled_in_sikola')" />
+                        <x-text-input id="courses_fully_filled_in_sikola" class="block mt-1 w-full" type="number" name="courses_fully_filled_in_sikola" :value="old('courses_fully_filled_in_sikola')" required/>
                     </div>
                     <!-- Submit Button -->
                     <div class="mt-4">

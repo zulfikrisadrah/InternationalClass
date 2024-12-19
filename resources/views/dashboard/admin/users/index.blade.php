@@ -311,7 +311,9 @@
                                                             <td class="py-3 px-4">{{ $user->student->Phone_Number }}</td>
                                                         </tr><tr class="hover:bg-gray-50 border-b">
                                                             <td class="py-3 px-4 text-gray-600 font-medium">Gender</td>
-                                                            <td class="py-3 px-4">{{ $user->student->Gender }}</td>
+                                                            <td class="py-3 px-4">
+                                                                {{ $user->student->Gender == 'L' ? 'Male' : ($user->student->Gender == 'P' ? 'Female' : 'N/A') }}
+                                                            </td>
                                                         </tr>
 
                                                         <tr class="hover:bg-gray-50 border-b">

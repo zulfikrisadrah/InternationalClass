@@ -6,6 +6,7 @@ use App\Models\Faculty;
 use App\Models\StudyProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudyProgramController extends Controller
 {
@@ -58,19 +59,37 @@ class StudyProgramController extends Controller
             'teaching_materials_in_english' => 'nullable|integer|min:0',
             'courses_delivered_in_english' => 'nullable|integer|min:0',
             'courses_fully_filled_in_sikola' => 'nullable|integer|min:0',
-
         ]);
 
-        if ($request->hasFile('study_program_Image')) {
+        $existingProgram = StudyProgram::where('study_program_Name', $request->study_program_Name)->first();
+        if ($existingProgram) {
+            return redirect()->back()->withErrors(['study_program_Name' => 'The study program already exists.'])->withInput();
+        }
 
+        $filePath = public_path('study_programs.csv');
+        $validPrograms = [];
+    
+        if (file_exists($filePath)) {
+            $file = fopen($filePath, 'r');
+            while (($row = fgetcsv($file, 1000, ';')) !== false) {
+                $validPrograms[] = $row[2];  
+            }
+            fclose($file);
+        }
+    
+        if (!in_array($request->study_program_Name, $validPrograms)) {
+            return redirect()->back()->withErrors(['study_program_Name' => 'The study program name is invalid.'])->withInput();
+        }
+    
+        if ($request->hasFile('study_program_Image')) {
             $imagePath = $request->file('study_program_Image')->store('images/studyprogram', 'public');
             $validatedStudyProgram['study_program_Image'] = $imagePath;
         }
+    
         StudyProgram::create($validatedStudyProgram);
-
-
+    
         return redirect()->route('admin.studyProgram.index')->with('success', 'Study Program created successfully');
-    }
+    }    
 
     public function show(StudyProgram $studyProgram)
     {
@@ -87,7 +106,6 @@ class StudyProgramController extends Controller
 
     public function update(Request $request, StudyProgram $studyProgram)
     {
-
         $validatedData = $request->validate([
             'study_program_Name' => 'required|string|max:255',
             'degree' => 'required|string|max:255',
@@ -110,18 +128,80 @@ class StudyProgramController extends Controller
             'teaching_materials_in_english' => 'nullable|integer|min:0',
             'courses_delivered_in_english' => 'nullable|integer|min:0',
             'courses_fully_filled_in_sikola' => 'nullable|integer|min:0',
-
         ]);
-
+    
+        $filePath = public_path('study_programs.csv');
+        $validPrograms = [];
+    
+        if (file_exists($filePath)) {
+            $file = fopen($filePath, 'r');
+            while (($row = fgetcsv($file, 1000, ';')) !== false) {
+                $validPrograms[] = $row[2]; 
+            }
+            fclose($file);
+        }
+    
+        if (!in_array($request->study_program_Name, $validPrograms)) {
+            return redirect()->back()->withErrors(['study_program_Name' => 'The study program name is invalid.'])->withInput();
+        }
+    
         if ($request->hasFile('study_program_Image')) {
             if ($studyProgram->study_program_Image) {
                 Storage::disk('public')->delete($studyProgram->study_program_Image);
             }
             $validatedData['study_program_Image'] = $request->file('study_program_Image')->store('images/studyprogram', 'public');
         }
-
+    
         $studyProgram->update($validatedData);
-
+    
         return redirect()->route('admin.studyProgram.index')->with('success', 'Study Program updated successfully');
+    }
+    
+    public function autocomplete(Request $request)
+    {
+        $query = $request->get('query');  
+        $filePath = public_path('study_programs.csv');  
+        
+        $programs = [];
+        if (file_exists($filePath)) {
+            $file = fopen($filePath, 'r');
+            
+            while (($row = fgetcsv($file, 1000, ';')) !== false) {
+                $programs[] = [
+                    'prodiId' => $row[0],
+                    'prodiKode' => $row[1],
+                    'prodiNama' => $row[2],
+                    'prodiNamaAsing' => $row[3],
+                    'prodiJenjang' => $row[4],
+                    'prodiKodeDikti' => $row[5],
+                    'prodiFakId' => $row[6]
+                ];
+            }
+            fclose($file);
+            
+            $matchingPrograms = array_filter($programs, function ($program) use ($query) {
+                return stripos($program['prodiNama'], $query) !== false && stripos($program['prodiNama'], 'S1') !== false;
+            });
+            
+            return response()->json(array_values($matchingPrograms));  
+        } else {
+            return response()->json([]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        $studyProgram = StudyProgram::findOrFail($id);
+
+        if ($studyProgram->study_program_Image) {
+            $imagePath = public_path('storage/' . $studyProgram->study_program_Image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        $studyProgram->delete();
+
+        return redirect()->route('admin.studyProgram.index')->with('success', 'Study Program deleted successfully');
     }
 }

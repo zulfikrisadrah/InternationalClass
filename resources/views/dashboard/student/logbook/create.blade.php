@@ -71,7 +71,7 @@
                     <!-- Logbook Image -->
                     <div class="mt-4">
                         <x-input-label for="Logbook_Image" :value="__('Logbook Image')" />
-                        <x-text-input id="Logbook_Image" class="block mt-1 w-full" type="file" name="Logbook_Image" accept="image/*" />
+                        <x-text-input id="Logbook_Image" class="block mt-1 w-full" type="file" name="Logbook_Image" accept="image/*" required/>
                         <x-input-error :messages="$errors->get('Logbook_Image')" class="mt-2" />
                     </div>
 

@@ -11,13 +11,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class LandingPageController extends Controller
 {
     public function index()
     {
-        // Mengambil berbagai data yang dibutuhkan
-        $programs = StudyProgram::with('faculty')->get();
+        $tr = new GoogleTranslate('en');
+        $tr->setOptions([
+            'verify' => true,
+            'curl' => [
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYHOST => 2,
+                CURLOPT_CAINFO => public_path('cacert.pem'),
+            ]
+        ]);
+
+        $programs = StudyProgram::with('faculty')->get()->map(function($program) use ($tr) {
+            if ($program->study_program_Name) {
+                $cleanName = str_replace(' - S1', '', $program->study_program_Name);
+                $program->translated_name = $tr->translate($cleanName);
+
+                // Menambahkan translasi untuk nama fakultas
+                if ($program->faculty && $program->faculty->Faculty_Name) {
+                    $program->faculty->translated_name = $tr->translate($program->faculty->Faculty_Name);
+                }
+            } else {
+                $program->translated_name = '';
+            }
+            return $program;
+        });
         $news = News::latest()->take(3)->get(); // Mengambil 3 berita terbaru
         $events = Event::latest()->take(2)->get();
         $ie_programs = IeProgram::pluck('ie_program_name');
@@ -28,12 +51,35 @@ class LandingPageController extends Controller
             'description' => 'Join our International Class to experience a world-class education, expert instructors, and a diverse community. Gain valuable skills, global insights, and hands-on learning opportunities that will prepare you for a bright future in an interconnected world.',
         ];
 
-        return view('home', compact('programs', 'news', 'events', 'data'));
+        return view('home', compact('programs', 'news', 'events', 'data' ));
     }
 
     public function studyProgram()
     {
-        $programs = StudyProgram::with('faculty')->get();
+        $tr = new GoogleTranslate('en');
+        $tr->setOptions([
+            'verify' => true,
+            'curl' => [
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYHOST => 2,
+                CURLOPT_CAINFO => public_path('cacert.pem'),
+            ]
+        ]);
+
+        $programs = StudyProgram::with('faculty')->get()->map(function($program) use ($tr) {
+            if ($program->study_program_Name) {
+                $cleanName = str_replace(' - S1', '', $program->study_program_Name);
+                $program->translated_name = $tr->translate($cleanName);
+
+                // Menambahkan translasi untuk nama fakultas
+                if ($program->faculty && $program->faculty->Faculty_Name) {
+                    $program->faculty->translated_name = $tr->translate($program->faculty->Faculty_Name);
+                }
+            } else {
+                $program->translated_name = '';
+            }
+            return $program;
+        });
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
             'title' => 'Study Program',
@@ -48,10 +94,33 @@ class LandingPageController extends Controller
     }
     public function studyProgramShow($ID_study_program)
     {
-        $programs = StudyProgram::with('faculty', 'partnerships')->findOrFail($ID_study_program);
+        $tr = new GoogleTranslate('en');
+        $tr->setOptions([
+            'verify' => true,
+            'curl' => [
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYHOST => 2,
+                CURLOPT_CAINFO => public_path('cacert.pem'),
+            ]
+        ]);
+
+        $programs = StudyProgram::with('faculty', 'partnerships')->find($ID_study_program);
+        if ($programs) {
+            if ($programs->study_program_Name) {
+                $cleanName = str_replace(' - S1', '', $programs->study_program_Name);
+                $programs->translated_name = $tr->translate($cleanName);
+
+                // Menambahkan translasi untuk nama fakultas
+                if ($programs->faculty && $programs->faculty->Faculty_Name) {
+                    $programs->faculty->translated_name = $tr->translate($programs->faculty->Faculty_Name);
+                }
+            } else {
+                $programs->translated_name = '';
+            }
+        }
         $ie_programs = IeProgram::pluck('ie_program_name');
         $data = [
-            'title' => $programs->study_program_Name,
+            'title' => $programs->translated_name,
         ];
 
         // Mengambil berita yang relevan dengan program studi

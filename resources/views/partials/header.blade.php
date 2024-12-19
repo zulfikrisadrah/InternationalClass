@@ -1,17 +1,6 @@
 <header>
-    <!-- Top Navbar (hidden on mobile) -->
-    <div class="bg-redSecondary text-white py-2 hidden sm:block">
-        <div class="container mx-auto flex justify-center items-center px-6">
-            <nav class="flex space-x-6">
-                <a href="https://neosia.unhas.ac.id/login" class="hover:text-gray-900">Portal Mahasiswa</a>
-                <a href="https://sikola-v2.unhas.ac.id/login/index.php" class="hover:text-gray-900">Sikola</a>
-                <a href="https://journal.unhas.ac.id/" class="hover:text-gray-900">Jurnal</a>
-            </nav>
-        </div>
-    </div>
-
     <!-- Main Navbar -->
-    <div class="bg-redPrimary text-white py-4" style="box-shadow: 0 -2px 18px rgba(0, 0, 0, 0.2);">
+    <div class="bg-redPrimary text-white py-2" style="box-shadow: 0 -2px 18px rgba(0, 0, 0, 0.2);">
         <div class="container mx-auto px-6">
             <div class="navbar p-0 flex items-center justify-between">
                 <!-- Logo (Left) -->
@@ -19,7 +8,7 @@
                     <a href="{{ route('landing.page') }}" class="flex items-center gap-2">
                         <img src="{{ asset('images/logoUnhas.png') }}" alt="Logo" class="w-8">
                         <div class="w-px h-6 bg-white hidden sm:block"></div>
-                        <span class="font-semibold text-xs sm:text-sm">Kelas Internasional <br> Universitas Hasanuddin</span>
+                        <span class="font-semibold text-xs sm:text-sm">International Class <br> Hasanuddin University</span>
                     </a>
                 </div>
 

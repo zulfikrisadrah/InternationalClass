@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', $programs->study_program_Name)
+@section('title', $programs->translated_name)
 
 @section('content')
     <div class="flex flex-col leading-none whitespace-nowrap">
@@ -9,7 +9,7 @@
             <div class="breadcrumbs text-white">
                 <ul>
                     <li><a href="{{ route('studyProgram.index') }}">Study Programs</a></li>
-                    <li>{{ $programs->study_program_Name }}</li>
+                    <li>{{ $programs->translated_name }}</li>
                 </ul>
             </div>
         </div>
@@ -19,11 +19,16 @@
         <div class="space-y-6">
             <div class="text-center md:text-left" data-aos="fade-right">
                 <h2 class="text-3xl md:text-4xl font-bold text-blueThird mb-2">
-                    {{ $programs->study_program_Name }}
+                    {{ $programs->translated_name }}
                 </h2>
-                <p class="text-base md:text-lg text-gray-600 uppercase">
-                    FACULTY OF {{ strtoupper($programs->faculty->Faculty_Name) }}
-                </p>
+                <div class="flex items-center justify-center md:justify-start space-x-4">
+                    <p class="text-base md:text-lg text-gray-600 uppercase">
+                        FACULTY OF {{ strtoupper($programs->faculty->translated_name) }}
+                    </p>
+                    <span class="inline-flex items-center px-4 py-1 rounded-full text-sm font-semibold bg-gradient-to-r from-blueSecondary to-blueThird text-white shadow-md">
+                        {{ $programs->degree }}
+                    </span>
+                </div>
             </div>
 
             <div class="card bg-base-100 shadow-xl p-6 md:p-8" data-aos="fade-up">

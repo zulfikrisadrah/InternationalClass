@@ -136,7 +136,7 @@
 
                     <div x-data="{ preview: '{{ asset('storage/' . $studyProgram->study_program_Image) }}' }" class="mt-4">
                         <x-input-label for="study_program_Image" :value="__('Image')" />
-                        <input type="file" id="study_program_Image" name="study_program_Image" required class="block mt-1 w-full"
+                        <input type="file" id="study_program_Image" name="study_program_Image" class="block mt-1 w-full"
                             accept="image/*" @change="preview = URL.createObjectURL($event.target.files[0])">
 
                         <div x-show="preview" class="mt-4">

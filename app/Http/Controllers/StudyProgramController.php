@@ -122,7 +122,7 @@ class StudyProgramController extends Controller
             'ukt_fee' => 'nullable|numeric|min:0',
             'ipi_fee' => 'nullable|numeric|min:0',
             'international_exposure' => 'nullable|string|max:255',
-            'study_program_Image' => 'required|image|max:2048',
+            'study_program_Image' => 'nullable|image|max:2048',
             'total_courses' => 'nullable|integer|min:0',
             'rps_courses_in_english' => 'nullable|integer|min:0',
             'teaching_materials_in_english' => 'nullable|integer|min:0',

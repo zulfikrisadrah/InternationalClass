@@ -609,11 +609,17 @@ class UserController extends Controller
         $staffStudyProgramName = auth()->user()->hasRole('staff') 
             ? auth()->user()->staff->studyProgram->study_program_Name ?? null 
             : null;
-    
+
+        $role = $request->input('role');
+
         $usersQuery = User::role('student')
-            ->whereHas('student', function ($query) use ($request, $staffStudyProgramName) {
-                $query->where('isactive', 1);
+            ->whereHas('student', function ($query) use ($request, $staffStudyProgramName, $role) {
+                $query->where('isVerified', 1);
     
+                if ($role === 'student') {
+                    $query->where('isActive', 1);
+                }
+
                 if ($request->filled('search')) {
                     $query->where('Student_Name', 'like', '%' . $request->search . '%');
                 }
@@ -698,14 +704,19 @@ class UserController extends Controller
     }
     public function previewPdf(Request $request)
     {
-        // Ambil data staff study program jika user adalah staff
         $staffStudyProgramName = auth()->user()->hasRole('staff') 
             ? auth()->user()->staff->studyProgram->study_program_Name ?? null 
             : null;
     
+        $role = $request->input('role');
+    
         $usersQuery = User::role('student')
-            ->whereHas('student', function ($query) use ($request, $staffStudyProgramName) {
-                $query->where('isactive', 1);
+            ->whereHas('student', function ($query) use ($request, $staffStudyProgramName, $role) {
+                $query->where('isVerified', 1);
+    
+                if ($role === 'student') {
+                    $query->where('isActive', 1);
+                }
     
                 if ($request->filled('search')) {
                     $query->where('Student_Name', 'like', '%' . $request->search . '%');
@@ -780,7 +791,7 @@ class UserController extends Controller
             'programsData' => $programsData,
             'study_program_name' => $study_program_name,
         ]);
-    }
+    }    
     /**
      * Show the form for editing the specified resource.
      */
